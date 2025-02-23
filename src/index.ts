@@ -2,8 +2,9 @@ import dotenv from 'dotenv';
 import express from 'express';
 import mongoose from 'mongoose';
 
+import { modelLoad } from './services/chatbot';
+import chatRoute from './routes/chat.routes';
 import newsRoutes from './routes/news.routes';
-import { PrecomputeEmbeddingsFN } from './services/PrecomputeEmbeddings';
 
 dotenv.config();
 
@@ -20,9 +21,15 @@ mongoose
     console.log('Connected to MongoDB');
   })
   .catch((err) => console.error('MongoDB connection error:', err));
-PrecomputeEmbeddingsFN();
+// PrecomputeEmbeddingsFN();
 // Routes
+
+
 app.use('/api/news', newsRoutes);
-app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
-});
+app.use('/api/chat', chatRoute);
+
+modelLoad().then(() => {
+    app.listen(port, () => {
+        console.log(`Server running on http://localhost:${port}`);
+      });
+  });

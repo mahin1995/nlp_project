@@ -1,7 +1,5 @@
 // src/services/nlp.service.ts
 
-import { pipeline } from '@xenova/transformers';
-
 export class NlpServiceV2 {
   public model: any;
   public initialized = false;
@@ -9,18 +7,21 @@ export class NlpServiceV2 {
   // Initialize the model with error handling
   async initialize() {
     try {
-      this.model = await pipeline(
-        'feature-extraction',
-        'Xenova/all-mpnet-base-v2',
-        {
-          quantized: true, // Use quantized model for faster loading
-          progress_callback: (progress: any) => {
-            console.log(
-              `Download progress: ${Math.round((progress.loaded / progress.total) * 100)}%`
-            );
-          },
-        }
-      );
+      import('@xenova/transformers').then(({ pipeline }) => {
+        this.model =  pipeline(
+          'feature-extraction',
+          'Xenova/all-mpnet-base-v2',
+          {
+            quantized: true, // Use quantized model for faster loading
+            progress_callback: (progress: any) => {
+              console.log(
+                `Download progress: ${Math.round((progress.loaded / progress.total) * 100)}%`
+              );
+            },
+          }
+        );
+      });
+
       this.initialized = true;
       console.log('NLP model initialized successfully');
     } catch (error) {
