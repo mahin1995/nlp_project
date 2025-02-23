@@ -20,7 +20,7 @@ mongoose
     console.log('Connected to MongoDB');
   })
   .catch((err) => console.error('MongoDB connection error:', err));
-// PrecomputeEmbeddingsFN();
+PrecomputeEmbeddingsFN();
 // Routes
 app.use('/api/news', newsRoutes);
 app.listen(port, () => {

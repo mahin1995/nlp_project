@@ -1,8 +1,8 @@
 // src/services/nlp.service.ts
 
-import { pipeline } from "@xenova/transformers";
+import { pipeline } from '@xenova/transformers';
 
-export class AdvancedNLPService {
+export class NlpServiceV2 {
   public model: any;
   public initialized = false;
 

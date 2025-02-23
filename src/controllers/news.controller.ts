@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import News from '../models/News';
-import { AdvancedNLPService } from '../services/AdvanceNLPService';
 import { NLPService } from '../services/nlp.service';
 
 const nlpService = new NLPService();
@@ -25,5 +24,3 @@ export const getRecommendations = async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
-
-

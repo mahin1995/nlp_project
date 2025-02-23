@@ -1,15 +1,15 @@
-import News, { INews } from '../models/News';
-import { AdvancedNLPService } from './AdvanceNLPService';
+import News from '../models/News';
+import { NlpServiceV2 } from './Nlp.service.v2';
 
-const nlpService = new AdvancedNLPService();
+const nlpService = new NlpServiceV2();
 
 async function PrecomputeEmbeddingsFN() {
   await nlpService.initialize();
 
   const allNews = await News.find({});
-  for (const news:INews of allNews) {
+  for (const news of allNews) {
     const embedding = await nlpService.getEmbedding(
-      `${news.title} ${news.content} ${news.category}`
+      `${news?.title?.toLowerCase()} ${news?.content?.toLowerCase()} ${news?.category?.toLowerCase()}`
     );
     news.embedding = embedding;
     await news.save();
