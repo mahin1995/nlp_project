@@ -2,15 +2,19 @@ import dotenv from 'dotenv';
 import express from 'express';
 import mongoose from 'mongoose';
 
-import { modelLoad } from './services/chatbot';
+import cors from 'cors';
 import chatRoute from './routes/chat.routes';
 import newsRoutes from './routes/news.routes';
-
+import { modelLoad } from './services/chatbot';
 dotenv.config();
 
 const app = express();
 const port = 3000;
-
+const corsOptions = {
+  origin: '*',
+  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
+app.use(cors(corsOptions));
 // Middleware
 app.use(express.json());
 
@@ -24,12 +28,11 @@ mongoose
 // PrecomputeEmbeddingsFN();
 // Routes
 
-
 app.use('/api/news', newsRoutes);
 app.use('/api/chat', chatRoute);
 
 modelLoad().then(() => {
-    app.listen(port, () => {
-        console.log(`Server running on http://localhost:${port}`);
-      });
+  app.listen(port, () => {
+    console.log(`Server running on http://localhost:${port}`);
   });
+});
