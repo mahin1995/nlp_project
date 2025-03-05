@@ -64,6 +64,7 @@ export const predictIntent = async (text: string) => {
   const intentIndex = prediction.argMax(1).dataSync()[0];
 
   const intent = intents.intents[intentIndex];
+  console.log('My Log intent: ', intent);
   const response =
     intent.responses[Math.floor(Math.random() * intent.responses.length)];
 
