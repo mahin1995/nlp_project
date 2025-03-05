@@ -6,6 +6,7 @@ import cors from 'cors';
 import chatRoute from './routes/chat.routes';
 import newsRoutes from './routes/news.routes';
 import { modelLoad } from './services/chatbot';
+import { initializeModel } from './services/chatbotv2';
 dotenv.config();
 
 const app = express();
@@ -36,3 +37,12 @@ modelLoad().then(() => {
     console.log(`Server running on http://localhost:${port}`);
   });
 });
+
+initializeModel()
+  .then(() => {
+    console.log('Model and intents initialized.');
+  })
+  .catch((err: any) => {
+    console.error('Failed to initialize:', err);
+    process.exit(1); // Stop server if initialization fails
+  });

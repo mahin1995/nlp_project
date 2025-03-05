@@ -39,6 +39,7 @@ async function recognizeIntent(userInput: string): Promise<string | null> {
 
 async function generateResponse(userInput: string): Promise<string> {
   const intent = await recognizeIntent(userInput);
+  console.log('My Log intent: ', intent);
   return intent && responses[intent]
     ? responses[intent]
     : "I'm sorry, I don't understand that. Can you please rephrase?";

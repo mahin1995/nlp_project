@@ -1,0 +1,149 @@
+{
+  "intents": [
+    {
+      "tag": "greeting",
+      "patterns": [
+        "hello",
+        "hi",
+        "hey",
+        "good morning",
+        "good evening",
+        "what's up"
+      ],
+      "responses": [
+        "Hello! How can I assist you today?",
+        "Hi there! Looking for news updates?"
+      ]
+    },
+    {
+      "tag": "goodbye",
+      "patterns": ["bye", "goodbye", "see you later", "talk to you soon"],
+      "responses": [
+        "Goodbye! Stay updated with the latest news.",
+        "See you next time!"
+      ]
+    },
+    {
+      "tag": "latest_news",
+      "patterns": [
+        "latest news",
+        "breaking news",
+        "current news",
+        "recent updates",
+        "top headlines"
+      ],
+      "responses": [
+        "Here are the latest headlines...",
+        "Fetching the top news for you..."
+      ]
+    },
+    {
+      "tag": "news_by_category",
+      "patterns": [
+        "show me sports news",
+        "what's happening in technology?",
+        "politics news",
+        "entertainment updates",
+        "business news"
+      ],
+      "responses": ["Here are the latest {category} news updates."]
+    },
+    {
+      "tag": "trending_news",
+      "patterns": [
+        "what's trending?",
+        "trending topics",
+        "most popular news",
+        "viral news"
+      ],
+      "responses": ["Here are the trending news stories today."]
+    },
+    {
+      "tag": "news_by_location",
+      "patterns": [
+        "news in my area",
+        "local news",
+        "what's happening near me?",
+        "city news"
+      ],
+      "responses": ["Here are the latest local news updates."]
+    },
+    {
+      "tag": "news_by_source",
+      "patterns": [
+        "show news from BBC",
+        "CNN news updates",
+        "articles from The Guardian"
+      ],
+      "responses": ["Fetching news from {source}."]
+    },
+    {
+      "tag": "news_search",
+      "patterns": [
+        "find news about climate change",
+        "search news on bitcoin",
+        "articles related to AI"
+      ],
+      "responses": ["Searching for news articles on {query}..."]
+    },
+    {
+      "tag": "weather_update",
+      "patterns": [
+        "what's the weather like?",
+        "today's weather",
+        "weather forecast"
+      ],
+      "responses": ["Fetching the latest weather updates for your location."]
+    },
+    {
+      "tag": "stock_market",
+      "patterns": ["stock market news", "share prices", "finance updates"],
+      "responses": ["Here are the latest stock market updates."]
+    },
+    {
+      "tag": "sports_scores",
+      "patterns": [
+        "latest football scores",
+        "NBA results",
+        "cricket match updates"
+      ],
+      "responses": ["Here are the latest sports scores and results."]
+    },
+    {
+      "tag": "subscribe_newsletter",
+      "patterns": [
+        "subscribe to daily news",
+        "send me news updates",
+        "news alerts"
+      ],
+      "responses": ["You've been subscribed to daily news updates."]
+    },
+    {
+      "tag": "unsubscribe_newsletter",
+      "patterns": ["unsubscribe from news", "stop sending me news updates"],
+      "responses": ["You've been unsubscribed from news alerts."]
+    },
+    {
+      "tag": "set_preferences",
+      "patterns": [
+        "I want more sports news",
+        "show me business articles",
+        "personalize my feed"
+      ],
+      "responses": [
+        "Got it! Personalizing your news feed for more {category} news."
+      ]
+    },
+    {
+      "tag": "app_help",
+      "patterns": [
+        "how to use this app?",
+        "how does this work?",
+        "help me use this app"
+      ],
+      "responses": [
+        "You can ask for the latest news, search for specific topics, or browse by categories."
+      ]
+    }
+  ]
+}

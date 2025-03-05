@@ -3,10 +3,10 @@ import News from '../models/News';
 import { NlpServiceV2 } from '../services/Nlp.service.v2';
 
 const nlpServiceV2 = new NlpServiceV2();
-nlpServiceV2.initialize().catch((error) => {
-  console.error('Failed to initialize NLP service:', error);
-  process.exit(1);
-});
+// nlpServiceV2.initialize().catch((error) => {
+//   console.error('Failed to initialize NLP service:', error);
+//   process.exit(1);
+// });
 export const getRecommendationsV2 = async (req: Request, res: Response) => {
   try {
     if (!nlpServiceV2.initialized) {
