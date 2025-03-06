@@ -10,7 +10,7 @@ import { initializeModel } from './services/chatbotv2';
 dotenv.config();
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 5000;
 const corsOptions = {
   origin: '*',
   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
@@ -32,13 +32,11 @@ mongoose
 app.use('/api/news', newsRoutes);
 app.use('/api/chat', chatRoute);
 
-
-
 initializeModel()
   .then(() => {
     app.listen(port, () => {
-        console.log(`Server running on http://localhost:${port}`);
-      });
+      console.log(`Server running on http://localhost:${port}`);
+    });
     console.log('Model and intents initialized.');
   })
   .catch((err: any) => {
