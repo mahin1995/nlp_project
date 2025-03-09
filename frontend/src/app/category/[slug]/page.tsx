@@ -1,4 +1,5 @@
 "use client";
+import CategoryDetails from "@/component/CategoryDetails";
 import { usePathname } from "next/navigation";
 
 function Page() {
@@ -6,7 +7,7 @@ function Page() {
   const slug = pathname.split("/").pop();
   return (
     <>
-      <div>{slug}</div>
+      <div><CategoryDetails slug={slug}/></div>
     </>
   );
 }

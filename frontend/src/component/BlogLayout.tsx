@@ -24,7 +24,15 @@ const BlogLayout = () => {
   ) => {
     setImageError(true);
   };
-
+  function formatDate(dateString: string) {
+    const date = new Date(dateString);
+    const options: Intl.DateTimeFormatOptions = {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    };
+    return date.toLocaleDateString("en-GB", options).replace(",", "");
+  }
   return (
     <>
       <main className="mt-10">
@@ -123,10 +131,10 @@ const BlogLayout = () => {
 
                             <div>
                               <p className="font-semibold dark:text-white text-gray-700 text-sm capitalize">
-                                {news.author||"Unknown"}
+                                {news.author || "Unknown"}
                               </p>
                               <p className="dark:text-white text-gray-600 text-xs">
-                                {news.publishedAt.toString()}
+                                {formatDate(news.publishedAt.toString())}
                               </p>
                             </div>
                           </div>
