@@ -18,6 +18,13 @@ const BlogLayout = () => {
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
   };
+  const [imageError, setImageError] = useState(false);
+  const handleImageError = (
+    e: React.SyntheticEvent<HTMLImageElement, Event>,
+    setImageError: React.Dispatch<React.SetStateAction<boolean>>
+  ) => {
+    setImageError(true);
+  };
 
   return (
     <div className="max-w-screen-xl mx-auto">
@@ -59,6 +66,9 @@ const BlogLayout = () => {
           {/* post cards */}
           <div className="w-full lg:w-2/3">
             {data?.pageData?.map((news: INews) => {
+              const imageSrc = imageError
+                ? "/brand_image.png" // Fallback image in the public folder
+                : news?.image;
               return (
                 <div key={news?._id}>
                   <a
@@ -67,15 +77,37 @@ const BlogLayout = () => {
                   >
                     <div
                       className="h-48 lg:w-48 flex-none bg-top text-center overflow-hidden opacity-75"
-                      style={{
-                        backgroundImage: `${
-                          news?.image
-                            ? `url(${news.image})`
-                            : `url('/brand_image.png')`
-                        }`,
-                      }}
+                      //   style={{
+                      //     backgroundImage: `${
+                      //       news?.image
+                      //         ? `url(${news.image})`
+                      //         : `url('/brand_image.png')`
+                      //     }`,
+                      //   }}
                       title="deit is very important"
-                    ></div>
+                    >
+                      {!news?.image ? (
+                        <>
+                          <Image
+                            src="/brand_image.png"
+                            alt="Eduard Franz"
+                            width={600}
+                            height={400}
+                          />
+                        </>
+                      ) : (
+                        <>
+                          {" "}
+                          <Image
+                            src={imageSrc}
+                            alt={news?.title}
+                            width={600}
+                            height={400}
+                            onError={(e) => handleImageError(e, setImageError)} // Handle image load error
+                          />
+                        </>
+                      )}
+                    </div>
                     <div className="rounded px-4 flex flex-col justify-between leading-normal">
                       <div className="w-full">
                         <div className="mt-3 md:mt-0 dark:text-white text-gray-700 font-bold text-2xl mb-2">
@@ -128,26 +160,24 @@ const BlogLayout = () => {
                 Popular News{" "}
               </h5>
               <ul>
-                {["Nutrition", "Food & Diet", "Workouts", "Immunity"].map(
-                  (topic, index) => (
-                    <li
-                      key={index}
-                      className="px-1 py-4 border-b  hover:border-gray-200 transition duration-300"
+                {[].map((topic, index) => (
+                  <li
+                    key={index}
+                    className="px-1 py-4 border-b  hover:border-gray-200 transition duration-300"
+                  >
+                    <a
+                      href="#"
+                      className="flex items-center dark:text-white text-gray-600 cursor-pointer"
                     >
-                      <a
-                        href="#"
-                        className="flex items-center dark:text-white text-gray-600 cursor-pointer"
-                      >
-                        <span
-                          className={`inline-block h-4 w-4 bg-${
-                            ["green", "indigo", "yellow", "blue"][index]
-                          }-300 mr-3`}
-                        ></span>
-                        {topic}
-                      </a>
-                    </li>
-                  )
-                )}
+                      <span
+                        className={`inline-block h-4 w-4 bg-${
+                          ["green", "indigo", "yellow", "blue"][index]
+                        }-300 mr-3`}
+                      ></span>
+                      {topic}
+                    </a>
+                  </li>
+                ))}
               </ul>
             </div>
           </div>

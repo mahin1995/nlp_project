@@ -25,6 +25,17 @@ const Pagination: React.FC<PaginationProps> = ({
     }
   };
 
+  // Create page ranges (grouped by 10 pages)
+  const pageGroups: number[][] = [];
+  for (let i = 1; i <= totalPages; i += 10) {
+    pageGroups.push(
+      Array.from(
+        { length: Math.min(10, totalPages - i + 1) },
+        (_, index) => i + index
+      )
+    );
+  }
+
   return (
     <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
       <div className="flex flex-1 justify-between sm:hidden">
@@ -56,7 +67,7 @@ const Pagination: React.FC<PaginationProps> = ({
         </div>
         <div>
           <nav
-            className="isolate inline-flex -space-x-px rounded-md shadow-sm"
+            className="isolate inline-flex flex-col space-y-2 -space-x-px rounded-md shadow-sm"
             aria-label="Pagination"
           >
             <button
@@ -64,7 +75,8 @@ const Pagination: React.FC<PaginationProps> = ({
               disabled={currentPage === 1}
               className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-gray-300 ring-inset hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:opacity-50"
             >
-              <span className="sr-only">Previous</span>
+              {/* <span className="sr-only">Previous</span> */}
+              <span className="">Previous</span>
               <svg
                 className="w-5 h-5"
                 viewBox="0 0 20 20"
@@ -78,18 +90,22 @@ const Pagination: React.FC<PaginationProps> = ({
                 />
               </svg>
             </button>
-            {[...Array(totalPages)].map((_, index) => (
-              <button
-                key={index + 1}
-                onClick={() => onPageChange(index + 1)}
-                className={`relative inline-flex items-center px-4 py-2 text-sm font-semibold ${
-                  currentPage === index + 1
-                    ? "bg-indigo-600 text-white"
-                    : "text-gray-900 ring-1 ring-gray-300 hover:bg-gray-50"
-                } focus:z-20`}
-              >
-                {index + 1}
-              </button>
+            {pageGroups.map((group, groupIndex) => (
+              <div key={groupIndex} className="flex space-x-1">
+                {group.map((page) => (
+                  <button
+                    key={page}
+                    onClick={() => onPageChange(page)}
+                    className={`relative inline-flex items-center px-4 py-2 text-sm font-semibold ${
+                      currentPage === page
+                        ? "bg-indigo-600 text-white"
+                        : "text-gray-900 ring-1 ring-gray-300 hover:bg-gray-50"
+                    } focus:z-20`}
+                  >
+                    {page}
+                  </button>
+                ))}
+              </div>
             ))}
             <button
               onClick={handleNext}
@@ -97,6 +113,7 @@ const Pagination: React.FC<PaginationProps> = ({
               className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-gray-300 hover:bg-gray-50 focus:z-20 disabled:opacity-50"
             >
               <span className="sr-only">Next</span>
+              <span className="">Next</span>
               <svg
                 className="w-5 h-5"
                 viewBox="0 0 20 20"
