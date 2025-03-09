@@ -7,6 +7,7 @@ import chatRoute from './routes/chat.routes';
 import newsRoutes from './routes/news.routes';
 
 import { initializeModel } from './services/chatbotv2';
+import { processFeeds } from './utils/rss_parser';
 dotenv.config();
 
 const app = express();
@@ -27,8 +28,10 @@ mongoose
   })
   .catch((err) => console.error('MongoDB connection error:', err));
 // PrecomputeEmbeddingsFN();
-// Routes
+// processFeeds();
 
+
+// Routes
 app.use('/api/news', newsRoutes);
 app.use('/api/chat', chatRoute);
 

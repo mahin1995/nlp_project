@@ -18,6 +18,7 @@ const BlogLayout = () => {
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
   };
+
   return (
     <div className="max-w-screen-xl mx-auto">
       {/* Header */}
@@ -57,60 +58,57 @@ const BlogLayout = () => {
         <div className="block lg:flex lg:space-x-2 px-2 lg:p-0 mt-10 mb-10">
           {/* post cards */}
           <div className="w-full lg:w-2/3">
-            {data?.pageData?.map((news: INews) => (
-              <div key={news?._id}>
-                <a
-                  className="block p-2 bg-gray-100 dark:bg-gray-800 rounded w-full lg:flex mb-10 shadow-2xl"
-                  href={news?.link}
-                >
-                  <div
-                    className="h-48 lg:w-48 flex-none bg-top text-center overflow-hidden opacity-75"
-                    style={{
-                      backgroundImage: "url('/brand_image.png')",
-                    }}
-                    title="deit is very important"
-                  ></div>
-                  <div className="rounded px-4 flex flex-col justify-between leading-normal">
-                    <div className="w-full">
-                      <div className="mt-3 md:mt-0 dark:text-white text-gray-700 font-bold text-2xl mb-2">
-                        {news?.title}
+            {data?.pageData?.map((news: INews) => {
+              return (
+                <div key={news?._id}>
+                  <a
+                    className="block p-2 bg-gray-100 dark:bg-gray-800 rounded w-full lg:flex mb-10 shadow-2xl"
+                    href={news?.link}
+                  >
+                    <div
+                      className="h-48 lg:w-48 flex-none bg-top text-center overflow-hidden opacity-75"
+                      style={{
+                        backgroundImage: `${
+                          news?.image
+                            ? `url(${news.image})`
+                            : `url('/brand_image.png')`
+                        }`,
+                      }}
+                      title="deit is very important"
+                    ></div>
+                    <div className="rounded px-4 flex flex-col justify-between leading-normal">
+                      <div className="w-full">
+                        <div className="mt-3 md:mt-0 dark:text-white text-gray-700 font-bold text-2xl mb-2">
+                          {news?.title}
+                        </div>
+                        <p className="text-gray-700 dark:text-white text-base">
+                          {news?.content}
+                        </p>
                       </div>
-                      <p className="text-gray-700 dark:text-white text-base">
-                        {news?.content}
-                      </p>
-                    </div>
-                    <div className="flex mt-3">
-                      <div className="h-10 w-10 rounded-full mr-2 object-cover">
-                        {news?.image ? (
-                          <Image
-                            src={news?.image}
-                            alt="Eduard Franz"
-                            width={100}
-                            height={100}
-                          />
-                        ) : (
+                      <div className="flex mt-3">
+                        <div className="h-10 w-10 rounded-full mr-2 object-cover">
                           <Image
                             src="/person.png"
                             alt="Eduard Franz"
                             width={100}
                             height={100}
                           />
-                        )}
-                      </div>
+                        </div>
 
-                      <div>
-                        <p className="font-semibold dark:text-white text-gray-700 text-sm capitalize">
-                          {news.author}
-                        </p>
-                        <p className="dark:text-white text-gray-600 text-xs">
-                          {news.publishedAt.toString()}
-                        </p>
+                        <div>
+                          <p className="font-semibold dark:text-white text-gray-700 text-sm capitalize">
+                            {news.author}
+                          </p>
+                          <p className="dark:text-white text-gray-600 text-xs">
+                            {news.publishedAt.toString()}
+                          </p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </a>
-              </div>
-            ))}
+                  </a>
+                </div>
+              );
+            })}
             {isLoading && <div>Loading</div>}
             {isError && <div>Error</div>}
             <Pagination

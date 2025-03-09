@@ -54,6 +54,7 @@ const vectorize = (text: string): tf.Tensor2D => {
   return tf.tensor2d([words.map((word) => (tokenized.includes(word) ? 1 : 0))]);
 };
 
+
 // Predict intent
 export const predictIntent = async (text: string) => {
   if (!model) {

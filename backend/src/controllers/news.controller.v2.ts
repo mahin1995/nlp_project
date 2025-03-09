@@ -31,7 +31,7 @@ export const getRecommendationsV2 = async (req: Request, res: Response) => {
     const recommendations = allNews.map((news) => {
       const similarity = nlpServiceV2.cosineSimilarity(
         promptEmbedding,
-        news.embedding
+        news?.embedding || []
       );
       news.embedding = [];
       return { ...news.toObject(), similarity };

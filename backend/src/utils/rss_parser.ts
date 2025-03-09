@@ -1,5 +1,7 @@
 import axios from 'axios';
 import Parser from 'rss-parser';
+import Category, { ICategory } from '../models/Category';
+import News, { INewsInput } from '../models/News';
 
 // Extended type definitions for custom fields
 interface CustomItem {
@@ -91,21 +93,121 @@ async function parseFeed(url: string) {
 const FEED_URLS = [
   'https://feeds.bbci.co.uk/news/world/rss.xml',
   'https://www.cbsnews.com/latest/rss/main',
+  'https://abcnews.go.com/abcnews/usheadlines',
+  'https://feeds.nbcnews.com/nbcnews/public/world',
+  'https://www.theguardian.com/us-news/rss',
+  'https://rss.nytimes.com/services/xml/rss/nyt/Sports.xml',
+  'https://feeds.foxnews.com/foxnews/sports',
+  'https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml',
+  'https://feeds.arstechnica.com/arstechnica/technology-lab',
 ];
 
 async function processFeeds() {
   for (const url of FEED_URLS) {
     const items = await parseFeed(url);
     console.log(`\nFeed: ${url}`);
-    items.forEach((item, index) => {
-      console.log('My Log item: ', item);
-      console.log(`\nItem ${index + 1}:`);
-      console.log(`Title: ${item.title}`);
-      console.log(`Content: ${item.content}`);
-      console.log(`pubDate: ${item.pubDate}`);
-      console.log(`Image: ${item.image || 'No image found'}`);
+    let newsItemList: INewsInput[] = [];
+    let category: ICategory | null = await Category.findOne({ name: 'latest' });
+    if (!category) {
+      category = await findOrCreateCategory('latest', 'N/A');
+    }
+    if (url == 'https://feeds.bbci.co.uk/news/world/rss.xml') {
+      category = await findOrCreateCategory('world', 'N/A');
+    }
+    if (url == 'https://feeds.nbcnews.com/nbcnews/public/world') {
+      category = await findOrCreateCategory('world', 'N/A');
+    }
+    if (url == 'https://www.theguardian.com/us-news/rss') {
+      category = await findOrCreateCategory('us-news', 'N/A');
+    }
+    if (url == 'https://www.cbsnews.com/latest/rss/main') {
+      category = await findOrCreateCategory('latest', 'N/A');
+    }
+    if (url == 'https://abcnews.go.com/abcnews/usheadlines') {
+      category = await findOrCreateCategory('latest', 'N/A');
+    }
+    if (url == 'https://rss.nytimes.com/services/xml/rss/nyt/Sports.xml') {
+      category = await findOrCreateCategory('Sports', 'N/A');
+    }
+    if (url == 'https://feeds.foxnews.com/foxnews/sports') {
+      category = await findOrCreateCategory('Sports', 'N/A');
+    }
+    if (url == 'https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml') {
+      category = await findOrCreateCategory('Technology', 'N/A');
+    }
+    if (url == 'https://feeds.arstechnica.com/arstechnica/technology-lab') {
+      category = await findOrCreateCategory('Technology', 'N/A');
+    }
+    items.forEach(async (item, index) => {
+      //   console.log('My Log item: ', item);
+      //   console.log(`\nItem ${index + 1}:`);
+      //   console.log(`Title: ${item.title}`);
+      //   console.log(`Content: ${item.content}`);
+      //   console.log(`pubDate: ${item.pubDate}`);
+      //   console.log(`Image: ${item.image || 'No image found'}`);
+      let news: INewsInput = {
+        title: item?.title || '',
+        link: item?.link || '',
+        image: item?.image || null,
+        content: item?.content ? removeHtmlAndLimitText(item.content, 150) : '',
+        publishedAt: item?.pubDate ? new Date(item.pubDate) : null,
+        website: url,
+        embedding: [],
+        category: category,
+      };
+
+      newsItemList.push(news);
     });
+    console.log(' news Item List: ', newsItemList);
+    insertNewsIfNotExists(newsItemList);
   }
 }
+async function insertNewsIfNotExists(newsList: INewsInput[]) {
+  try {
+    const bulkOps = newsList.map((newsItem: INewsInput) => ({
+      updateOne: {
+        filter: { title: newsItem?.title },
+        update: { $setOnInsert: newsItem }, // Insert only if it doesn’t exist
+        upsert: true, // Create if not present
+      },
+    }));
 
-processFeeds();
+    const result = await News.bulkWrite(bulkOps);
+    console.log('Bulk insert result:', result);
+  } catch (err) {
+    console.error('Error inserting news:', err);
+  }
+}
+async function findOrCreateCategory(name: string, description: string) {
+  // ✅ Try to find the category by name
+  let category = await Category.findOne({ name });
+
+  if (!category) {
+    // ✅ If the category doesn't exist, create a new one
+    category = new Category({
+      name,
+      description,
+    });
+
+    await category.save(); // Save the newly created category
+    console.log('New Category Created:', category);
+  } else {
+    console.log('Category Found:', category);
+  }
+
+  return category;
+}
+function removeHtmlAndLimitText(input: string, limit: number): string {
+  // Step 1: Remove HTML tags using regular expression
+  const textWithoutHtml = input.replace(/<[^>]*>/g, '');
+
+  // Step 2: Limit the text length
+  const limitedText =
+    textWithoutHtml.length > limit
+      ? textWithoutHtml.slice(0, limit) + '...'
+      : textWithoutHtml;
+
+  return limitedText;
+}
+// processFeeds();
+export { processFeeds };
