@@ -1,3 +1,1 @@
-# nlp_project
-
 ![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/mahin1995/nlp_project?labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit%20Reviews)
