@@ -1,6 +1,9 @@
 import ThemeProvider from "@/theme/theme-provider";
+import ThemeToggle from "@/theme/theme-toggle";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Image from "next/image";
+import Link from "next/link";
 import "./globals.css";
 import Providers from "./Providers";
 
@@ -29,14 +32,52 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <Providers>{children}</Providers>
-        </ThemeProvider>
+        <div className="max-w-screen-xl mx-auto">
+          {/* Header */}
+          <header className="flex items-center justify-between py-2 border-b">
+            <Link
+              href="/"
+              className="px-2 lg:px-0 uppercase font-bold text-purple-800"
+            >
+              <Image src={"/logo dark.jpg"} width={200} height={200} alt={""} />
+            </Link>
+            <ul className="inline-flex items-center">
+              {[
+                { label: "Home", link: "/" },
+                { label: "Category", link: "/category" },
+                { label: "Login", link: "/" },
+                { label: "Register", link: "/" },
+              ].map((item, index) => (
+                <li
+                  key={index}
+                  className={`px-2 md:px-4 ${
+                    index >= 4 ? "hidden md:block" : ""
+                  }`}
+                >
+                  <Link
+                    href={item?.link}
+                    className={`text-${
+                      index === 0 ? "purple-600" : "gray-500"
+                    } font-semibold hover:text-purple-500`}
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+              <li className={`px-2 md:px-4`}>
+                <ThemeToggle />
+              </li>
+            </ul>
+          </header>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Providers>{children}</Providers>
+          </ThemeProvider>
+        </div>
       </body>
     </html>
   );

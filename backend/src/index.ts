@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import chatRoute from './routes/chat.routes';
 import newsRoutes from './routes/news.routes';
+import categoryRoutes from './routes/category.routes';
 
 import { initializeModel } from './services/chatbotv2';
 import { processFeeds } from './utils/rss_parser';
@@ -34,6 +35,7 @@ mongoose
 // Routes
 app.use('/api/news', newsRoutes);
 app.use('/api/chat', chatRoute);
+app.use('/api/category', categoryRoutes);
 
 initializeModel()
   .then(() => {

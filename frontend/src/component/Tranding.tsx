@@ -1,13 +1,19 @@
+import { CategoryService } from "@/service/category-service";
+import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 
 interface TrendingTag {
   id: string;
-  displayTitle: string;
+  name: string;
 }
 
 const TrendingHead: React.FC = () => {
-  const tranding_itmes: [TrendingTag] = [{ id: "1", displayTitle: "Sprots" }];
-
+  const { data: tranding_itmes } = useQuery({
+    queryKey: ["news"], // Include page and limit in query key
+    queryFn: CategoryService.getAll, // Pass dynamic page and limit
+    // keepPreviousData: true, // Keeps previous data while fetching new data
+  });
+  console.log("My Log tranding_itmes: ", tranding_itmes);
   return (
     <div className="main-container overflow-hidden">
       <div className="grid grid-cols-2 items-center justify-between -mt-1.5 mb-2.5">
@@ -86,12 +92,16 @@ const TrendingHead: React.FC = () => {
               <div className="ml-3">
                 <div className="absolute w-0.5 h-[30px] bg-[#E9E9E9]"></div>
                 <div className="flex whitespace-nowrap max-sm:flex-nowrap max-sm:truncate items-center justify-start gap-2 list-none ml-3 w-full">
-                  {tranding_itmes?.length > 0 &&
-                    tranding_itmes.map((menu: TrendingTag) => (
-                      <Link href={"/"} legacyBehavior key={menu.id}>
+                  {tranding_itmes?.data?.length > 0 &&
+                    tranding_itmes?.data?.map((menu: TrendingTag) => (
+                      <Link
+                        href={"/category/" + menu?.name}
+                        legacyBehavior
+                        key={menu.id}
+                      >
                         <a className="bg-[#e8e8e9] dark:bg-slate-500 rounded-[50px] hover:drop-shadow-md">
                           <p className="text-[.9rem] outline-none px-3 cursor-pointer hover:text-[#D12026] dark:hover:text-[#d8d7d7]">
-                            {menu.displayTitle}
+                            {menu?.name}
                           </p>
                         </a>
                       </Link>
