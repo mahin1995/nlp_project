@@ -1,6 +1,7 @@
 import * as tf from '@tensorflow/tfjs-node';
 import * as fs from 'fs/promises';
 import natural from 'natural';
+import path from 'path';
 
 // Define types for intent structure
 interface Intent {
@@ -25,8 +26,9 @@ const loadData = async (): Promise<{
 }> => {
   try {
     // Read and parse intents JSON file
+    const filePath = path.join(__dirname, '../utils/newsIntents.json');
     const data: string = await fs.readFile(
-      '/home/mahin/Personal/Archive/node/NLP_project/backend/src/utils/newsIntents.json',
+      filePath,
       'utf-8'
     );
     // console.log('My Log data: ',data)

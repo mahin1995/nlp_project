@@ -2,6 +2,7 @@ import * as tf from '@tensorflow/tfjs-node';
 import * as fs from 'fs/promises';
 import natural from 'natural';
 import { getPageDataByCategory } from './NewsService';
+import path from 'path';
 
 // Define intent structure
 interface Intent {
@@ -25,8 +26,10 @@ let intents: IntentData;
 export const initializeModel = async () => {
   try {
     console.log('Loading intents...');
+        const filePath = path.join(__dirname, '../utils/newsIntents.json');
+    
     const data = await fs.readFile(
-      '/home/mahin/Personal/Archive/node/NLP_project/backend/src/utils/newsIntents.json',
+     filePath,
       'utf-8'
     );
     intents = JSON.parse(data);
