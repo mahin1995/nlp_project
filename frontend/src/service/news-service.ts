@@ -32,4 +32,22 @@ export const NewsService = {
       };
     }
   },
+  getAllNewsByCategory: async (page = 1, limit = 10, category = "") => {
+    const { data } = await api.get(
+      url + `/all-by-category?page=${page}&limit=${limit}&category=${category}`
+    );
+    if (data) {
+      return {
+        pageData: data?.data,
+        currentPage: data.currentPage,
+        totalPages: data.totalPages,
+        totalItems: data.totalItems,
+        status: RESPONSE_STATUS.SUCCESS,
+      };
+    } else {
+      return {
+        status: RESPONSE_STATUS.FAILED,
+      };
+    }
+  },
 };

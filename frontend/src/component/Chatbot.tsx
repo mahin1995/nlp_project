@@ -1,13 +1,27 @@
 "use client";
 import { ChatService } from "@/service/chat-service";
+import { INews } from "@/service/news-service";
 import { useMutation } from "@tanstack/react-query";
 import { ChangeEvent, useState } from "react";
+import CardNews from "./CardNews";
 
 const Chatbot = () => {
   const [isChatVisible, setIsChatVisible] = useState(false); // State to manage visibility
   const [prompt, setPrompt] = useState("");
   const [messageHistory, setMessageHistory] = useState<
-    { host: string; message: string }[]
+    {
+      host: string;
+      message: {
+        messageType: string;
+        message: string;
+        news?: {
+          data: INews[];
+          currentPage?: 0;
+          totalPages?: 0;
+          totalItems?: 0;
+        };
+      };
+    }[]
   >([]);
   const toggleChatVisibility = () => {
     setIsChatVisible(!isChatVisible); // Toggle visibility
@@ -29,15 +43,26 @@ const Chatbot = () => {
   const handaleSubmit = (e: { preventDefault: () => void }) => {
     e.preventDefault();
     mutation.mutate(prompt);
-    handleMesaageHistory("You", prompt);
+    // handleMesaageHistory("You", prompt);
+    handleMesaageHistory("You", {
+      messageType: "PROMPT",
+      message: prompt,
+      news: { data: [] },
+    });
     setPrompt("");
   };
 
-  const handleMesaageHistory = (host: string, message: string) => {
+  const handleMesaageHistory = (
+    host: string,
+    message: { messageType: string; message: string; news: { data: INews[] } }
+  ) => {
     setMessageHistory((prev) => {
       return [...prev, { host: host, message: message }];
     });
   };
+  {
+    console.log("My Log data: ", messageHistory);
+  }
   return (
     <>
       {/* Floating Button */}
@@ -74,7 +99,7 @@ const Chatbot = () => {
           style={{
             boxShadow: "0 0 #0000, 0 0 #0000, 0 1px 2px 0 rgb(0 0 0 / 0.05)",
           }}
-          className="fixed bottom-[calc(4rem+1.5rem)] right-0 mr-4 bg-white p-6 rounded-lg border border-[#e5e7eb] w-[440px] h-[634px] "
+          className="fixed bottom-[calc(4rem+1.5rem)] right-0 mr-4 bg-white dark:bg-black p-6 rounded-lg border border-[#e5e7eb] w-[440px] h-[634px] "
         >
           {/* Heading */}
           <div className="flex flex-col space-y-1.5 pb-6">
@@ -92,9 +117,9 @@ const Chatbot = () => {
                   {data.host == "You" && (
                     <>
                       {/* User Chat Message */}
-                      <div className="flex gap-3 my-4 text-gray-600 text-sm flex-1">
+                      <div className="flex gap-3 my-4 text-gray-600 dark:text-white text-sm flex-1">
                         <span className="relative flex shrink-0 overflow-hidden rounded-full w-8 h-8">
-                          <div className="rounded-full bg-gray-100 border p-1">
+                          <div className="rounded-full bg-gray-100  border p-1">
                             <svg
                               stroke="none"
                               fill="black"
@@ -109,10 +134,12 @@ const Chatbot = () => {
                           </div>
                         </span>
                         <p className="leading-relaxed">
-                          <span className="block font-bold text-gray-700">
+                          <span className="block font-bold text-gray-700 dark:text-white">
                             You{" "}
                           </span>
-                          {data.message}
+
+                          {data.message.messageType == "PROMPT" &&
+                            data.message.message}
                         </p>
                       </div>
                     </>
@@ -121,7 +148,7 @@ const Chatbot = () => {
                   {data.host == "AI" && (
                     <>
                       {/* AI Chat Message */}
-                      <div className="flex gap-3 my-4 text-gray-600 text-sm flex-1">
+                      <div className="flex gap-3 my-4 text-gray-600 dark:text-white text-sm flex-1">
                         <span className="relative flex shrink-0 overflow-hidden rounded-full w-8 h-8">
                           <div className="rounded-full bg-gray-100 border p-1">
                             <svg
@@ -143,10 +170,18 @@ const Chatbot = () => {
                           </div>
                         </span>
                         <p className="leading-relaxed">
-                          <span className="block font-bold text-gray-700">
+                          <span className="block font-bold text-gray-700 dark:text-white">
                             AI{" "}
                           </span>
-                          {data.message}
+
+                          {data.message.messageType == "PROMPT" &&
+                            data.message.message}
+                          {data.message.messageType == "NEWS" &&
+                            data.message.news &&
+                            data.message?.news?.data && (
+                              <CardNews newsList={data.message?.news?.data} />
+                              //   <></>
+                            )}
                         </p>
                       </div>
                     </>
@@ -163,13 +198,13 @@ const Chatbot = () => {
               onSubmit={handaleSubmit}
             >
               <input
-                className="flex h-10 w-full rounded-md border border-[#e5e7eb] px-3 py-2 text-sm placeholder-[#6b7280] focus:outline-none focus:ring-2 focus:ring-[#9ca3af] disabled:cursor-not-allowed disabled:opacity-50 text-[#030712] focus-visible:ring-offset-2"
+                className="flex h-10 w-full rounded-md border border-[#e5e7eb] px-3 py-2 text-sm placeholder-[#6b7280] focus:outline-none focus:ring-2 focus:ring-[#9ca3af] disabled:cursor-not-allowed disabled:opacity-50 text-[#030712] dark:text-white focus-visible:ring-offset-2"
                 placeholder="Type your message"
                 onChange={handleInput}
                 value={prompt}
               />
               <button
-                className="inline-flex items-center justify-center rounded-md text-sm font-medium text-[#f9fafb] disabled:pointer-events-none disabled:opacity-50 bg-black hover:bg-[#111827E6] h-10 px-4 py-2"
+                className="inline-flex items-center justify-center rounded-md text-sm font-medium text-[#f9fafb]  disabled:pointer-events-none disabled:opacity-50 bg-black hover:bg-[#111827E6] h-10 px-4 py-2"
                 type="submit"
               >
                 Send

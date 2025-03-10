@@ -1,12 +1,14 @@
 import * as tf from '@tensorflow/tfjs-node';
 import * as fs from 'fs/promises';
 import natural from 'natural';
+import { getPageDataByCategory } from './NewsService';
 
 // Define intent structure
 interface Intent {
   tag: string;
   patterns: string[];
   responses: string[];
+  type: string;
 }
 
 interface IntentData {
@@ -54,20 +56,37 @@ const vectorize = (text: string): tf.Tensor2D => {
   return tf.tensor2d([words.map((word) => (tokenized.includes(word) ? 1 : 0))]);
 };
 
-
 // Predict intent
 export const predictIntent = async (text: string) => {
   if (!model) {
     throw new Error('Model not loaded.');
   }
 
-  const prediction = model.predict(vectorize(text)) as tf.Tensor;
+  const inputTensor = vectorize(text);
+  const prediction = model.predict(inputTensor) as tf.Tensor;
+  const scores = await prediction.data(); // Get confidence scores
   const intentIndex = prediction.argMax(1).dataSync()[0];
 
   const intent = intents.intents[intentIndex];
-  console.log('My Log intent: ', intent);
-  const response =
-    intent.responses[Math.floor(Math.random() * intent.responses.length)];
-
+  //   console.log('My Log intent: ', scores);
+  //   console.log('My Log intent: ', intent);
+  let response = null;
+  if (intent.type == 'CATEGORY') {
+    const newsList = await getPageDataByCategory(1, 10, intent.tag);
+    response = { messageType: 'NEWS', news: newsList };
+  } else {
+    if (intent?.responses) {
+      let message =
+        intent?.responses[Math.floor(Math.random() * intent.responses.length)];
+      if (message) {
+        response = { messageType: 'PROMPT', message };
+      }
+    } else {
+      response = {
+        messageType: 'PROMPT',
+        message: 'Somthing Wrong please try again!!',
+      };
+    }
+  }
   return response;
 };

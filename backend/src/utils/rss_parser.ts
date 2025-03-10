@@ -106,6 +106,7 @@ async function processFeeds() {
   for (const url of FEED_URLS) {
     const items = await parseFeed(url);
     console.log(`\nFeed: ${url}`);
+    let website = 'N/A';
     let newsItemList: INewsInput[] = [];
     let category: ICategory | null = await Category.findOne({ name: 'latest' });
     if (!category) {
@@ -113,30 +114,39 @@ async function processFeeds() {
     }
     if (url == 'https://feeds.bbci.co.uk/news/world/rss.xml') {
       category = await findOrCreateCategory('world', 'N/A');
+      website = 'BBC NEWS';
     }
     if (url == 'https://feeds.nbcnews.com/nbcnews/public/world') {
       category = await findOrCreateCategory('world', 'N/A');
+      website = 'NBC NEWS';
     }
     if (url == 'https://www.theguardian.com/us-news/rss') {
       category = await findOrCreateCategory('us-news', 'N/A');
+      website = 'THE GUARDIAN NEWS';
     }
     if (url == 'https://www.cbsnews.com/latest/rss/main') {
       category = await findOrCreateCategory('latest', 'N/A');
+      website = 'CBS NEWS';
     }
     if (url == 'https://abcnews.go.com/abcnews/usheadlines') {
       category = await findOrCreateCategory('latest', 'N/A');
+      website = 'ABC NEWS';
     }
     if (url == 'https://rss.nytimes.com/services/xml/rss/nyt/Sports.xml') {
       category = await findOrCreateCategory('Sports', 'N/A');
+      website = 'THE NEW YORK TIMES';
     }
     if (url == 'https://feeds.foxnews.com/foxnews/sports') {
       category = await findOrCreateCategory('Sports', 'N/A');
+      website = 'FOX NEWS';
     }
     if (url == 'https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml') {
       category = await findOrCreateCategory('Technology', 'N/A');
+      website = 'THE NEW YORK TIMES';
     }
     if (url == 'https://feeds.arstechnica.com/arstechnica/technology-lab') {
       category = await findOrCreateCategory('Technology', 'N/A');
+      website = 'ARS TECHNICA NEWS';
     }
     items.forEach(async (item, index) => {
       //   console.log('My Log item: ', item);
@@ -151,7 +161,7 @@ async function processFeeds() {
         image: item?.image || null,
         content: item?.content ? removeHtmlAndLimitText(item.content, 150) : '',
         publishedAt: item?.pubDate ? new Date(item.pubDate) : null,
-        website: url,
+        website: website,
         embedding: [],
         category: category,
       };

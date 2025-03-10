@@ -131,7 +131,7 @@ const BlogLayout = () => {
 
                             <div>
                               <p className="font-semibold dark:text-white text-gray-700 text-sm capitalize">
-                                {news.author || "Unknown"}
+                                {news.website || "Unknown"}
                               </p>
                               <p className="dark:text-white text-gray-600 text-xs">
                                 {formatDate(news.publishedAt.toString())}

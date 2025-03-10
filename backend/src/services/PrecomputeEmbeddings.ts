@@ -6,10 +6,10 @@ const nlpService = new NlpServiceV2();
 async function PrecomputeEmbeddingsFN() {
   await nlpService.initialize();
 
-  const allNews = await News.find({});
+  const allNews = await News.find({}).populate('category');
   for (const news of allNews) {
     const embedding = await nlpService.getEmbedding(
-      `${news?.title?.toLowerCase()} ${news?.content?.toLowerCase()} ${news?.category?.toLowerCase()}`
+      `${news?.title?.toLowerCase()} ${news?.content?.toLowerCase()}`
     );
     news.embedding = embedding;
     await news.save();

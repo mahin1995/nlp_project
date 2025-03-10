@@ -80,11 +80,11 @@ const trainModel = async () => {
     model.add(
       tf.layers.dense({
         inputShape: [words.length],
-        units: 16,
+        units: 128,
         activation: 'relu',
       })
     );
-    model.add(tf.layers.dense({ units: 16, activation: 'relu' }));
+    model.add(tf.layers.dense({ units: 64, activation: 'relu' }));
 
     // Output layer
     model.add(tf.layers.dense({ units: labels.length, activation: 'softmax' }));
@@ -98,7 +98,11 @@ const trainModel = async () => {
 
     // Train the model
     console.log('Training model...');
-    await model.fit(xTrain, yTrain, { epochs: 100 });
+    await model.fit(xTrain, yTrain, {
+      epochs: 100,
+      batchSize: 32,
+      validationSplit: 0.2,
+    });
 
     console.log('Training complete. Saving model...');
     await model.save('file://./model');

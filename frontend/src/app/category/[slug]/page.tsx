@@ -4,10 +4,12 @@ import { usePathname } from "next/navigation";
 
 function Page() {
   const pathname = usePathname();
-  const slug = pathname.split("/").pop();
+  const slug = pathname.split("/").pop() || "";
   return (
     <>
-      <div><CategoryDetails slug={slug}/></div>
+      <div>
+        <CategoryDetails slug={slug} />
+      </div>
     </>
   );
 }

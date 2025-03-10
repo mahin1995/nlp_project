@@ -85,3 +85,10 @@ body {
   -ms-overflow-style: auto; /* IE and Edge */
   scrollbar-width: auto; /* Firefox */
 }
+.truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  

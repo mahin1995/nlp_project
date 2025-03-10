@@ -3,6 +3,7 @@
 import { INews, NewsService } from "@/service/news-service";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 import Pagination from "./Pagination";
 
@@ -11,7 +12,7 @@ function CategoryDetails({ slug }: { slug: string }) {
   const limit = 4; // Show only 5 news per page
   const { data, isLoading } = useQuery({
     queryKey: ["news", page, limit],
-    queryFn: () => NewsService.getAllNews(page, limit),
+    queryFn: () => NewsService.getAllNewsByCategory(page, limit, slug),
   });
 
   const handlePageChange = (newPage: number) => {
@@ -56,47 +57,49 @@ function CategoryDetails({ slug }: { slug: string }) {
 
           {!isLoading && data && (
             <>
-              <div className="space-y-6 flex flex-row">
+              <div className="space-y-6 flex flex-row gap-2 mx-auto">
                 {data?.pageData?.map((news: INews) => (
-                  <div
-                    key={news?._id}
-                    className="max-w-sm  text-white rounded-xl overflow-hidden shadow-lg"
-                  >
-                    <div className="relative w-full h-48">
-                      <Image
-                        src={news?.image || "/brand_image.png"}
-                        alt={news?.title}
-                        width={600}
-                        height={400}
-                        className="object-cover rounded-lg"
-                      />
-                    </div>
-                    <div className="p-6">
-                      <h2 className="text-lg font-bold text-gray-800 dark:text-white">
-                        {news?.title}
-                      </h2>
-                      <p className="text-gray-600 dark:text-white">
-                        {news?.content}
-                      </p>
-                      <div className="flex items-center mt-2">
+                  <Link key={news._id} href={news.link}>
+                    <div
+                      key={news?._id}
+                      className="max-w-sm  text-white rounded-xl overflow-hidden shadow-lg"
+                    >
+                      <div className="relative w-full h-48">
                         <Image
-                          src="/person.png"
-                          alt="Author"
-                          width={30}
-                          height={30}
-                          className="rounded-full"
+                          src={news?.image || "/brand_image.png"}
+                          alt={news?.title}
+                          width={600}
+                          height={400}
+                          className="object-cover rounded-lg"
                         />
-                        <div className="ml-2">
-                          <p className="text-sm font-semibold text-gray-700 dark:text-white">
-                            {news?.author || "Unknown"}
-                          </p>
-                          <p className="text-xs text-gray-600 dark:text-white">
-                            {formatDate(news.publishedAt.toString())}
-                          </p>
+                      </div>
+                      <div className="p-6">
+                        <h2 className="text-lg font-bold text-gray-800 dark:text-white">
+                          {news?.title}
+                        </h2>
+                        <p className="text-gray-600 dark:text-white">
+                          {news?.content}
+                        </p>
+                        <div className="flex items-center mt-2">
+                          <Image
+                            src="/person.png"
+                            alt="Author"
+                            width={30}
+                            height={30}
+                            className="rounded-full"
+                          />
+                          <div className="ml-2">
+                            <p className="text-sm font-semibold text-gray-700 dark:text-white">
+                              {news?.author || "Unknown"}
+                            </p>
+                            <p className="text-xs text-gray-600 dark:text-white">
+                              {formatDate(news.publishedAt.toString())}
+                            </p>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
 
