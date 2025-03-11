@@ -9,15 +9,15 @@ interface TrendingTag {
 
 const TrendingHead: React.FC = () => {
   const { data: tranding_itmes } = useQuery({
-    queryKey: ["news"], // Include page and limit in query key
+    queryKey: ["category"], // Include page and limit in query key
     queryFn: CategoryService.getAll, // Pass dynamic page and limit
     // keepPreviousData: true, // Keeps previous data while fetching new data
   });
   console.log("My Log tranding_itmes: ", tranding_itmes);
   return (
-    <div className="main-container overflow-hidden">
+    <div className="main-container overflow-hidden mt-4">
       <div className="grid grid-cols-2 items-center justify-between -mt-1.5 mb-2.5">
-        <div className="col-span-2 flex flex-wrap max-sm:flex-nowrap justify-start max-sm:hidden">
+        <div className="col-span-2 flex flex-wrap max-sm:flex-nowrap justify-start ">
           <div className="w-full flex items-center gap-x-5">
             <div className="flex max-sm:flex-nowrap items-center">
               <div className="mt-1">

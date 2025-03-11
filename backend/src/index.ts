@@ -3,10 +3,11 @@ import express from 'express';
 import mongoose from 'mongoose';
 
 import cors from 'cors';
+import categoryRoutes from './routes/category.routes';
 import chatRoute from './routes/chat.routes';
 import newsRoutes from './routes/news.routes';
-import categoryRoutes from './routes/category.routes';
 
+import { CronJob } from 'cron';
 import { initializeModel } from './services/chatbotv2';
 import { processFeeds } from './utils/rss_parser';
 dotenv.config();
@@ -31,7 +32,6 @@ mongoose
 // PrecomputeEmbeddingsFN();
 // processFeeds();
 
-
 // Routes
 app.use('/api/news', newsRoutes);
 app.use('/api/chat', chatRoute);
@@ -48,3 +48,15 @@ initializeModel()
     console.error('Failed to initialize:', err);
     process.exit(1); // Stop server if initialization fails
   });
+
+// const job = CronJob.from({
+//   cronTime: '* 5 * * * *',
+//   onTick: function () {
+//     processFeeds();
+//     console.log('Corn job run');
+//   },
+//   start: true,
+//   timeZone: 'Asia/Dhaka',
+// });
+// job.start();
+// processFeeds();

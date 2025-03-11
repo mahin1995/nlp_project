@@ -1,6 +1,7 @@
 "use client";
 
 import { INews, NewsService } from "@/service/news-service";
+import { truncateText } from "@/utils/utils";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,7 +12,7 @@ function CategoryDetails({ slug }: { slug: string }) {
   const [page, setPage] = useState(1);
   const limit = 4; // Show only 5 news per page
   const { data, isLoading } = useQuery({
-    queryKey: ["news", page, limit],
+    queryKey: ["news_category", page, limit],
     queryFn: () => NewsService.getAllNewsByCategory(page, limit, slug),
   });
 
@@ -70,15 +71,16 @@ function CategoryDetails({ slug }: { slug: string }) {
                           alt={news?.title}
                           width={600}
                           height={400}
-                          className="object-cover rounded-lg"
+                          objectFit="cover"
+                          className="rounded-lg"
                         />
                       </div>
                       <div className="p-6">
                         <h2 className="text-lg font-bold text-gray-800 dark:text-white">
-                          {news?.title}
+                          {truncateText(news?.title, 100)}
                         </h2>
                         <p className="text-gray-600 dark:text-white">
-                          {news?.content}
+                          {truncateText(news?.content, 100)}
                         </p>
                         <div className="flex items-center mt-2">
                           <Image

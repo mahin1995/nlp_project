@@ -12,6 +12,7 @@ export interface INews extends Document {
   embedding: number[];
   author: string;
   website: string;
+  categoryDetails?: { name: string };
 }
 
 const url = "api/news";
@@ -42,6 +43,20 @@ export const NewsService = {
         currentPage: data.currentPage,
         totalPages: data.totalPages,
         totalItems: data.totalItems,
+        status: RESPONSE_STATUS.SUCCESS,
+      };
+    } else {
+      return {
+        status: RESPONSE_STATUS.FAILED,
+      };
+    }
+  },
+  getHomePageData: async () => {
+    const { data } = await api.get(url + `/home`);
+    console.log("My Log response: ", data);
+    if (data) {
+      return {
+        data: data,
         status: RESPONSE_STATUS.SUCCESS,
       };
     } else {

@@ -1,11 +1,10 @@
-import BlogLayout from "@/component/BlogLayout";
-import Chatbot from "@/component/Chatbot";
+import HomeComponent from "@/component/HomeComponent";
+
 
 export default function Home() {
   return (
-    <>
-      <BlogLayout />
-      <Chatbot />
-    </>
+    <HomeComponent/>
   );
+
+ 
 }

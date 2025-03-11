@@ -62,3 +62,43 @@ export const getPageDataByCategory = async (
     return { data: [], currentPage: page, totalPages: 0, totalItems: 0 };
   }
 };
+
+export const getHomeDataCategoryWish = async () => {
+  try {
+    try {
+      const newsByCategory = await News.aggregate([
+        {
+          $lookup: {
+            from: 'categories', // Make sure this matches your collection name
+            localField: 'category',
+            foreignField: '_id',
+            as: 'categoryDetails',
+          },
+        },
+        { $unwind: '$categoryDetails' },
+        {
+          $group: {
+            _id: '$categoryDetails._id',
+            categoryName: { $first: '$categoryDetails.name' },
+            news: { $push: '$$ROOT' },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            categoryName: 1,
+            news: { $slice: ['$news', 10] }, // Limit to 6 news per category
+          },
+        },
+      ]);
+
+      return newsByCategory;
+    } catch (error) {
+      console.error('Error fetching news by category:', error);
+      return [];
+    }
+  } catch (error) {
+    console.error('Error fetching paginated news:', error);
+    return {};
+  }
+};

@@ -69,7 +69,7 @@ async function parseFeed(url: string) {
           content: item.content,
           pubDate: item.pubDate,
         };
-
+        // console.log('My Log item.image: ',item.media)
         // Check different possible image locations with proper object access
         if (item.enclosure?.$?.type?.startsWith('image/')) {
           result.image = item.enclosure.$.url;
@@ -92,7 +92,7 @@ async function parseFeed(url: string) {
 
 const FEED_URLS = [
   'https://feeds.bbci.co.uk/news/world/rss.xml',
-  'https://www.cbsnews.com/latest/rss/main',
+  'https://www.thedailystar.net/frontpage/rss.xml',
   'https://abcnews.go.com/abcnews/usheadlines',
   'https://feeds.nbcnews.com/nbcnews/public/world',
   'https://www.theguardian.com/us-news/rss',
@@ -100,6 +100,10 @@ const FEED_URLS = [
   'https://feeds.foxnews.com/foxnews/sports',
   'https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml',
   'https://feeds.arstechnica.com/arstechnica/technology-lab',
+
+  //bd news papaer
+  'https://www.thedailystar.net/frontpage/rss.xml',
+  'https://www.bd24live.com/feed',
 ];
 
 async function processFeeds() {
@@ -124,14 +128,22 @@ async function processFeeds() {
       category = await findOrCreateCategory('us-news', 'N/A');
       website = 'THE GUARDIAN NEWS';
     }
-    if (url == 'https://www.cbsnews.com/latest/rss/main') {
-      category = await findOrCreateCategory('latest', 'N/A');
-      website = 'CBS NEWS';
+    if (url == 'https://www.thedailystar.net/frontpage/rss.xml') {
+      category = await findOrCreateCategory('Bangladesh', 'N/A');
+      website = 'The Daily Star';
     }
-    if (url == 'https://abcnews.go.com/abcnews/usheadlines') {
-      category = await findOrCreateCategory('latest', 'N/A');
-      website = 'ABC NEWS';
+    if (url == 'https://www.bd24live.com/feed') {
+      category = await findOrCreateCategory('Bangladesh', 'N/A');
+      website = 'BD 24 Live';
     }
+    // if (url == 'https://www.cbsnews.com/latest/rss/main') {
+    //   category = await findOrCreateCategory('latest', 'N/A');
+    //   website = 'CBS NEWS';
+    // }
+    // if (url == 'https://abcnews.go.com/abcnews/usheadlines') {
+    //   category = await findOrCreateCategory('latest', 'N/A');
+    //   website = 'ABC NEWS';
+    // }
     if (url == 'https://rss.nytimes.com/services/xml/rss/nyt/Sports.xml') {
       category = await findOrCreateCategory('Sports', 'N/A');
       website = 'THE NEW YORK TIMES';
@@ -149,7 +161,6 @@ async function processFeeds() {
       website = 'ARS TECHNICA NEWS';
     }
     items.forEach(async (item, index) => {
-      //   console.log('My Log item: ', item);
       //   console.log(`\nItem ${index + 1}:`);
       //   console.log(`Title: ${item.title}`);
       //   console.log(`Content: ${item.content}`);
@@ -168,22 +179,22 @@ async function processFeeds() {
 
       newsItemList.push(news);
     });
-    console.log(' news Item List: ', newsItemList);
     insertNewsIfNotExists(newsItemList);
+    console.log('Finish dump');
   }
 }
 async function insertNewsIfNotExists(newsList: INewsInput[]) {
   try {
     const bulkOps = newsList.map((newsItem: INewsInput) => ({
       updateOne: {
-        filter: { title: newsItem?.title },
+        filter: { title: newsItem?.title, link: newsItem?.link },
         update: { $setOnInsert: newsItem }, // Insert only if it doesn’t exist
         upsert: true, // Create if not present
       },
     }));
 
     const result = await News.bulkWrite(bulkOps);
-    console.log('Bulk insert result:', result);
+    // console.log('Bulk insert result:', result);
   } catch (err) {
     console.error('Error inserting news:', err);
   }
@@ -200,7 +211,7 @@ async function findOrCreateCategory(name: string, description: string) {
     });
 
     await category.save(); // Save the newly created category
-    console.log('New Category Created:', category);
+    // console.log('New Category Created:', category);
   } else {
     console.log('Category Found:', category);
   }
