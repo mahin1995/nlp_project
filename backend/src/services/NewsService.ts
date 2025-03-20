@@ -77,6 +77,9 @@ export const getHomeDataCategoryWish = async () => {
         },
         { $unwind: '$categoryDetails' },
         {
+          $sort: { publishedAt: -1 }, // Sort news by publishAt in descending order
+        },
+        {
           $group: {
             _id: '$categoryDetails._id',
             categoryName: { $first: '$categoryDetails.name' },
@@ -87,11 +90,11 @@ export const getHomeDataCategoryWish = async () => {
           $project: {
             _id: 0,
             categoryName: 1,
-            news: { $slice: ['$news', 10] }, // Limit to 6 news per category
+            news: { $slice: ['$news', 10] }, // Limit to 10 news per category
           },
         },
       ]);
-
+      
       return newsByCategory;
     } catch (error) {
       console.error('Error fetching news by category:', error);

@@ -9,6 +9,9 @@ import { NewsService } from "@/service/news-service";
 import { HomeResponse } from "@/utils/utils";
 import { useQuery } from "@tanstack/react-query";
 import SportNews from "./section/SportNews";
+import AuthenticationModal from "./AuthenticationModal";
+import { useModal } from "@/app/ModalProvider";
+import { useAuth } from "@/app/AuthContextProviders";
 export default function HomeComponent() {
   const { data: homeData } = useQuery({
     queryKey: ["home"], // Include page and limit in query key
@@ -31,8 +34,11 @@ export default function HomeComponent() {
   const usNews = homeData?.data.find(
     (a: HomeResponse) => a.categoryName == "us-news"
   );
+  let {isModalOpen,closeModal,modalType}=useModal()
+
   return (
     <>
+    <AuthenticationModal isOpen={isModalOpen} onClose={closeModal} modalType={modalType} />
       {/* <BlogLayout /> */}
       <TrendingHead />
       <div className="mt-1">

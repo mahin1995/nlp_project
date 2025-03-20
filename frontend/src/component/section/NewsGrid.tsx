@@ -99,7 +99,7 @@ const NewsGrid = ({ news }: { news: HomeResponse }) => {
                           {news && news?.categoryName && news?.categoryName}
                         </Link>
                         <Link
-                          href="#"
+                          href={a.link}
                           className="block text-gray-900 dark:text-white font-bold text-2xl mb-2 hover:text-indigo-600 transition duration-500 ease-in-out"
                         >
                           {a && a.title}

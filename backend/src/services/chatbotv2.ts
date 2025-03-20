@@ -1,7 +1,7 @@
 import * as tf from '@tensorflow/tfjs-node';
 import * as fs from 'fs/promises';
 import natural from 'natural';
-import { getPageDataByCategory } from './NewsService';
+import { getPageDataByCategory, getPaginatedNews } from './NewsService';
 import path from 'path';
 
 // Define intent structure
@@ -77,7 +77,12 @@ export const predictIntent = async (text: string) => {
   if (intent.type == 'CATEGORY') {
     const newsList = await getPageDataByCategory(1, 10, intent.tag);
     response = { messageType: 'NEWS', news: newsList };
-  } else {
+  }
+  if (intent.type == 'NEWS') {
+    const newsList = await getPaginatedNews(1, 10);
+    response = { messageType: 'NEWS', news: newsList };
+  }
+   else {
     if (intent?.responses) {
       let message =
         intent?.responses[Math.floor(Math.random() * intent.responses.length)];
