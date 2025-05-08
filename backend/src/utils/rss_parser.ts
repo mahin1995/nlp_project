@@ -194,7 +194,7 @@ async function insertNewsIfNotExists(newsList: INewsInput[]) {
     }));
 
     const result = await News.bulkWrite(bulkOps);
-    // console.log('Bulk insert result:', result);
+    console.log('Bulk insert result:', result);
   } catch (err) {
     console.error('Error inserting news:', err);
   }

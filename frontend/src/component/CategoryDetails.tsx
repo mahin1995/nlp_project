@@ -69,10 +69,11 @@ function CategoryDetails({ slug }: { slug: string }) {
                         <Image
                           src={news?.image || "/brand_image.png"}
                           alt={news?.title}
-                          width={600}
-                          height={400}
-                          objectFit="cover"
-                          className="rounded-lg"
+                          //   width={600}
+                          //   height={400}
+                          //   objectFit="cover"
+                          fill
+                          className="rounded-lg object-cover"
                         />
                       </div>
                       <div className="p-6">

@@ -4,10 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import SideBar from "./SideBar";
 
-
-
-
-
 const NewsGrid = ({ news }: { news: HomeResponse }) => {
   console.log("My Log news: ", news);
   return (
@@ -45,7 +41,7 @@ const NewsGrid = ({ news }: { news: HomeResponse }) => {
                     <div className="mt-3 text-center dark:bg-black bg-white rounded-b lg:rounded-b-none lg:rounded-r flex flex-col justify-between leading-normal">
                       <div>
                         <Link
-                          href={"/category/" + news?.categoryName}
+                          href={"/news-page/category/" + news?.categoryName}
                           className="text-xs text-indigo-600 uppercase dark:text-white font-medium hover:text-gray-900 transition duration-500 ease-in-out"
                         >
                           {news && news?.categoryName && news?.categoryName}
@@ -93,7 +89,7 @@ const NewsGrid = ({ news }: { news: HomeResponse }) => {
                     <div className="mt-3 text-center dark:text-white dark:bg-black bg-white rounded-b lg:rounded-b-none lg:rounded-r flex flex-col justify-between leading-normal">
                       <div>
                         <Link
-                          href={"/category/" + news?.categoryName}
+                          href={"/news-page/category/" + news?.categoryName}
                           className="text-xs dark:text-white text-indigo-600 uppercase font-medium hover:text-gray-900 transition duration-500 ease-in-out"
                         >
                           {news && news?.categoryName && news?.categoryName}

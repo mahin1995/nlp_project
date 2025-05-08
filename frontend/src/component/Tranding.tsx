@@ -95,7 +95,7 @@ const TrendingHead: React.FC = () => {
                   {tranding_itmes?.data?.length > 0 &&
                     tranding_itmes?.data?.map((menu: TrendingTag) => (
                       <Link
-                        href={"/category/" + menu?.name}
+                        href={"/news-page/category/" + menu?.name}
                         legacyBehavior
                         key={menu.id}
                       >

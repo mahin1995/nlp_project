@@ -1,15 +1,11 @@
 import ThemeProvider from "@/theme/theme-provider";
-import ThemeToggle from "@/theme/theme-toggle";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Image from "next/image";
-import Link from "next/link";
+import { AuthProvider } from "@/provider/AuthContextProviders";
 import "./globals.css";
-import Providers from "./Providers";
-import { createContext } from "react";
 import HeaderFooterLayer from "./HeaderFooterLayer";
-import { AuthProvider } from "./AuthContextProviders";
-import { ModalProvider } from "./ModalProvider";
+import { ModalProvider } from "@/provider/ModalProvider";
+import Providers from "@/provider/Providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -43,13 +39,10 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Providers>
-
             <AuthProvider>
-            <ModalProvider>
-            <HeaderFooterLayer>
-              {children}
-              </HeaderFooterLayer>
-            </ModalProvider>
+              <ModalProvider>
+                <HeaderFooterLayer>{children}</HeaderFooterLayer>
+              </ModalProvider>
             </AuthProvider>
           </Providers>
         </ThemeProvider>
@@ -57,5 +50,3 @@ export default function RootLayout({
     </html>
   );
 }
-
-

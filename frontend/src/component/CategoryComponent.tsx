@@ -29,7 +29,7 @@ function CategoryComponent() {
                     className="px-1 py-4 border-b  hover:border-gray-200 transition duration-300"
                   >
                     <Link
-                      href={"/category/" + topic.name}
+                      href={"/news-page/category/" + topic.name}
                       className="flex items-center dark:text-white text-gray-600 cursor-pointer"
                     >
                       <span

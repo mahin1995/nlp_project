@@ -1,6 +1,6 @@
 "use client"
-import { useAuth } from "@/app/AuthContextProviders";
-import { MODAL_TYPE } from "@/app/ModalProvider";
+import { useAuth } from "@/provider/AuthContextProviders";
+import { MODAL_TYPE } from "@/provider/ModalProvider";
 import { useState, useEffect, useRef } from "react";
 
 interface ModalProps {
@@ -12,7 +12,7 @@ interface ModalProps {
 const AuthenticationModal: React.FC<ModalProps> = ({ isOpen, onClose,modalType }) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const [isRegister, setIsRegister] = useState(false);
-  let {login,logout}=useAuth()
+  const {login,logout}=useAuth()
 
   // Form state
   const [email, setEmail] = useState("");

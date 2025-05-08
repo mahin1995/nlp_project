@@ -44,7 +44,7 @@ const BBCNewsClone = ({ news }: { news: HomeResponse }) => {
                       {truncateText(item.content, 100)}
                     </div>
                     <div className="card-link no-decoration hover:underline mt-2 text-sm lg:text-base pl-2 text-black dark:text-white border-l-2 border-red-500">
-                      <Link href={"/category/" + item?.categoryDetails?.name}>
+                      <Link href={"/news-page/category/" + item?.categoryDetails?.name}>
                         {item?.categoryDetails?.name}
                       </Link>
                     </div>
