@@ -2,8 +2,10 @@ import Providers from "@/provider/Providers";
 import ThemeProvider from "@/theme/theme-provider";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import SideBarLayout from "./component/sidbar/SideBarLayout";
 import "./css/globals.css";
-
+import "./css/tailwind.css";
+import { AntdRegistry } from '@ant-design/nextjs-registry';
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -29,14 +31,20 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <AntdRegistry>
+
+
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
-          <Providers>{children}</Providers>
+          <Providers>
+            <SideBarLayout>{children}</SideBarLayout>
+          </Providers>
         </ThemeProvider>
+                </AntdRegistry>
       </body>
     </html>
   );

@@ -5,7 +5,6 @@ import Link from "next/link";
 import SideBar from "./SideBar";
 
 const NewsGrid = ({ news }: { news: HomeResponse }) => {
-  console.log("My Log news: ", news);
   return (
     <div className="max-w-screen-xl mx-auto relative p-2 sm:p-0">
       <div className="grid grid-cols-1 sm:grid-cols-12 gap-10">
