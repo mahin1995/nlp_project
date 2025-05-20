@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
-import User, { IUser } from '../models/user';
-import jwt from 'jsonwebtoken';
 import { validationResult } from 'express-validator';
+import User, { IUser } from '../models/user';
 
 export const registerUser = async (req: Request, res: Response) => {
   // Validate request
@@ -23,7 +22,7 @@ export const registerUser = async (req: Request, res: Response) => {
     const user: IUser = new User({
       username,
       email,
-      password
+      password,
     });
 
     await user.save();
@@ -37,8 +36,8 @@ export const registerUser = async (req: Request, res: Response) => {
       user: {
         id: user._id,
         username: user.username,
-        email: user.email
-      }
+        email: user.email,
+      },
     });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
@@ -70,8 +69,8 @@ export const loginUser = async (req: Request, res: Response) => {
       user: {
         id: user._id,
         username: user.username,
-        email: user.email
-      }
+        email: user.email,
+      },
     });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
@@ -82,7 +81,7 @@ export const getMe = async (req: Request, res: Response) => {
   try {
     // req.user is set by the auth middleware
     const user = await User.findById((req as any).user.id).select('-password');
-    
+
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }

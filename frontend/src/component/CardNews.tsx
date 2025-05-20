@@ -1,15 +1,16 @@
 import { INews } from "@/service/news-service";
 import Image from "next/image";
 import Link from "next/link";
-import Slider from "react-slick";
+
 import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
+import Slider from "react-slick";
 type CardNewsProps = {
   newsList: INews[];
 };
 
 const CardNews: React.FC<CardNewsProps> = ({ newsList }) => {
-  function SampleNextArrow(props: any) {
+  function SampleNextArrow(props: React.ComponentProps<"div"> & { onClick?: () => void }) {
     const { className, style, onClick } = props;
     return (
       <div
@@ -25,7 +26,7 @@ const CardNews: React.FC<CardNewsProps> = ({ newsList }) => {
     );
   }
 
-  function SamplePrevArrow(props: any) {
+  function SamplePrevArrow(props: React.ComponentProps<"div"> & { onClick?: () => void }) {
     const { className, style, onClick } = props;
     return (
       <div
