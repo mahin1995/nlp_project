@@ -7,9 +7,8 @@ import categoryRoutes from './routes/category.routes';
 import chatRoute from './routes/chat.routes';
 import newsRoutes from './routes/news.routes';
 
-import { CronJob } from 'cron';
 import { initializeModel } from './services/chatbotv2';
-import { processFeeds } from './utils/rss_parser';
+import { setupSwagger } from './utils/swaggerService';
 dotenv.config();
 
 const app = express();
@@ -36,7 +35,7 @@ mongoose
 app.use('/api/news', newsRoutes);
 app.use('/api/chat', chatRoute);
 app.use('/api/category', categoryRoutes);
-
+setupSwagger(app);
 initializeModel()
   .then(() => {
     app.listen(port, () => {

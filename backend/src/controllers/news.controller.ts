@@ -1,9 +1,10 @@
 import { Request, Response } from 'express';
 import News from '../models/News';
 import {
-    getHomeDataCategoryWish,
+  getHomeDataCategoryWish,
   getPageDataByCategory,
   getPaginatedNews,
+  getSingleNews,
 } from '../services/NewsService';
 import { NLPService } from '../services/nlp.service';
 
@@ -43,6 +44,17 @@ export const getAll = async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
+export const getById = async (req: Request, res: Response) => {
+  try {
+    // MongoDB Text Search
+    const results = await getSingleNews(req.params.id);
+    res.json(results);
+  } catch (error) {
+    console.log('My Log error: ', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
 export const getAllByCategory = async (req: Request, res: Response) => {
   try {
     const page = parseInt(req.query.page as string) || 1;
@@ -62,7 +74,7 @@ export const getAllByCategory = async (req: Request, res: Response) => {
 };
 export const getHomePageData = async (req: Request, res: Response) => {
   try {
-    let result=await getHomeDataCategoryWish()
+    let result = await getHomeDataCategoryWish();
     return res.json(result);
   } catch (error) {
     console.log('My Log error: ', error);

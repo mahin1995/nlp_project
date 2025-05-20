@@ -1,6 +1,6 @@
 import Category, { ICategoryOut } from '../models/Category';
 import News, { INews } from '../models/News';
-import { PaginatedResult } from '../utils/all_interface';
+import { PaginatedResult, Response } from '../utils/all_interface';
 
 export const getPaginatedNews = async (
   page: number = 1,
@@ -26,6 +26,21 @@ export const getPaginatedNews = async (
   } catch (error) {
     console.error('Error fetching paginated news:', error);
     return { data: [], currentPage: page, totalPages: 0, totalItems: 0 };
+  }
+};
+
+export const getSingleNews = async (id: String): Promise<Response<INews>> => {
+  try {
+    const news: INews | null = await News.findById(id, {
+      embedding: 0})    
+
+
+    return {
+      data: news
+    };
+  } catch (error) {
+    console.error('Error fetching paginated news:', error);
+    return {data:null,message:"sumthing went wrong"};
   }
 };
 export const getPageDataByCategory = async (
@@ -94,7 +109,7 @@ export const getHomeDataCategoryWish = async () => {
           },
         },
       ]);
-      
+
       return newsByCategory;
     } catch (error) {
       console.error('Error fetching news by category:', error);
