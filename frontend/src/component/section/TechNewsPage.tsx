@@ -1,6 +1,7 @@
 import { INews } from "@/service/news-service";
 import { formatDate, HomeResponse } from "@/utils/utils";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 const TechNewsPage = ({ news }: { news: HomeResponse }) => {
@@ -61,8 +62,8 @@ const TechNewsPage = ({ news }: { news: HomeResponse }) => {
     className,
     ...props
   }) => (
-    <a
-      href={item.link}
+    <Link
+     href={`/news-page/details/${item._id||item.id}`}
       target="_blank"
       rel="noopener noreferrer"
       className={
@@ -91,7 +92,7 @@ const TechNewsPage = ({ news }: { news: HomeResponse }) => {
           </span>
         </div>
       </div>
-    </a>
+    </Link>
   );
 
   return (

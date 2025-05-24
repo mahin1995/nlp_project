@@ -17,28 +17,26 @@ const BBCNewsClone = ({ news }: { news: HomeResponse }) => {
               news?.news?.slice(0, 4).map((item, index) => (
                 <div key={index} className="card">
                   <div className="card-body pb-2 border-b lg:border-b-0">
-                    <div
-                      className="relative card-image hidden md:grid w-full brightness transition duration-300"
-                      //   src={item.image}
-                      //   alt={item.title}
-                    >
-                      <Image
-                        src={item?.image}
-                        alt={""}
-                        width={300}
-                        height={200}
-                        // fill
-                        className="object-contain"
-                      />
+                    <div className="relative card-image md:grid transition duration-300" style={{ minHeight: "180px" }}>
+                        <Image
+                            src={item?.image || "/placeholder.png"}
+                            alt={item?.title || "News image"}
+                            fill
+                            className="object-contain"
+                            sizes="(max-width: 768px) 100vw, 300px"
+                            priority
+                        />
                     </div>
                     <div className="card-title text-base lg:text-xl font-semibold pt-2 dark:text-white text-black">
-                      <a
-                        href="https://www.bbc.com/news/live/world-asia-58219963"
+                      <Link
+                        className="no-decoration hover:underline"
+                        legacyBehavior
+                        href={`/news-page/details/${item._id||item.id}`}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
                         {truncateText(item.title, 50)}
-                      </a>
+                      </Link>
                     </div>
                     <div className="card-title text-base hidden md:contents dark:text-white text-black pt-2">
                       {truncateText(item.content, 100)}

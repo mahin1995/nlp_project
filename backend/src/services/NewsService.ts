@@ -32,15 +32,15 @@ export const getPaginatedNews = async (
 export const getSingleNews = async (id: String): Promise<Response<INews>> => {
   try {
     const news: INews | null = await News.findById(id, {
-      embedding: 0})    
-
+      embedding: 0,
+    }).populate('category');
 
     return {
-      data: news
+      data: news,
     };
   } catch (error) {
     console.error('Error fetching paginated news:', error);
-    return {data:null,message:"sumthing went wrong"};
+    return { data: null, message: 'sumthing went wrong' };
   }
 };
 export const getPageDataByCategory = async (

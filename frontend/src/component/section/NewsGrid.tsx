@@ -1,5 +1,5 @@
 import { INews } from "@/service/news-service";
-import { HomeResponse } from "@/utils/utils";
+import { HomeResponse, truncateText } from "@/utils/utils";
 import Image from "next/image";
 import Link from "next/link";
 import SideBar from "./SideBar";
@@ -18,22 +18,20 @@ const NewsGrid = ({ news }: { news: HomeResponse }) => {
               news?.news.slice(0, 2).map((a: INews) => (
                 <>
                   <div className="">
-                    <Link href={`${a.link}`}>
+                    <Link href={`/news-page/details/${a._id || a.id}`}>
                       <div
-                        className="bg-cover text-center overflow-hidden"
+                        className="relative card-image md:grid transition duration-300"
                         style={{
-                          minHeight: "200px",
-                          //   backgroundImage: `url(${
-                          //     (a && a.image) || "/brand_image.png"
-                          //   })`,
+                          minHeight: "180px",
                         }}
-                        // title={a && truncateText(a.title, 50)}
                       >
                         <Image
                           src={a?.image || "/brand_image.png"}
-                          width={400}
-                          height={500}
+                          fill
+                          className="object-contain"
                           alt="a && truncateText(a.title, 50)"
+                          sizes="(max-width: 768px) 100vw, 300px"
+                          priority
                         />
                       </div>
                     </Link>
@@ -46,10 +44,10 @@ const NewsGrid = ({ news }: { news: HomeResponse }) => {
                           {news && news?.categoryName && news?.categoryName}
                         </Link>
                         <Link
-                          href="#"
+                          href={`/news-page/details/${a._id || a.id}`}
                           className="block dark:text-white text-gray-900 font-bold text-2xl mb-2 hover:text-indigo-600 transition duration-500 ease-in-out"
                         >
-                          {a && a.title}
+                          {a && truncateText(a.title, 50)}
                         </Link>
                         <p className="text-gray-700  text-base mt-2 mx-5 sm:mx-10">
                           {/* {a && truncateText(a.content, 100)} */}
@@ -68,20 +66,18 @@ const NewsGrid = ({ news }: { news: HomeResponse }) => {
                   <div className="">
                     <Link href={`${a.link}`}>
                       <div
-                        className="bg-cover text-center overflow-hidden"
+                        className="relative card-image md:grid transition duration-300"
                         style={{
-                          minHeight: "200px",
-                          //   backgroundImage: `url(${
-                          //     (a && a.image) || "/brand_image.png"
-                          //   })`,
+                          minHeight: "180px",
                         }}
-                        // title={a && truncateText(a.title, 50)}
                       >
                         <Image
                           src={a?.image || "/brand_image.png"}
-                          width={400}
-                          height={500}
+                          fill
+                          className="object-contain"
                           alt="a && truncateText(a.title, 50)"
+                          sizes="(max-width: 768px) 100vw, 300px"
+                          priority
                         />
                       </div>
                     </Link>
@@ -97,7 +93,7 @@ const NewsGrid = ({ news }: { news: HomeResponse }) => {
                           href={a.link}
                           className="block text-gray-900 dark:text-white font-bold text-2xl mb-2 hover:text-indigo-600 transition duration-500 ease-in-out"
                         >
-                          {a && a.title}
+                      {a && truncateText(a.title, 50)}
                         </Link>
                         <p className="text-gray-700 dark:text-white text-base mt-2 mx-5 sm:mx-10">
                           {/* {a && truncateText(a.content, 100)} */}
@@ -113,19 +109,29 @@ const NewsGrid = ({ news }: { news: HomeResponse }) => {
         <div className="sm:col-span-12 lg:col-span-3">
           {news?.news.slice(4, 7).map((article, index) => (
             <div className="mb-2" key={index}>
-              <a href="#">
+              <Link href={`/news-page/details/${article._id || article.id}`}>
                 <div
-                  className="h-40 bg-cover text-center overflow-hidden"
-                  style={{ backgroundImage: `url(${article.image})` }}
-                  title={article.title}
-                ></div>
-              </a>
-              <a
-                href="#"
+                  className="relative card-image md:grid transition duration-300"
+                  style={{
+                    minHeight: "180px",
+                  }}
+                >
+                  <Image
+                    src={article?.image || "/brand_image.png"}
+                    fill
+                    className="object-contain"
+                    alt="article && truncateText(article.title, 50)"
+                    sizes="(max-width: 768px) 100vw, 300px"
+                    priority
+                  />
+                </div>
+              </Link>
+              <Link
+                href={`/news-page/details/${article._id || article.id}`}
                 className="text-gray-900 dark:text-white inline-block font-semibold text-md my-2 hover:text-indigo-600 transition duration-500 ease-in-out"
               >
                 {article.title}
-              </a>
+              </Link>
             </div>
           ))}
         </div>

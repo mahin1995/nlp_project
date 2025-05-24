@@ -1,6 +1,6 @@
 import { formatDate, HomeResponse, truncateText } from "@/utils/utils";
 import Image from "next/image";
-
+import Link from "next/link";
 
 const SportNews = ({ news }: { news: HomeResponse }) => {
   return (
@@ -21,12 +21,12 @@ const SportNews = ({ news }: { news: HomeResponse }) => {
                 key={index}
                 className="flex flex-col justify-between border-b pb-5"
               >
-                <a
-                  href="#"
+                <Link
+                  href={`/news-page/details/${item._id || item.id}`}
                   className="text-gray-900 dark:text-white text-lg font-bold hover:text-indigo-600"
                 >
                   {truncateText(item.title, 40)}
-                </a>
+                </Link>
                 <div className="flex items-start justify-between mt-3">
                   <div className="text-sm w-2/3">
                     <p className="text-gray-700 dark:text-white">
@@ -36,7 +36,10 @@ const SportNews = ({ news }: { news: HomeResponse }) => {
                       {formatDate(item.publishedAt.toString())}
                     </p>
                   </div>
-                  <a href="#" className="inline-block ml-2">
+                  <Link
+                    href={`/news-page/details/${item._id || item.id}`}
+                    className="inline-block ml-2"
+                  >
                     <div
                       className="relative w-20 h-20 bg-cover bg-center"
                       //   style={{ backgroundImage: `url(${item.image})` }}
@@ -48,7 +51,7 @@ const SportNews = ({ news }: { news: HomeResponse }) => {
                         className="object-cover"
                       />
                     </div>
-                  </a>
+                  </Link>
                 </div>
               </div>
             ))}

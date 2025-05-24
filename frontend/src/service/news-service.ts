@@ -51,6 +51,20 @@ export const NewsService = {
       };
     }
   },
+  getNewsById: async (id = "") => {
+    const { data } = await api.get(url + `/get-by-id/${id}`);
+    console.log("My Log data: ", data);
+    if (data && data?.data) {
+      return {
+        news: data?.data,
+        status: RESPONSE_STATUS.SUCCESS,
+      };
+    } else {
+      return {
+        status: RESPONSE_STATUS.FAILED,
+      };
+    }
+  },
   getHomePageData: async () => {
     const { data } = await api.get(url + `/home`);
     console.log("My Log response: ", data);

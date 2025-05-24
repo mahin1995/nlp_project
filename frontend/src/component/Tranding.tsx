@@ -13,7 +13,7 @@ const TrendingHead: React.FC = () => {
     queryFn: CategoryService.getAll, // Pass dynamic page and limit
     // keepPreviousData: true, // Keeps previous data while fetching new data
   });
-  console.log("My Log tranding_itmes: ", tranding_itmes);
+
   return (
     <div className="main-container overflow-hidden mt-4">
       <div className="grid grid-cols-2 items-center justify-between -mt-1.5 mb-2.5">
