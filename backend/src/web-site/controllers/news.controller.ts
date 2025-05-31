@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import News from '../models/News';
 import {
   getHomeDataCategoryWish,
+  getLatestPopularHotTopicNews,
   getPageDataByCategory,
   getPaginatedNews,
   getSingleNews,
@@ -78,6 +79,15 @@ export const getAllByCategory = async (req: Request, res: Response) => {
 export const getHomePageData = async (req: Request, res: Response) => {
   try {
     let result = await getHomeDataCategoryWish();
+    return res.json(result);
+  } catch (error) {
+    console.log('My Log error: ', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+export const getSideBarData = async (req: Request, res: Response) => {
+  try {
+    let result = await getLatestPopularHotTopicNews();
     return res.json(result);
   } catch (error) {
     console.log('My Log error: ', error);

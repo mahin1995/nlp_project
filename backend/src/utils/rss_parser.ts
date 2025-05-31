@@ -204,42 +204,42 @@ const FEED_URLS = [
   },
   {
     url: 'https://rtvonline.com/english/rss/life-style.xml',
-    category: 'lifestyle',
+    category: 'Lifestyle',
     link: 'lifestyle',
     website:"RTV News"
 
   },
   {
     url: 'https://rtvonline.com/english/rss/feature.xml',
-    category: 'feature',
+    category: 'Feature',
     link: 'feature',
     website:"RTV News"
 
   },
   {
     url: 'https://rtvonline.com/english/rss/health.xml',
-    category: 'health',
+    category: 'Health',
     link: 'health',
     website:"RTV News"
 
   },
   {
     url: 'https://en.dhakapost.com/rss/entertainment.xml',
-    category: 'entertainment',
+    category: 'Entertainment',
     link: 'entertainment',
     website:"Dhakapost"
 
   },
   {
     url: 'https://en.dhakapost.com/rss/lifestyle.xml',
-    category: 'lifestyle',
+    category: 'Lifestyle',
     link: 'lifestyle',
     website:"Dhakapost"
   },
     {
     url: 'https://www.jagonews24.com/en/rss/politics.xml',
     category: 'Politics',
-    link: 'lifestyle',
+    link: 'politics',
     website:"Dhakapost"
   },
     {

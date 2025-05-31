@@ -79,4 +79,18 @@ export const NewsService = {
       };
     }
   },
+  getSideBarData: async () => {
+    const { data } = await api.get(url + `/side-bar-content`);
+    console.log("My Log response: ", data);
+    if (data) {
+      return {
+        data: data,
+        status: RESPONSE_STATUS.SUCCESS,
+      };
+    } else {
+      return {
+        status: RESPONSE_STATUS.FAILED,
+      };
+    }
+  },
 };

@@ -5,6 +5,7 @@ import {
   getById,
   getHomePageData,
   getRecommendations,
+  getSideBarData,
 } from '../controllers/news.controller';
 import { getRecommendationsV2 } from '../controllers/news.controller.v2';
 
@@ -54,6 +55,27 @@ router.get('/all', getAll);
  *         description: Server error
  */
 router.get('/all-by-category', getAllByCategory);
+/**
+ * @swagger
+ * /api/news/side-bar-content:
+ *   get:
+ *     tags:
+ *       - News
+ *     summary: Get all side bar news items
+ *     description: Returns a list news item based on its unique identifier
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved news item list
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/News'
+ *       404:
+ *         description: News item not found
+ *       500:
+ *         description: Server error
+ */
+router.get('/side-bar-content', getSideBarData);
 /**
  * @swagger
  * /api/news/home:

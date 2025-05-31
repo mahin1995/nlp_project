@@ -28,6 +28,32 @@ export const getPaginatedNews = async (
     return { data: [], currentPage: page, totalPages: 0, totalItems: 0 };
   }
 };
+export const getLatestPopularHotTopicNews = async (): Promise<{
+  [key: string]: INews[];
+}> => {
+  try {
+    const news: INews[] = await News.find({}, { embedding: 0 }) // Exclude embedding
+      .sort({ publishedAt: -1 }) // Sort by newest first
+      .limit(4);
+
+    // Get total count
+    let data: { [key: string]: any[] } = {};
+    const mappedNews = news.map((item, idx) => ({
+      id: item._id,
+      imageUrl: item?.image || '',
+      title: item.title,
+      time: item.publishedAt ? new Date(item.publishedAt).toLocaleString() : '',
+      category: (item as any).category?.Name || 'General',
+    }));
+    data['LATEST'] = mappedNews;
+    data['POPULAR'] = mappedNews;
+    data['HOT-TOPIC'] = mappedNews;
+    return data;
+  } catch (error) {
+    console.error('Error fetching paginated news:', error);
+    return { message: 'something went wrong', data: [] } as any;
+  }
+};
 
 export const getSingleNews = async (id: String): Promise<Response<INews>> => {
   try {
