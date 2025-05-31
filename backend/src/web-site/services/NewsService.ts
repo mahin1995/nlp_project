@@ -1,6 +1,6 @@
+import { PaginatedResult, Response } from '../../utils/all_interface';
 import Category, { ICategoryOut } from '../models/Category';
 import News, { INews } from '../models/News';
-import { PaginatedResult, Response } from '../utils/all_interface';
 
 export const getPaginatedNews = async (
   page: number = 1,
@@ -51,7 +51,7 @@ export const getPageDataByCategory = async (
   try {
     const skip = (page - 1) * limit;
     const categoryObj: ICategoryOut | null = await Category.findOne({
-      name: category,
+      link: category,
     });
     const news: INews[] = await News.find(
       { category: categoryObj?._id },

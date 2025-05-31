@@ -64,7 +64,7 @@ const NewsGrid = ({ news }: { news: HomeResponse }) => {
               news?.news.slice(2, 4).map((a: INews) => (
                 <>
                   <div className="">
-                    <Link href={`${a.link}`}>
+                    <Link href={"/news-page/category/" + news?.categoryName}>
                       <div
                         className="relative card-image md:grid transition duration-300"
                         style={{
@@ -90,10 +90,10 @@ const NewsGrid = ({ news }: { news: HomeResponse }) => {
                           {news && news?.categoryName && news?.categoryName}
                         </Link>
                         <Link
-                          href={a.link}
+                          href={`/news-page/details/${a._id || a.id}`}
                           className="block text-gray-900 dark:text-white font-bold text-2xl mb-2 hover:text-indigo-600 transition duration-500 ease-in-out"
                         >
-                      {a && truncateText(a.title, 50)}
+                          {a && truncateText(a.title, 50)}
                         </Link>
                         <p className="text-gray-700 dark:text-white text-base mt-2 mx-5 sm:mx-10">
                           {/* {a && truncateText(a.content, 100)} */}

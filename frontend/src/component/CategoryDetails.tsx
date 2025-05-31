@@ -10,7 +10,7 @@ import Pagination from "./Pagination";
 
 function CategoryDetails({ slug }: { slug: string }) {
   const [page, setPage] = useState(1);
-  const limit = 4; // Show only 5 news per page
+  const limit = 10; // Show only 5 news per page
   const { data, isLoading } = useQuery({
     queryKey: ["news_category", page, limit],
     queryFn: () => NewsService.getAllNewsByCategory(page, limit, slug),
@@ -58,51 +58,53 @@ function CategoryDetails({ slug }: { slug: string }) {
 
           {!isLoading && data && (
             <>
-              <div className="space-y-6 flex flex-row gap-2 mx-auto">
+              <div className="grid grid-cols-3 gap-2">
                 {data?.pageData?.map((news: INews) => (
-                  <Link key={news._id} href={news.link}>
-                    <div
-                      key={news?._id}
-                      className="max-w-sm  text-white rounded-xl overflow-hidden shadow-lg"
-                    >
-                      <div className="relative w-full h-48">
-                        <Image
-                          src={news?.image || "/brand_image.png"}
-                          alt={news?.title}
-                          //   width={600}
-                          //   height={400}
-                          //   objectFit="cover"
-                          fill
-                          className="rounded-lg object-cover"
-                        />
-                      </div>
-                      <div className="p-6">
-                        <h2 className="text-lg font-bold text-gray-800 dark:text-white">
-                          {truncateText(news?.title, 100)}
-                        </h2>
-                        <p className="text-gray-600 dark:text-white">
-                          {truncateText(news?.content, 100)}
-                        </p>
-                        <div className="flex items-center mt-2">
+                  <div key={news.id}>
+                    <Link href={`/news-page/details/${news._id || news.id}`}>
+                      <div
+                        key={news?._id}
+                        className="max-w-sm  text-white rounded-xl overflow-hidden shadow-lg"
+                      >
+                        <div className="relative w-full h-48">
                           <Image
-                            src="/person.png"
-                            alt="Author"
-                            width={30}
-                            height={30}
-                            className="rounded-full"
+                            src={news?.image || "/brand_image.png"}
+                            alt={news?.title}
+                            //   width={600}
+                            //   height={400}
+                            //   objectFit="cover"
+                            fill
+                            className="rounded-lg object-cover"
                           />
-                          <div className="ml-2">
-                            <p className="text-sm font-semibold text-gray-700 dark:text-white">
-                              {news?.author || "Unknown"}
-                            </p>
-                            <p className="text-xs text-gray-600 dark:text-white">
-                              {formatDate(news.publishedAt.toString())}
-                            </p>
+                        </div>
+                        <div className="p-6">
+                          <h2 className="text-lg font-bold text-gray-800 dark:text-white">
+                            {truncateText(news?.title, 100)}
+                          </h2>
+                          <p className="text-gray-600 dark:text-white">
+                            {truncateText(news?.content, 100)}
+                          </p>
+                          <div className="flex items-center mt-2">
+                            <Image
+                              src="/person.png"
+                              alt="Author"
+                              width={30}
+                              height={30}
+                              className="rounded-full"
+                            />
+                            <div className="ml-2">
+                              <p className="text-sm font-semibold text-gray-700 dark:text-white">
+                                {news?.author || "Unknown"}
+                              </p>
+                              <p className="text-xs text-gray-600 dark:text-white">
+                                {formatDate(news.publishedAt.toString())}
+                              </p>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </Link>
+                    </Link>
+                  </div>
                 ))}
               </div>
 

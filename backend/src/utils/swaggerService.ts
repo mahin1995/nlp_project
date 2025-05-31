@@ -35,7 +35,7 @@ const options: SwaggerOptions = {
     //   },
     // ],
   },
-  apis: ['src/routes/news.routes.ts'], // Path to the API routes
+  apis: ['src/routes/*'], // Path to the API routes
 };
 
 const specs = swaggerJsdoc(options);

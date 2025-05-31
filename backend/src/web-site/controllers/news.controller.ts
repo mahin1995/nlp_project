@@ -62,8 +62,11 @@ export const getAllByCategory = async (req: Request, res: Response) => {
     const category = req.query.category as string;
     let result = {};
     // MongoDB Text Search
-    if (category) {
+    if (category && category !== 'latest') {
       const results = await getPageDataByCategory(page, limit, category);
+      result = results;
+    } else if (category === 'latest') {
+      const results = await getPaginatedNews(page, limit);
       result = results;
     }
     return res.json(result);

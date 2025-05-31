@@ -45,11 +45,19 @@ export const registerUser = async (req: Request, res: Response) => {
 };
 
 export const loginUser = async (req: Request, res: Response) => {
-  const { email, password } = req.body;
+  const { email,username, password } = req.body;
 
   try {
     // Check if user exists
-    const user = await User.findOne({ email }).select('+password');
+     if(!username && !email) return res.status(401).json({ message: 'User Name email both not found' });
+    let user;
+    if(email!=null || email){
+     user = await User.findOne({ email }).select('+password');
+    }
+    if(username!=null || username != undefined || user){
+     user = await User.findOne({ username }).select('+password');
+
+    }
     if (!user) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }

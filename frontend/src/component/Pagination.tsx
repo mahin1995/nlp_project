@@ -25,19 +25,23 @@ const Pagination: React.FC<PaginationProps> = ({
     }
   };
 
-  // Create page ranges (grouped by 10 pages)
-  const pageGroups: number[][] = [];
-  for (let i = 1; i <= totalPages; i += 10) {
-    pageGroups.push(
-      Array.from(
-        { length: Math.min(10, totalPages - i + 1) },
-        (_, index) => i + index
-      )
-    );
-  }
+  // Compute the group start page
+  const groupSize = 10;
+  const currentGroupStart =
+    Math.floor((currentPage - 1) / groupSize) * groupSize + 1;
+  const currentGroupEnd = Math.min(
+    currentGroupStart + groupSize - 1,
+    totalPages
+  );
+
+  // Create visible page range
+  const visiblePages = Array.from(
+    { length: currentGroupEnd - currentGroupStart + 1 },
+    (_, idx) => currentGroupStart + idx
+  );
 
   return (
-    <div className="flex items-center justify-between border-t border-gray-200 dark:bg-black  bg-white px-4 py-3 sm:px-6">
+    <div className="flex items-center justify-between border-t border-gray-200 dark:bg-black bg-white px-4 py-3 sm:px-6">
       <div className="flex flex-1 justify-between sm:hidden">
         <button
           onClick={handlePrevious}
@@ -56,7 +60,7 @@ const Pagination: React.FC<PaginationProps> = ({
       </div>
       <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
         <div>
-          <p className="text-sm text-gray-700">
+          <p className="text-sm text-gray-700 dark:text-white">
             Showing{" "}
             <span className="font-medium">{(currentPage - 1) * 10 + 1}</span> to{" "}
             <span className="font-medium">
@@ -67,65 +71,65 @@ const Pagination: React.FC<PaginationProps> = ({
         </div>
         <div>
           <nav
-            className="isolate inline-flex flex-col space-y-2 -space-x-px rounded-md shadow-sm"
+            className="isolate inline-flex -space-x-px rounded-md shadow-sm"
             aria-label="Pagination"
           >
             <button
               onClick={handlePrevious}
               disabled={currentPage === 1}
-              className="relative inline-flex items-center rounded-l-md px-2 py-2 dark:text-white dark:hover:text-black text-gray-400 ring-1 ring-gray-300 ring-inset hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:opacity-50"
+              className="relative inline-flex items-center rounded-l-md px-2 py-2 dark:text-white dark:hover:text-black text-gray-400 ring-1 ring-gray-300 hover:bg-gray-50 focus:z-20 disabled:opacity-50"
             >
-              {/* <span className="sr-only">Previous</span> */}
-              <span className="">Previous</span>
-              <svg
-                className="w-5 h-5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M11.78 5.22a.75.75 0 0 1 0 1.06L8.06 10l3.72 3.72a.75.75 0 1 1-1.06 1.06l-4.25-4.25a.75.75 0 0 1 0-1.06l4.25-4.25a.75.75 0 0 1 1.06 0Z"
-                  clipRule="evenodd"
-                />
-              </svg>
+              Previous
             </button>
-            {pageGroups.map((group, groupIndex) => (
-              <div key={groupIndex} className="flex space-x-1">
-                {group.map((page) => (
-                  <button
-                    key={page}
-                    onClick={() => onPageChange(page)}
-                    className={`relative inline-flex items-center px-4 py-2 text-sm font-semibold ${
-                      currentPage === page
-                        ? "bg-indigo-600 text-white"
-                        : "text-gray-900 dark:text-white ring-1 ring-gray-300 hover:bg-gray-50 dark:hover:bg-amber-50 dark:hover:text-black"
-                    } focus:z-20`}
-                  >
-                    {page}
-                  </button>
-                ))}
-              </div>
+
+            {currentGroupStart > 1 && (
+              <>
+                <button
+                  onClick={() => onPageChange(1)}
+                  className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 dark:text-white ring-1 ring-gray-300 hover:bg-gray-50 dark:hover:bg-amber-50 dark:hover:text-black"
+                >
+                  1
+                </button>
+                <span className="px-2 py-2 text-gray-500 dark:text-white">
+                  ...
+                </span>
+              </>
+            )}
+
+            {visiblePages.map((page) => (
+              <button
+                key={page}
+                onClick={() => onPageChange(page)}
+                className={`relative inline-flex items-center px-4 py-2 text-sm font-semibold ${
+                  currentPage === page
+                    ? "bg-indigo-600 text-white"
+                    : "text-gray-900 dark:text-white ring-1 ring-gray-300 hover:bg-gray-50 dark:hover:bg-amber-50 dark:hover:text-black"
+                } focus:z-20`}
+              >
+                {page}
+              </button>
             ))}
+
+            {currentGroupEnd < totalPages && (
+              <>
+                <span className="px-2 py-2 text-gray-500 dark:text-white">
+                  ...
+                </span>
+                <button
+                  onClick={() => onPageChange(totalPages)}
+                  className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 dark:text-white ring-1 ring-gray-300 hover:bg-gray-50 dark:hover:bg-amber-50 dark:hover:text-black"
+                >
+                  {totalPages}
+                </button>
+              </>
+            )}
+
             <button
               onClick={handleNext}
               disabled={currentPage === totalPages}
               className="relative inline-flex items-center rounded-r-md px-2 py-2 dark:text-white dark:hover:text-black text-gray-400 ring-1 ring-gray-300 hover:bg-gray-50 focus:z-20 disabled:opacity-50"
             >
-              <span className="sr-only">Next</span>
-              <span className="">Next</span>
-              <svg
-                className="w-5 h-5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z"
-                  clipRule="evenodd"
-                />
-              </svg>
+              Next
             </button>
           </nav>
         </div>

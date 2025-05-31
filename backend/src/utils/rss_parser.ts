@@ -1,7 +1,7 @@
 import axios from 'axios';
 import Parser from 'rss-parser';
-import Category, { ICategory } from '../models/Category';
-import News, { INewsInput } from '../models/News';
+import Category, { ICategory } from '../web-site/models/Category';
+import News, { INewsInput } from '../web-site/models/News';
 
 // Extended type definitions for custom fields
 interface CustomItem {
@@ -91,74 +91,184 @@ async function parseFeed(url: string) {
 }
 
 const FEED_URLS = [
-  'https://feeds.bbci.co.uk/news/world/rss.xml',
-  'https://www.thedailystar.net/frontpage/rss.xml',
-  'https://abcnews.go.com/abcnews/usheadlines',
-  'https://feeds.nbcnews.com/nbcnews/public/world',
-  'https://www.theguardian.com/us-news/rss',
-  'https://rss.nytimes.com/services/xml/rss/nyt/Sports.xml',
-  'https://feeds.foxnews.com/foxnews/sports',
-  'https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml',
-  'https://feeds.arstechnica.com/arstechnica/technology-lab',
+  {
+    url: 'https://feeds.bbci.co.uk/news/world/rss.xml',
+    category: 'World',
+    link: 'world',
+    website:"BBC news"
+  },
+  {
+    url: 'https://www.thedailystar.net/frontpage/rss.xml',
+    category: 'Others',
+    link: 'others',
+    website:"The daily Star"
 
-  //bd news papaer
-  'https://www.thedailystar.net/frontpage/rss.xml',
-  'https://www.bd24live.com/feed',
+  },
+  {
+    url: 'https://abcnews.go.com/abcnews/usheadlines',
+    category: 'Us-News',
+    link: 'us-news',
+    website:"ABC News"
+
+  },
+  {
+    url: 'https://feeds.nbcnews.com/nbcnews/public/world',
+    category: 'World',
+    link: 'world',
+    website:"NBC News"
+
+  },
+  {
+    url: 'https://www.theguardian.com/us-news/rss',
+    category: 'Us-News',
+    link: 'us-news',
+    website:"The Guardian"
+
+  },
+  {
+    url: 'https://rss.nytimes.com/services/xml/rss/nyt/Sports.xml',
+    category: 'Sports',
+    link: 'sports',
+    website:"Newyork times"
+
+  },
+  {
+    url: 'https://feeds.foxnews.com/foxnews/sports',
+    category: 'Sports',
+    link: 'sports',
+    website:"FOX News"
+
+  },
+  {
+    url: 'https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml',
+    category: 'Technology',
+    link: 'technology',
+    website:"Newyork times"
+
+  },
+  {
+    url: 'https://feeds.arstechnica.com/arstechnica/technology-lab',
+    category: 'Technology',
+    link: 'technology-lab',
+    website:"ARS Tech"
+
+  },
+  {
+    url: 'https://www.bd24live.com/feed',
+    category: 'Others',
+    link: 'others',
+    website:"BD 24 Live"
+
+  },
+  {
+    url: 'https://rtvonline.com/english/rss/country.xml',
+    category: 'Bangladesh',
+    link: 'bangladesh',
+    website:"RTV News"
+
+  },
+  {
+    url: 'https://rtvonline.com/english/rss/bangladesh.xml',
+    category: 'Bangladesh',
+    link: 'bangladesh',
+    website:"RTV News"
+
+  },
+  {
+    url: 'https://rtvonline.com/english/rss/international.xml',
+    category: 'International',
+    link: 'international',
+    website:"RTV News"
+
+  },
+  {
+    url: 'https://rtvonline.com/english/rss/entertainment.xml',
+    category: 'Entertainment',
+    link: 'entertainment',
+    website:"RTV News"
+
+  },
+  {
+    url: 'https://rtvonline.com/english/rss/sports.xml',
+    category: 'Sports',
+    link: 'sports',
+    website:"RTV News"
+
+  },
+  {
+    url: 'https://rtvonline.com/english/rss/politics.xml',
+    category: 'Politics',
+    link: 'politics',
+    website:"RTV News"
+
+  },
+  {
+    url: 'https://rtvonline.com/english/rss/life-style.xml',
+    category: 'lifestyle',
+    link: 'lifestyle',
+    website:"RTV News"
+
+  },
+  {
+    url: 'https://rtvonline.com/english/rss/feature.xml',
+    category: 'feature',
+    link: 'feature',
+    website:"RTV News"
+
+  },
+  {
+    url: 'https://rtvonline.com/english/rss/health.xml',
+    category: 'health',
+    link: 'health',
+    website:"RTV News"
+
+  },
+  {
+    url: 'https://en.dhakapost.com/rss/entertainment.xml',
+    category: 'entertainment',
+    link: 'entertainment',
+    website:"Dhakapost"
+
+  },
+  {
+    url: 'https://en.dhakapost.com/rss/lifestyle.xml',
+    category: 'lifestyle',
+    link: 'lifestyle',
+    website:"Dhakapost"
+  },
+    {
+    url: 'https://www.jagonews24.com/en/rss/politics.xml',
+    category: 'Politics',
+    link: 'lifestyle',
+    website:"Dhakapost"
+  },
+    {
+    url: 'https://www.jagonews24.com/en/rss/business.xml',
+    category: 'Business',
+    link: 'business',
+    website:"Jago News24"
+  },
+    {
+    url: 'https://www.jagonews24.com/en/rss/international.xml',
+    category: 'International',
+    link: 'international',
+    website:"Jago News24"
+  },
 ];
 
 async function processFeeds() {
-  for (const url of FEED_URLS) {
-    const items = await parseFeed(url);
-    console.log(`\nFeed: ${url}`);
+  for (const feed of FEED_URLS) {
+    const items = await parseFeed(feed?.url);
+    console.log(`\nFeed: ${feed?.url}`);
     let website = 'N/A';
     let newsItemList: INewsInput[] = [];
-    let category: ICategory | null = await Category.findOne({ name: 'latest' });
+    let category: ICategory | null = await Category.findOne({ name: 'Latest' });
     if (!category) {
-      category = await findOrCreateCategory('latest', 'N/A');
+      category = await findOrCreateCategory('Latest', 'N/A','latest');
     }
-    if (url == 'https://feeds.bbci.co.uk/news/world/rss.xml') {
-      category = await findOrCreateCategory('world', 'N/A');
-      website = 'BBC NEWS';
-    }
-    if (url == 'https://feeds.nbcnews.com/nbcnews/public/world') {
-      category = await findOrCreateCategory('world', 'N/A');
-      website = 'NBC NEWS';
-    }
-    if (url == 'https://www.theguardian.com/us-news/rss') {
-      category = await findOrCreateCategory('us-news', 'N/A');
-      website = 'THE GUARDIAN NEWS';
-    }
-    if (url == 'https://www.thedailystar.net/frontpage/rss.xml') {
-      category = await findOrCreateCategory('Bangladesh', 'N/A');
-      website = 'The Daily Star';
-    }
-    if (url == 'https://www.bd24live.com/feed') {
-      category = await findOrCreateCategory('Bangladesh', 'N/A');
-      website = 'BD 24 Live';
-    }
-    // if (url == 'https://www.cbsnews.com/latest/rss/main') {
-    //   category = await findOrCreateCategory('latest', 'N/A');
-    //   website = 'CBS NEWS';
-    // }
-    // if (url == 'https://abcnews.go.com/abcnews/usheadlines') {
-    //   category = await findOrCreateCategory('latest', 'N/A');
-    //   website = 'ABC NEWS';
-    // }
-    if (url == 'https://rss.nytimes.com/services/xml/rss/nyt/Sports.xml') {
-      category = await findOrCreateCategory('Sports', 'N/A');
-      website = 'THE NEW YORK TIMES';
-    }
-    if (url == 'https://feeds.foxnews.com/foxnews/sports') {
-      category = await findOrCreateCategory('Sports', 'N/A');
-      website = 'FOX NEWS';
-    }
-    if (url == 'https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml') {
-      category = await findOrCreateCategory('Technology', 'N/A');
-      website = 'THE NEW YORK TIMES';
-    }
-    if (url == 'https://feeds.arstechnica.com/arstechnica/technology-lab') {
-      category = await findOrCreateCategory('Technology', 'N/A');
-      website = 'ARS TECHNICA NEWS';
+     if (feed?.category) {
+      category = await findOrCreateCategory(feed?.category, 'N/A',feed?.link);
+      website = feed?.website||"N/A";
     }
     items.forEach(async (item, index) => {
       //   console.log(`\nItem ${index + 1}:`);
@@ -166,9 +276,10 @@ async function processFeeds() {
       //   console.log(`Content: ${item.content}`);
       //   console.log(`pubDate: ${item.pubDate}`);
       //   console.log(`Image: ${item.image || 'No image found'}`);
+      
       let news: INewsInput = {
         title: item?.title || '',
-        link: item?.link || '',
+        link: fixRtvonlineUrl(item?.link || '') || '',
         image: item?.image || null,
         content: item?.content ? removeHtmlAndLimitText(item.content, 150) : '',
         publishedAt: item?.pubDate ? new Date(item.pubDate) : null,
@@ -199,7 +310,7 @@ async function insertNewsIfNotExists(newsList: INewsInput[]) {
     console.error('Error inserting news:', err);
   }
 }
-async function findOrCreateCategory(name: string, description: string) {
+async function findOrCreateCategory(name: string, description: string,link:string) {
   // ✅ Try to find the category by name
   let category = await Category.findOne({ name });
 
@@ -208,6 +319,7 @@ async function findOrCreateCategory(name: string, description: string) {
     category = new Category({
       name,
       description,
+      link
     });
 
     await category.save(); // Save the newly created category
@@ -229,6 +341,12 @@ function removeHtmlAndLimitText(input: string, limit: number): string {
       : textWithoutHtml;
 
   return limitedText;
+}
+function fixRtvonlineUrl(url:string) {
+  if (url.includes('rtvonline.com') && url.includes('/undefined/')) {
+    return url.replace('/undefined/', '/english/');
+  }
+  return url;
 }
 // processFeeds();
 export { processFeeds };

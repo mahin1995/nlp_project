@@ -5,6 +5,7 @@ import Link from "next/link";
 interface TrendingTag {
   id: string;
   name: string;
+  link: string;
 }
 
 const TrendingHead: React.FC = () => {
@@ -95,7 +96,7 @@ const TrendingHead: React.FC = () => {
                   {tranding_itmes?.data?.length > 0 &&
                     tranding_itmes?.data?.map((menu: TrendingTag) => (
                       <Link
-                        href={"/news-page/category/" + menu?.name}
+                        href={"/news-page/category/" + menu?.link}
                         legacyBehavior
                         key={menu.id}
                       >

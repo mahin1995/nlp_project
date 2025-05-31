@@ -26,7 +26,7 @@ let intents: IntentData;
 export const initializeModel = async () => {
   try {
     console.log('Loading intents...');
-        const filePath = path.join(__dirname, '../utils/newsIntents.json');
+        const filePath = path.join(__dirname, '../../utils/newsIntents.json');
     
     const data = await fs.readFile(
      filePath,

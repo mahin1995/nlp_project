@@ -3,12 +3,14 @@ import express from 'express';
 import mongoose from 'mongoose';
 
 import cors from 'cors';
-import categoryRoutes from './routes/category.routes';
-import chatRoute from './routes/chat.routes';
-import newsRoutes from './routes/news.routes';
+import authRoutes from './web-site/routes/auth.route';
+import categoryRoutes from './web-site/routes/category.routes';
+import chatRoute from './web-site/routes/chat.routes';
+import newsRoutes from './web-site/routes/news.routes';
 
-import { initializeModel } from './services/chatbotv2';
 import { setupSwagger } from './utils/swaggerService';
+import { initializeModel } from './web-site/services/chatbotv2';
+import { processFeeds } from './utils/rss_parser';
 dotenv.config();
 
 const app = express();
@@ -35,6 +37,7 @@ mongoose
 app.use('/api/news', newsRoutes);
 app.use('/api/chat', chatRoute);
 app.use('/api/category', categoryRoutes);
+app.use('/api/auth', authRoutes);
 setupSwagger(app);
 initializeModel()
   .then(() => {
