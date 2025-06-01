@@ -36,10 +36,10 @@ export default function HomeComponent() {
     (a: HomeResponse) => a.categoryName == "Entertainment"
   );
   const lifestyle = homeData?.data.find(
-    (a: HomeResponse) => a.categoryName == "lifestyle"
+    (a: HomeResponse) => a.categoryName == "Lifestyle"
   );
   const feature = homeData?.data.find(
-    (a: HomeResponse) => a.categoryName == "feature"
+    (a: HomeResponse) => a.categoryName == "Feature"
   );
   const { isModalOpen, closeModal, modalType } = useModal();
 

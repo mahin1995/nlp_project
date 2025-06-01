@@ -32,7 +32,7 @@ export default function Page() {
             <div className="card-body pb-2 border-b lg:border-b-0">
               <div
                 className="relative card-image md:grid transition duration-300"
-                style={{ minHeight: "180px" }}
+                style={{ minHeight: "380px" }}
               >
                 <Image
                   src={data?.news?.image || "/placeholder.png"}

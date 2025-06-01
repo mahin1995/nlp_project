@@ -1,4 +1,4 @@
-import { HomeResponse } from "@/utils/utils";
+import { HomeResponse, truncateText } from "@/utils/utils";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -12,7 +12,7 @@ const NewsArticleLayout = ({ news }: { news: HomeResponse }) => {
             key={article._id}
             className="bg-white dark:bg-black rounded-lg shadow-md overflow-hidden"
           >
-            <Link href={`/news-page/details/${article._id||article.id}`}>
+            <Link href={`/news-page/details/${article._id || article.id}`}>
               <div className="relative w-full h-48 ">
                 <Image
                   src={article.image}
@@ -24,9 +24,13 @@ const NewsArticleLayout = ({ news }: { news: HomeResponse }) => {
             </Link>
             <div className="p-4">
               <h2 className="text-xl font-semibold mb-2">
-                <Link href={`/news-page/details/${article._id||article.id}`}>{article.title}</Link>
+                <Link href={`/news-page/details/${article._id || article.id}`}>
+                  {article.title}
+                </Link>
               </h2>
-              <p className="text-gray-600">{article.content}</p>
+              <p className="text-gray-600">
+                {truncateText(article.content, 100)}
+              </p>
             </div>
           </div>
         ))}
