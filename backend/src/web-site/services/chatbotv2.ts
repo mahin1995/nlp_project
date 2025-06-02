@@ -1,8 +1,8 @@
 import * as tf from '@tensorflow/tfjs-node';
 import * as fs from 'fs/promises';
 import natural from 'natural';
-import { getPageDataByCategory, getPaginatedNews } from './NewsService';
 import path from 'path';
+import { getPageDataByCategory, getPaginatedNews } from './NewsService';
 
 // Define intent structure
 interface Intent {
@@ -26,12 +26,9 @@ let intents: IntentData;
 export const initializeModel = async () => {
   try {
     console.log('Loading intents...');
-        const filePath = path.join(__dirname, '../../utils/newsIntents.json');
-    
-    const data = await fs.readFile(
-     filePath,
-      'utf-8'
-    );
+    const filePath = path.join(__dirname, '../../utils/newsIntents.json');
+
+    const data = await fs.readFile(filePath, 'utf-8');
     intents = JSON.parse(data);
 
     words = [
@@ -45,7 +42,8 @@ export const initializeModel = async () => {
     ];
 
     console.log('Loading TensorFlow model...');
-    model = await tf.loadLayersModel('file://./model/model.json');
+    const modelPath = `file://${path.resolve(__dirname, '../../../model/model.json')}`;
+    model = await tf.loadLayersModel(modelPath);
     console.log('Model loaded successfully.');
   } catch (error) {
     console.error('Error loading model or intents:', error);
@@ -81,8 +79,7 @@ export const predictIntent = async (text: string) => {
   if (intent.type == 'NEWS') {
     const newsList = await getPaginatedNews(1, 10);
     response = { messageType: 'NEWS', news: newsList };
-  }
-   else {
+  } else {
     if (intent?.responses) {
       let message =
         intent?.responses[Math.floor(Math.random() * intent.responses.length)];

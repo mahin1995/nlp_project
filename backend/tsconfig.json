@@ -10,10 +10,15 @@
     "outDir": "./dist", // Output compiled files to 'dist' directory
     "rootDir": "./src", // Set root directory to 'src'
     "resolveJsonModule": true, // Allow importing JSON modules
-    "baseUrl": "./src", // Set the base URL for resolving non-relative modules
-    "paths": {
-      "*": ["node_modules/*", "src/types/*"] // Map module paths to local type files
-    }
+    // "baseUrl": "./src", // Set the base URL for resolving non-relative modules
+    // "paths": {
+    //   "*": ["node_modules/*", "src/types/*"],
+    //   "@/*": ["src/*"] // Allow importing from 'src' directory using '@' alias
+    // },
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true, // Emit metadata for decorators
+    "useDefineForClassFields": false // Use legacy class fields behavior
+    // "legacyDecorators": true // Enable legacy decorators support
   },
   "include": ["src/**/*"], // Include all .ts files in the 'src' folder
   "exclude": ["node_modules"] // Exclude 'node_modules' from compilation

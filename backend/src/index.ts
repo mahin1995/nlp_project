@@ -1,13 +1,16 @@
 import dotenv from 'dotenv';
 import express from 'express';
 import mongoose from 'mongoose';
+import 'reflect-metadata';
 
 import cors from 'cors';
+import './admin/api/news.controller';
 import authRoutes from './web-site/routes/auth.route';
 import categoryRoutes from './web-site/routes/category.routes';
 import chatRoute from './web-site/routes/chat.routes';
 import newsRoutes from './web-site/routes/news.routes';
 
+import { router } from './common/decorator/controller.decorator';
 import { setupSwagger } from './utils/swaggerService';
 import { initializeModel } from './web-site/services/chatbotv2';
 import { processFeeds } from './utils/rss_parser';
@@ -32,12 +35,13 @@ mongoose
   .catch((err) => console.error('MongoDB connection error:', err));
 // PrecomputeEmbeddingsFN();
 // processFeeds();
-
+mongoose.set('debug', true);
 // Routes
 app.use('/api/news', newsRoutes);
 app.use('/api/chat', chatRoute);
 app.use('/api/category', categoryRoutes);
 app.use('/api/auth', authRoutes);
+app.use(router);
 setupSwagger(app);
 initializeModel()
   .then(() => {
@@ -62,3 +66,4 @@ initializeModel()
 // });
 // job.start();
 // processFeeds();
+

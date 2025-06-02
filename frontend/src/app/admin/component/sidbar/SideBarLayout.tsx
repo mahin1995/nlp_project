@@ -1,15 +1,13 @@
 // components/Layout.tsx
 "use client";
 import {
-  BarChartOutlined,
   CalendarOutlined,
-  FileTextOutlined,
-  MoneyCollectOutlined,
   RightOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Layout, Menu } from "antd";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const { Header, Sider, Content } = Layout;
@@ -38,25 +36,25 @@ export default function SideBarLayout({
   const [collapsed, setCollapsed] = useState(false);
 
   const items: MenuItem[] = [
-    getItem("Agenda", "agenda", <CalendarOutlined />, [
-      getItem("Gestión de citas", "gestion-citas", <RightOutlined />),
-      getItem("Pólizas", "polizas", <RightOutlined />),
+    getItem("News", "", <CalendarOutlined />, [
+      getItem("List", "/admin/news/list", <RightOutlined />),
+      //   getItem("Pólizas", "polizas", <RightOutlined />),
     ]),
-    getItem("Contabilidad", "contabilidad", <MoneyCollectOutlined />, [
-      getItem("Tratamientos", "tratamientos", <RightOutlined />),
-      getItem("Gastos", "gastos", <RightOutlined />),
-      getItem("Facturas", "facturas", <RightOutlined />),
-    ]),
-    getItem("Informes", "informes", <BarChartOutlined />, [
-      getItem("Presupuestos", "presupuestos", <RightOutlined />),
-      getItem("Informe médico", "informe-medico", <RightOutlined />),
-    ]),
-    getItem("Documentación", "documentacion", <FileTextOutlined />, [
-      getItem("Firmas pendientes", "firmas-pendientes", <RightOutlined />),
-      getItem("Documentos", "documentos", <RightOutlined />),
-    ]),
+    // getItem("Contabilidad", "contabilidad", <MoneyCollectOutlined />, [
+    //   getItem("Tratamientos", "tratamientos", <RightOutlined />),
+    //   getItem("Gastos", "gastos", <RightOutlined />),
+    //   getItem("Facturas", "facturas", <RightOutlined />),
+    // ]),
+    // getItem("Informes", "informes", <BarChartOutlined />, [
+    //   getItem("Presupuestos", "presupuestos", <RightOutlined />),
+    //   getItem("Informe médico", "informe-medico", <RightOutlined />),
+    // ]),
+    // getItem("Documentación", "documentacion", <FileTextOutlined />, [
+    //   getItem("Firmas pendientes", "firmas-pendientes", <RightOutlined />),
+    //   getItem("Documentos", "documentos", <RightOutlined />),
+    // ]),
   ];
-
+  const router = useRouter();
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Sider
@@ -73,6 +71,9 @@ export default function SideBarLayout({
           mode="inline"
           items={items}
           style={{ paddingTop: "16px" }}
+          onClick={({ key }) => {
+            router.push(key);
+          }}
         />
       </Sider>
       <Layout>

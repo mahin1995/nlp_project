@@ -1,6 +1,8 @@
 import mongoose, { Document, Schema } from 'mongoose';
 import { ICategory } from './Category';
 
+import NewsModel from '../../admin/model/News-model';
+
 export interface INews extends Document {
   _id: String | null;
   id?: String;
@@ -26,19 +28,20 @@ export interface INewsInput {
   website: string;
 }
 
-const newsSchema = new Schema(
-  {
-    title: { type: String, required: true },
-    link: { type: String, required: true, unique: true },
-    image: { type: String, required: true },
-    content: { type: String, required: true },
-    publishedAt: { type: Date, default: null },
-    embedding: { type: [Number], default: [], index: true }, // ✅ Default to an empty array
-    author: { type: String },
-    website: { type: String, required: true },
-    category: { type: Schema.Types.ObjectId, ref: 'Category', required: true },
-  },
-  { timestamps: true }
-);
+// const newsSchema = new Schema(
+//   {
+//     title: { type: String, required: true },
+//     link: { type: String, required: true, unique: true },
+//     image: { type: String, required: true },
+//     content: { type: String, required: true },
+//     publishedAt: { type: Date, default: null },
+//     embedding: { type: [Number], default: [], index: true }, // ✅ Default to an empty array
+//     author: { type: String },
+//     website: { type: String, required: true },
+//     category: { type: Schema.Types.ObjectId, ref: 'Category', required: true },
+//   },
+//   { timestamps: true }
+// );
 
-export default mongoose.model<INews>('News', newsSchema);
+// export default mongoose.model<INews>('News', newsSchema);
+export default NewsModel;
