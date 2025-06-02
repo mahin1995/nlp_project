@@ -5,15 +5,13 @@ import { Get, Patch, Post, Put } from '../../decorator/router.decorator';
 import AbstractService from '../Service/AbstractService';
 import AbstractRepository from '../repository/AbstractRepository';
 
-class AbstractApiClass<
+abstract class AbstractApiClass<
   T extends Document,
   R extends AbstractRepository<T>,
   S extends AbstractService<T, R>,
 > {
-  private service: S;
-  constructor(service: S) {
-    this.service = service;
-  }
+  protected abstract service: S;
+
   @Post('')
   async create(req: any, res: any, next: any) {
     try {

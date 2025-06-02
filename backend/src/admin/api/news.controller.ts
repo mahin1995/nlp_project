@@ -6,17 +6,12 @@ import NewsRepository from '../../admin/repository/news.repository';
   import { INews } from '../model/News-model';
 
   @Controller('/api/news')
-  // @Service()
   export default class NewsController extends AbstractApiClass<
     INews,
     NewsRepository,
     NewsService
   > {
-    constructor() {
-         const service = Container.get(NewsService);
-    super(service);
-    
-    }
+    protected service = Container.get(NewsService);
     //   @Get('')
     //   @Middleware((req: any, res: any, next: any) => {
     //     console.log('Middleware 1');

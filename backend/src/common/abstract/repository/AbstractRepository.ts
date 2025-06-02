@@ -1,13 +1,14 @@
+import "reflect-metadata"
 import { Document, Model } from 'mongoose'; // Assuming you are using Mongoose for your models
 import { AppError } from '../../../utils/app-errors';
 import pageAbleQuery from '../utils/pageableQuery';
 
 abstract class AbstractRepository<T extends Document> {
-  protected model: Model<T>;
+  protected abstract model: Model<T>;
 
-  constructor(model: Model<T>) {
-    this.model = model;
-  }
+  // constructor(model: Model<T>) {
+  //   this.model = model;
+  // }
 
   async save(item: any): Promise<T> {
     const model = new this.model(item);

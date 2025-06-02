@@ -1,7 +1,9 @@
+
+import 'reflect-metadata';
+import { Container } from 'typedi';
 import dotenv from 'dotenv';
 import express from 'express';
 import mongoose from 'mongoose';
-import 'reflect-metadata';
 
 import cors from 'cors';
 import './admin/api/news.controller';

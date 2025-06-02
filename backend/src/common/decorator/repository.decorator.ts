@@ -1,3 +1,4 @@
+import "reflect-metadata"
 import { Container, ServiceOptions } from "typedi";
 
 export function Repository(options?: ServiceOptions): ClassDecorator {

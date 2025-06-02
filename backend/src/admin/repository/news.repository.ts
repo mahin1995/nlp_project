@@ -3,9 +3,7 @@ import AbstractRepository from '../../common/abstract/repository/AbstractReposit
 import { Repository } from '../../common/decorator/repository.decorator';
 @Repository()
 class NewsRepository extends AbstractRepository<INews> {
-  constructor() {
-    super(NewsModel);
-  }
+ protected model=NewsModel;
 }
 
 export default NewsRepository;

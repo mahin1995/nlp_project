@@ -1,5 +1,5 @@
 import { Document } from 'mongoose';
-
+import "reflect-metadata"
 import { AppError } from '../../../utils/app-errors';
 import AbstractRepository from '../repository/AbstractRepository';
 
@@ -9,9 +9,7 @@ abstract class AbstractService<
 > {
   //   repository: R;
 
-  constructor(private repository: R) {
-    this.repository = repository;
-  }
+  protected abstract repository: R;
 
   async Create(input: T) {
     try {
