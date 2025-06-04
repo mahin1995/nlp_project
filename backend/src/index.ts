@@ -1,21 +1,20 @@
-
-import 'reflect-metadata';
-import { Container } from 'typedi';
 import dotenv from 'dotenv';
 import express from 'express';
 import mongoose from 'mongoose';
+import 'reflect-metadata';
 
 import cors from 'cors';
+import './admin/api/category-controller';
 import './admin/api/news.controller';
 import authRoutes from './web-site/routes/auth.route';
 import categoryRoutes from './web-site/routes/category.routes';
 import chatRoute from './web-site/routes/chat.routes';
 import newsRoutes from './web-site/routes/news.routes';
 
-import { router } from './common/decorator/controller.decorator';
-import { setupSwagger } from './utils/swaggerService';
+import { router, setupSwagger } from './common/decorator/controller.decorator';
+
+import { globalErrorHandler } from './utils/error/error-handler';
 import { initializeModel } from './web-site/services/chatbotv2';
-import { processFeeds } from './utils/rss_parser';
 dotenv.config();
 
 const app = express();
@@ -44,7 +43,10 @@ app.use('/api/chat', chatRoute);
 app.use('/api/category', categoryRoutes);
 app.use('/api/auth', authRoutes);
 app.use(router);
-setupSwagger(app);
+if (process.env.NODE_ENV === 'development') {
+  setupSwagger(app);
+}
+app.use(globalErrorHandler);
 initializeModel()
   .then(() => {
     app.listen(port, () => {
@@ -68,4 +70,3 @@ initializeModel()
 // });
 // job.start();
 // processFeeds();
-

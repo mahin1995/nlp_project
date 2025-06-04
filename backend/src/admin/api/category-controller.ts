@@ -1,19 +1,18 @@
 import Container from 'typedi';
-import NewsRepository from '../../admin/repository/news.repository';
-import NewsService from '../../admin/service/news.service';
 import AbstractApiClass from '../../common/abstract/api/AbstractApi';
 import { Controller } from '../../common/decorator/controller.decorator';
-import { INews } from '../model/News-model';
-import { SearchBuilder } from '../../utils/SearchBuilder';
+import { ICategory } from '../model/Category-model';
+import CategoryRepository from '../repository/category.repository';
+import CategoryService from '../service/category.service';
 
-@Controller('/api/news')
-export default class NewsController extends AbstractApiClass<
-  INews,
-  NewsRepository,
-  NewsService
+@Controller('/api/category')
+export default class CategoryController extends AbstractApiClass<
+  ICategory,
+  CategoryRepository,
+  CategoryService
 > {
- 
-  protected service = Container.get(NewsService);
+
+  protected service = Container.get(CategoryService);
   //   @Get('')
   //   @Middleware((req: any, res: any, next: any) => {
   //     console.log('Middleware 1');

@@ -1,5 +1,6 @@
 import { Document } from 'mongoose';
-import "reflect-metadata"
+import 'reflect-metadata';
+import { PaginatedResult } from '../../../utils/all_interface';
 import { AppError } from '../../../utils/app-errors';
 import AbstractRepository from '../repository/AbstractRepository';
 
@@ -15,7 +16,7 @@ abstract class AbstractService<
     try {
       const modifying = this.mapInputToModel(input);
       const result = await this.repository.save(modifying);
-      return FormateData(result);
+      return this.FormateData(result);
     } catch (error) {
       throw AppError.internal('Unable to Create ', {
         error,
@@ -49,11 +50,20 @@ abstract class AbstractService<
     }
   }
 
-  async GetAll(query: any) {
+  async GetAll(
+    page: number = 1,
+    limit: number = 10,
+    sort: string = '',
+    offset: number = 0
+  ): Promise<PaginatedResult<T>> {
     try {
-      const data = await this.repository.findAll(query);
-      const modifydata = this.mapModelToRes(data);
-      return FormateData(modifydata);
+      const data = await this.repository.findAll({ page, limit, sort, offset });
+      return {
+        data: data.data,
+        currentPage: data.currentPage,
+        totalPages: data.totalPage,
+        totalItems: data.count,
+      };
     } catch (error) {
       throw AppError.notFound('Data not Found ', {
         error,
@@ -61,12 +71,30 @@ abstract class AbstractService<
       });
     }
   }
-
-  async Search(query: any) {
+  abstract searchQuery(body: any): Object;
+  async Search(body: any, page: any, limit: any) {
     try {
-      const data = await this.repository.findByQuery(query, []);
-      const modifydata = this.mapModelToRes(data);
-      return FormateData(modifydata);
+      const filter = this.searchQuery(body);
+      let model = this.repository.getModel().find(filter);
+      if (page && limit) {
+        model = model.skip((page - 1) * limit).limit(limit);
+      }
+
+      const paginatedData = await model.exec();
+      if (paginatedData.length === 0) {
+        throw AppError.notFound('No Data Found', null);
+      }
+      const totalCount: number = await this.repository
+        .getModel()
+        .countDocuments(filter);
+      const totalPages = Math.ceil(totalCount / limit);
+      const modifydata = this.mapModelToRes(paginatedData);
+      return {
+        data: modifydata,
+        currentPage: page || 1,
+        totalPages: totalPages || 1,
+        totalItems: totalCount || 0,
+      };
     } catch (error) {
       throw AppError.internal('Unable to Search ', {
         error,
@@ -80,7 +108,7 @@ abstract class AbstractService<
       if (id === undefined || id === null)
         throw AppError.internal('ID is not provided', null);
       const data = await this.repository.findById(id);
-      return FormateData(data);
+      return this.FormateData(data);
     } catch (error) {
       throw AppError.notFound('Data Not found', {
         error,
@@ -94,7 +122,7 @@ abstract class AbstractService<
       if (id === undefined || id === null)
         throw AppError.internal('ID is not provided', null);
       const data = await this.repository.deleteById(id);
-      return FormateData(data);
+      return this.FormateData(data);
     } catch (error) {
       throw AppError.notFound('Data Not found', {
         error,
@@ -107,7 +135,7 @@ abstract class AbstractService<
     try {
       const modifying = this.mapInputToModel(input);
       const data = await this.repository.update(modifying);
-      return FormateData(data);
+      return this.FormateData(data);
     } catch (error) {
       throw AppError.badRequest('Update not possible', {
         error,
@@ -127,15 +155,14 @@ abstract class AbstractService<
       page: 0,
     });
   }
+  FormateData(data: any): { data: any } {
+    if (data) {
+      return { data };
+    } else {
+      // return { data }
+      throw AppError.notFound('Data Not found', null);
+    }
+  }
 }
 
 export default AbstractService;
-
-function FormateData(data: any): { data: any } {
-  if (data) {
-    return { data };
-  } else {
-    // return { data }
-    throw AppError.notFound('Data Not found', null);
-  }
-}

@@ -1,11 +1,11 @@
-import "reflect-metadata"
 import { Document, Model } from 'mongoose'; // Assuming you are using Mongoose for your models
+import 'reflect-metadata';
 import { AppError } from '../../../utils/app-errors';
 import pageAbleQuery from '../utils/pageableQuery';
 
 abstract class AbstractRepository<T extends Document> {
   protected abstract model: Model<T>;
-
+  abstract getModel(): Model<T>;
   // constructor(model: Model<T>) {
   //   this.model = model;
   // }

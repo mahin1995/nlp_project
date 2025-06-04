@@ -1,4 +1,5 @@
 import mongoose, { Document, Schema } from 'mongoose';
+import CategoryModel from '../../admin/model/Category-model';
 
 export interface ICategory extends Document {
   name: string;
@@ -16,13 +17,14 @@ export interface ICategoryOut {
   updatedAt: Date;
 }
 
-const categorySchema = new Schema<ICategory>(
-  {
-    name: { type: String, required: true, unique: true, index: true },
-    description: { type: String },
-    link: { type: String, unique: true },
-  },
-  { timestamps: true } // ✅ Adds createdAt & updatedAt
-);
+// const categorySchema = new Schema<ICategory>(
+//   {
+//     name: { type: String, required: true, unique: true, index: true },
+//     description: { type: String },
+//     link: { type: String, unique: true },
+//   },
+//   { timestamps: true } // ✅ Adds createdAt & updatedAt
+// );
 
-export default mongoose.model<ICategory>('Category', categorySchema);
+// export default mongoose.model<ICategory>('Category', categorySchema);
+export default CategoryModel
