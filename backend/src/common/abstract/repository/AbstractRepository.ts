@@ -63,12 +63,12 @@ abstract class AbstractRepository<T extends Document> {
   }
 
   async findAll(query: {
-    isActive?: boolean;
-    pageable?: boolean;
-    limit: number;
-    offset: number;
-    sort: string;
-    page: number;
+    page: any;
+    limit: any;
+    sort: any;
+    pageable?: any;
+    offset?: any;
+    isActive?: any;
   }): Promise<any> {
     let isActive = true;
 
@@ -77,23 +77,31 @@ abstract class AbstractRepository<T extends Document> {
     }
 
     if (query.pageable) {
-      pageAbleQuery(query);
-      const data = await this.model
-        .find({}, { __v: 0 })
-        .where('isActive')
-        .equals(isActive)
-        .limit(query.limit)
-        .skip(query.offset);
-      // .sort({ _id: query.sort });
+      let { page, limit, sort, offset } = pageAbleQuery(query);
+      let qt = this.getModel().find({}, { __v: 0 });
+      if (isActive !== undefined) {
+        qt = qt.where('isActive').equals(isActive);
+      }
+      if (sort) {
+        qt = qt.sort({ _id: sort || '' });
+      }
+      if (limit) {
+        qt = qt.limit(limit);
+      }
+      if (query.offset) {
+        qt = qt.skip(offset);
+      }
+
+      const data = await qt.exec();
       const currentPage = 1;
       const countData = await this.model.countDocuments();
-      const totalPage = Math.ceil(countData / query.limit);
+      const totalPage = Math.ceil(countData / limit);
       return {
         data,
         count: countData,
-        limit: query.limit,
-        currentPage: query.page > 0 ? currentPage + 1 : currentPage,
-        page: query.page,
+        limit: limit,
+        currentPage: page > 0 ? currentPage + 1 : currentPage,
+        page: page,
         totalPage,
       };
     } else {

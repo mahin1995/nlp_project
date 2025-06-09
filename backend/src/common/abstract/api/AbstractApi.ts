@@ -118,8 +118,8 @@ abstract class AbstractApiClass<
       {
         in: 'query',
         name: 'sort',
-        schema: { type: 'string', default: 10 },
-        description: 'Number of featured items to return',
+        schema: { type: 'string', default: 'asc' },
+        description: 'Give sort order',
       },
     ],
     responses: {
@@ -129,9 +129,9 @@ abstract class AbstractApiClass<
   @Get('')
   async getALL(req: any, res: any, next: any) {
     try {
-      console.log('My Log req: ', req);
-      const { page, limit, sort, offset } = req.query;
-      const result = await this.service.GetAll(page, limit, sort, offset);
+      console.log('My Log req: ', req.query);
+      const { page, limit, sort } = req.query;
+      const result = await this.service.GetAll(page, limit, sort);
       return res.json(result);
     } catch (error) {
       Logger.logError(error);
@@ -163,7 +163,6 @@ abstract class AbstractApiClass<
   async search(req: any, res: any, next: any) {
     try {
       const body = req.body;
-      console.log('My Log body: ',body)
       const { page, limit } = req.query;
       const result = await this.service.Search(body, page, limit);
       return res.json(result);

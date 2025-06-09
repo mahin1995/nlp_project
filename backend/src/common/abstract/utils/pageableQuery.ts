@@ -10,5 +10,6 @@ const pageAbleQuery = (queryParams: any) => {
   }
 
   queryParams.sort = queryParams.sort === "des" ? -1 : 1 || "asc" ? 1 : -1;
+  return queryParams;
 };
 export default pageAbleQuery;

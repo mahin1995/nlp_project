@@ -53,11 +53,10 @@ abstract class AbstractService<
   async GetAll(
     page: number = 1,
     limit: number = 10,
-    sort: string = '',
-    offset: number = 0
+    sort: string = ''
   ): Promise<PaginatedResult<T>> {
     try {
-      const data = await this.repository.findAll({ page, limit, sort, offset });
+      const data = await this.repository.findAll({ page, limit, sort,pageable: true });
       return {
         data: data.data,
         currentPage: data.currentPage,
