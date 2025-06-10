@@ -6,7 +6,7 @@ import { Controller } from '../../common/decorator/controller.decorator';
 import { INews } from '../model/News-model';
 import { SearchBuilder } from '../../utils/SearchBuilder';
 
-@Controller('/api/news')
+@Controller('/api/v1/news')
 export default class NewsController extends AbstractApiClass<
   INews,
   NewsRepository,
@@ -14,13 +14,4 @@ export default class NewsController extends AbstractApiClass<
 > {
  
   protected service = Container.get(NewsService);
-  //   @Get('')
-  //   @Middleware((req: any, res: any, next: any) => {
-  //     console.log('Middleware 1');
-  //     next();
-  //   })
-  //   async getALL(req: any, res: any, next: any) {
-  //     const body: any = { message: 'Get all users' };
-  //     res.json(body);
-  //   }
 }

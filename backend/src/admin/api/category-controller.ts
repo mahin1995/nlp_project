@@ -5,7 +5,7 @@ import { ICategory } from '../model/Category-model';
 import CategoryRepository from '../repository/category.repository';
 import CategoryService from '../service/category.service';
 
-@Controller('/api/category')
+@Controller('/api/v1/category')
 export default class CategoryController extends AbstractApiClass<
   ICategory,
   CategoryRepository,

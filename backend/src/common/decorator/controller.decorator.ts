@@ -241,6 +241,20 @@ export const generateSwaggerSpec = () => {
       title: 'API Documentation',
       version: '1.0.0',
     },
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT', // Optional, can be just 'bearer'
+        },
+      },
+    },
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ],
     paths,
   };
 };
