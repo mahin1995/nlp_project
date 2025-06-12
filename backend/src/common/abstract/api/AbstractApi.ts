@@ -1,10 +1,13 @@
 import { Document } from 'mongoose';
 
+import { protect } from '../../../admin/middleware/auth.middleware';
 import Logger from '../../../utils/Logger';
 import { SwaggerDoc } from '../../decorator/controller.decorator';
+import { Middleware } from '../../decorator/middleware.decorator';
 import { Get, Patch, Post, Put } from '../../decorator/router.decorator';
 import AbstractService from '../Service/AbstractService';
 import AbstractRepository from '../repository/AbstractRepository';
+import User from '../../../web-site/models/user';
 
 abstract class AbstractApiClass<
   T extends Document,
@@ -24,6 +27,7 @@ abstract class AbstractApiClass<
     },
   })
   @Post('')
+  @Middleware(protect)
   async create(req: any, res: any, next: any) {
     try {
       const input = req.body;
@@ -48,6 +52,7 @@ abstract class AbstractApiClass<
     },
   })
   @Post('/create-all')
+  @Middleware(protect)
   async createMultiple(req: any, res: any, next: any) {
     try {
       const input = req.body;
@@ -62,6 +67,7 @@ abstract class AbstractApiClass<
     }
   }
   @Patch('/:id')
+  @Middleware(protect)
   async delete(req: any, res: any, next: any) {
     try {
       const { id } = req.params;
@@ -73,6 +79,7 @@ abstract class AbstractApiClass<
     }
   }
   @Put('')
+  @Middleware(protect)
   async update(req: any, res: any, next: any) {
     try {
       const input = req.body;
@@ -85,6 +92,7 @@ abstract class AbstractApiClass<
     }
   }
   @Put('/update-all')
+  @Middleware(protect)
   async updateMany(req: any, res: any, next: any) {
     try {
       const input = req.body;
@@ -127,6 +135,7 @@ abstract class AbstractApiClass<
     },
   })
   @Get('')
+  @Middleware(protect)
   async getALL(req: any, res: any, next: any) {
     try {
       console.log('My Log req: ', req.query);
@@ -160,6 +169,7 @@ abstract class AbstractApiClass<
     },
   })
   @Post('/search')
+  @Middleware(protect)
   async search(req: any, res: any, next: any) {
     try {
       const body = req.body;
@@ -192,6 +202,7 @@ abstract class AbstractApiClass<
     },
   })
   @Get('/:id')
+  @Middleware(protect)
   async getById(req: any, res: any, next: any) {
     try {
       const { id } = req.params;

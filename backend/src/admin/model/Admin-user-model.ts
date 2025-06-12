@@ -86,7 +86,7 @@ AdminUserSchema.methods.generateAuthToken = function (): string {
 
   const secret = process.env.JWT_SECRET || 'your-secret-key';
   const options: jwt.SignOptions = {
-    expiresIn: 30,
+    expiresIn: 30000,
   };
 
   return jwt.sign(payload, secret, options);
