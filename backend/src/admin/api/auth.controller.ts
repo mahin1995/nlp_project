@@ -21,8 +21,13 @@ export default class AuthController {
   })
   @Post('/login')
   async login(req: any, res: any, next: any) {
-    let { email, username, password } = req.body;
-    const body =await this.service.loginUser({ email, username, password });
-    res.json(body);
+    try {
+      let { email, username, password } = req.body;
+      const body = await this.service.loginUser({ email, username, password });
+      res.json(body);
+    } catch (error) {
+      next(error);
+      // Logger.logError(error);
+    }
   }
 }

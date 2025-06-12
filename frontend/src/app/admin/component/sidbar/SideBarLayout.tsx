@@ -9,6 +9,7 @@ import type { MenuProps } from "antd";
 import { Layout, Menu } from "antd";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { BiExit } from "react-icons/bi";
 
 const { Header, Sider, Content } = Layout;
 
@@ -55,6 +56,7 @@ export default function SideBarLayout({
     // ]),
   ];
   const router = useRouter();
+  const user = localStorage.getItem("user");
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Sider
@@ -79,10 +81,19 @@ export default function SideBarLayout({
       <Layout>
         <Header style={{ padding: 0, background: "#1890ff" }}>
           <div className="flex items-center justify-between h-full px-4">
-            <h1 className="text-white text-xl font-semibold">SALUD 360</h1>
+            <h1 className="text-white text-xl font-semibold">INSIGHT FEED</h1>
             <div className="flex items-center space-x-4">
-              <span className="text-white">Bienvenido</span>
               <UserOutlined className="text-white text-xl" />
+              <span className="text-white">{user}</span>
+              <BiExit
+                onClick={() => [
+                  localStorage.removeItem("jwt_token"),
+                  localStorage.removeItem("user"),
+                  router.push("/admin/login"),
+                ]}
+                className="text-white text-xl cusror-pointer hover:text-red-500 transition-colors duration-200"
+                title="Logout"
+              />
             </div>
           </div>
         </Header>

@@ -24,6 +24,7 @@ const LoginPage: React.FC = () => {
       console.log("Login successful:", response.data);
       // Handle successful login, e.g., store token, redirect, etc.
       localStorage.setItem("jwt_token", response.data.token); // Adjust based on your API response
+      localStorage.setItem("user", response.data.user.username); // Adjust based on your API response
       router.push("/admin");
     } else {
       notification.open({
