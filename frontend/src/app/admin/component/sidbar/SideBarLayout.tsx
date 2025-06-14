@@ -57,7 +57,7 @@ export default function SideBarLayout({
   ];
   const router = useRouter();
 
-  let user;
+  let user=null;
   if (typeof window !== "undefined") {
     user = localStorage.getItem("user");
   }
