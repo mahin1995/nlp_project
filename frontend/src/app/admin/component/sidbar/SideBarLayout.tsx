@@ -56,7 +56,11 @@ export default function SideBarLayout({
     // ]),
   ];
   const router = useRouter();
-  const user = localStorage.getItem("user");
+
+  let user;
+  if (typeof window !== "undefined") {
+    user = localStorage.getItem("user");
+  }
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Sider

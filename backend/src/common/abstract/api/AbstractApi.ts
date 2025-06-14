@@ -50,9 +50,7 @@ abstract class AbstractApiClass<
     @Req() req: Request,
     @Res() res: Response,
     @Next() next: NextFunction,
-    @Body() body: any,
-    @Query() query: any
-    // @Param("id") id: string | undefined = undefined
+    @Body() body: any
   ) {
     try {
       const input = body;
@@ -78,8 +76,6 @@ abstract class AbstractApiClass<
     @Res() res: Response,
     @Next() next: NextFunction,
     @Body() body: any,
-    @Query() query: any
-    // @Param("id") id: string | undefined = undefined
   ) {
     try {
       const input = body;
@@ -96,11 +92,8 @@ abstract class AbstractApiClass<
   @Patch('/:id')
   @Middleware(protect)
   async delete(
-    @Req() req: Request,
     @Res() res: Response,
     @Next() next: NextFunction,
-    @Body() body: any,
-    @Query() query: any,
     @Param('id') id: string
   ) {
     try {
@@ -137,12 +130,9 @@ abstract class AbstractApiClass<
   @Put('/update-all')
   @Middleware(protect)
   async updateMany(
-    @Req() req: Request,
     @Res() res: Response,
     @Next() next: NextFunction,
-    @Body() body: any,
-    @Query() query: any
-    // @Param("id") id: string | undefined = undefined
+    @Body() body: any
   ) {
     try {
       const value = await this.service.updateMultipleItem(body);
@@ -187,12 +177,9 @@ abstract class AbstractApiClass<
   @Get('')
   @Middleware(protect)
   async getALL(
-    @Req() req: Request,
     @Res() res: Response,
     @Next() next: NextFunction,
-    //    @Body() body: any,
     @Query() query: any
-    // @Param("id") id: string | undefined = undefined
   ) {
     try {
       const { page, limit, sort, status } = query;
@@ -238,12 +225,10 @@ abstract class AbstractApiClass<
   @Post('/search')
   @Middleware(protect)
   async search(
-    @Req() req: Request,
     @Res() res: Response,
     @Next() next: NextFunction,
     @Body() body: any,
     @Query() query: any
-    // @Param("id") id: string | undefined = undefined
   ) {
     try {
       if (!body || Object.keys(body).length === 0) {
@@ -276,7 +261,6 @@ abstract class AbstractApiClass<
   @Get('/:id')
   @Middleware(protect)
   async getById(
-    @Req() req: Request,
     @Res() res: Response,
     @Next() next: NextFunction,
     @Param('id') id: string
