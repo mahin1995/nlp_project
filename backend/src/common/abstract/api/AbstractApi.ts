@@ -7,7 +7,7 @@ import { Middleware } from '../../decorator/middleware.decorator';
 import { Get, Patch, Post, Put } from '../../decorator/router.decorator';
 import AbstractService from '../Service/AbstractService';
 import AbstractRepository from '../repository/AbstractRepository';
-import User from '../../../web-site/models/user';
+import { ACTIVE_STATUS } from '../utils/constant';
 
 abstract class AbstractApiClass<
   T extends Document,
@@ -42,11 +42,6 @@ abstract class AbstractApiClass<
   }
   @SwaggerDoc({
     summary: 'Create a new item',
-    bodyExample: {
-      title: 'Example News Title',
-      content: 'This is sample content for a Create request.',
-      category: 'General',
-    },
     responses: {
       200: { description: 'Successfully created item' },
     },
@@ -105,11 +100,6 @@ abstract class AbstractApiClass<
   }
   @SwaggerDoc({
     summary: 'Create a new item',
-    bodyExample: {
-      title: 'Example News Title',
-      content: 'This is sample content for a Create request.',
-      category: 'General',
-    },
     parameters: [
       {
         in: 'query',
@@ -129,6 +119,12 @@ abstract class AbstractApiClass<
         schema: { type: 'string', default: 'asc' },
         description: 'Give sort order',
       },
+      {
+        in: 'query',
+        name: 'status',
+        schema: { type: 'string', default: 'active' },
+        description: 'Give active or inactive status',
+      },
     ],
     responses: {
       200: { description: 'Successfully created item' },
@@ -138,9 +134,19 @@ abstract class AbstractApiClass<
   @Middleware(protect)
   async getALL(req: any, res: any, next: any) {
     try {
-      console.log('My Log req: ', req.query);
-      const { page, limit, sort } = req.query;
-      const result = await this.service.GetAll(page, limit, sort);
+      const { page, limit, sort, status } = req.query;
+      let isActive = ACTIVE_STATUS.ACTIVE;
+      if (status == 'active') {
+        isActive = ACTIVE_STATUS.ACTIVE;
+      } else {
+        isActive = ACTIVE_STATUS.INACTIVE;
+      }
+      const result = await this.service.GetAll({
+        page,
+        limit,
+        sort,
+        isActive,
+      });
       return res.json(result);
     } catch (error) {
       Logger.logError(error);
@@ -183,11 +189,7 @@ abstract class AbstractApiClass<
   }
   @SwaggerDoc({
     summary: 'Create a new item',
-    bodyExample: {
-      title: 'Example News Title',
-      content: 'This is sample content for a Create request.',
-      category: 'General',
-    },
+
     parameters: [
       {
         name: 'id',

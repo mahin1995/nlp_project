@@ -51,12 +51,28 @@ abstract class AbstractService<
   }
 
   async GetAll(
-    page: number = 1,
-    limit: number = 10,
-    sort: string = ''
+    {
+      page = 1,
+      limit = 10,
+      sort = '-createdAt',
+      offset = 0,
+      isActive = true,
+    } = {} as {
+      page?: number;
+      limit?: number;
+      sort?: string;
+      offset?: number;
+      isActive?: boolean;
+    }
   ): Promise<PaginatedResult<T>> {
     try {
-      const data = await this.repository.findAll({ page, limit, sort,pageable: true });
+      const data = await this.repository.findAll({
+        page,
+        limit,
+        sort,
+        pageable: true,
+        isActive,
+      });
       return {
         data: data.data,
         currentPage: data.currentPage,

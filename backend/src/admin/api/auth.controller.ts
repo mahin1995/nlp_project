@@ -1,8 +1,10 @@
+import { body } from 'express-validator';
 import Container from 'typedi';
 import {
   Controller,
   SwaggerDoc,
 } from '../../common/decorator/controller.decorator';
+import { Middleware } from '../../common/decorator/middleware.decorator';
 import { Post } from '../../common/decorator/router.decorator';
 import { AuthService } from '../service/auth.service';
 
@@ -12,16 +14,26 @@ export default class AuthController {
   @SwaggerDoc({
     summary: 'Login User',
     bodyExample: {
-      username: 'user name',
-      password: 'password',
+      type: 'object',
+      properties: {
+        username: { type: 'string', example: 'admin' },
+        password: { type: 'string', example: 'admin123' },
+      },
     },
     responses: {
       200: { description: 'Login successful' },
     },
   })
   @Post('/login')
+  @Middleware((req: any, res: any, next: any) => {
+    body('username').notEmpty().withMessage('Username is required'),
+      body('password').notEmpty().withMessage('Password is required'),
+      body('email').optional().isEmail().withMessage('Invalid email format'),
+      next();
+  })
   async login(req: any, res: any, next: any) {
     try {
+      console.log('My Log req.body: ', req.body);
       let { email, username, password } = req.body;
       const body = await this.service.loginUser({ email, username, password });
       res.json(body);

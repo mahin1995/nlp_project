@@ -115,8 +115,8 @@ import 'reflect-metadata';
 import swaggerUi from 'swagger-ui-express';
 import Container from 'typedi';
 import Logger from '../../utils/Logger';
+import express from 'express';
 import { RouteDefinition } from './RouteDefinition';
-
 export const router = Router();
 
 // Global registry for Swagger documentation
@@ -212,6 +212,14 @@ export const generateSwaggerSpec = () => {
         (p: any) => p.in === 'body'
       );
       if (!hasBodyParam) {
+        metadata.requestBody = {
+          required: true,
+          content: {
+            'application/json': {
+              schema: metadata.bodyExample || { type: 'object' },
+            },
+          },
+        };
         metadata.parameters.push({
           in: 'body',
           name: 'body',

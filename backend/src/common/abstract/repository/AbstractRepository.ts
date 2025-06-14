@@ -94,7 +94,9 @@ abstract class AbstractRepository<T extends Document> {
 
       const data = await qt.exec();
       const currentPage = 1;
-      const countData = await this.model.countDocuments();
+      const countData = await this.getModel().countDocuments({
+        isActive: isActive,
+      });
       const totalPage = Math.ceil(countData / limit);
       return {
         data,

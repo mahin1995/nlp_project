@@ -25,10 +25,19 @@ class NewsService extends AbstractService<INews, NewsRepository> {
     return modelData;
   }
   async GetAll(
-    page?: number,
-    limit?: number,
-    sort?: any,
-    offset?: number
+    {
+      page = 1,
+      limit = 10,
+      sort = 'asc',
+      offset = 0,
+      isActive = true,
+    } = {} as {
+      page?: number;
+      limit?: number;
+      sort?: string;
+      offset?: number;
+      isActive?: boolean;
+    }
   ): Promise<PaginatedResult<INews>> {
     ({ page, limit, sort, offset } = pageAbleQuery({
       page,
@@ -36,18 +45,21 @@ class NewsService extends AbstractService<INews, NewsRepository> {
       sort,
       offset,
     }));
+    console.log('My Log isActive: ', isActive);
     let qt = this.repository
       .getModel()
       .find({})
       .where('isActive')
-      .equals(true)
+      .equals(isActive)
       .limit(limit || 10)
       .skip(offset || 0)
-      .sort({ publishedAt: sort || -1 })
+      .sort({ publishedAt: sort === 'asc' ? 1 : -1 })
       .select({ __v: 0, createdAt: 0, updatedAt: 0, content: 0, isActive: 0 });
     let data = await qt.exec();
     // TODO: Implement actual logic
-    const countData = await this.repository.getModel().countDocuments();
+    const countData = await this.repository
+      .getModel()
+      .countDocuments({ isActive: isActive });
     const totalPage = Math.ceil(countData / (limit ?? 10));
     return Promise.resolve({
       data: data,
