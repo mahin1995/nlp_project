@@ -1,7 +1,12 @@
+import { NextFunction, Response } from 'express';
 import { body } from 'express-validator';
 import Container from 'typedi';
 import {
+  Body,
   Controller,
+  Next,
+  Req,
+  Res,
   SwaggerDoc,
 } from '../../common/decorator/controller.decorator';
 import { Middleware } from '../../common/decorator/middleware.decorator';
@@ -31,12 +36,20 @@ export default class AuthController {
       body('email').optional().isEmail().withMessage('Invalid email format'),
       next();
   })
-  async login(req: any, res: any, next: any) {
+  async login(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Next() next: NextFunction,
+    @Body() body: any
+  ) {
     try {
-      console.log('My Log req.body: ', req.body);
-      let { email, username, password } = req.body;
-      const body = await this.service.loginUser({ email, username, password });
-      res.json(body);
+      let { email, username, password } = body;
+      const result = await this.service.loginUser({
+        email,
+        username,
+        password,
+      });
+      res.json(result);
     } catch (error) {
       next(error);
       // Logger.logError(error);

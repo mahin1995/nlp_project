@@ -1,13 +1,31 @@
 import { Document } from 'mongoose';
 
+import { NextFunction, Request, Response } from 'express';
 import { protect } from '../../../admin/middleware/auth.middleware';
 import Logger from '../../../utils/Logger';
-import { SwaggerDoc } from '../../decorator/controller.decorator';
+import {
+  Body,
+  Next,
+  Param,
+  Query,
+  Req,
+  Res,
+  SwaggerDoc,
+} from '../../decorator/controller.decorator';
 import { Middleware } from '../../decorator/middleware.decorator';
 import { Get, Patch, Post, Put } from '../../decorator/router.decorator';
 import AbstractService from '../Service/AbstractService';
 import AbstractRepository from '../repository/AbstractRepository';
 import { ACTIVE_STATUS } from '../utils/constant';
+
+// Extend Express Request interface to include 'user'
+declare global {
+  namespace Express {
+    interface Request {
+      user?: any;
+    }
+  }
+}
 
 abstract class AbstractApiClass<
   T extends Document,
@@ -28,9 +46,16 @@ abstract class AbstractApiClass<
   })
   @Post('')
   @Middleware(protect)
-  async create(req: any, res: any, next: any) {
+  async create(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Next() next: NextFunction,
+    @Body() body: any,
+    @Query() query: any
+    // @Param("id") id: string | undefined = undefined
+  ) {
     try {
-      const input = req.body;
+      const input = body;
       input.createdBy = req.user;
       input.updatedBy = req.user;
       const { data } = await this.service.Create(input);
@@ -48,9 +73,16 @@ abstract class AbstractApiClass<
   })
   @Post('/create-all')
   @Middleware(protect)
-  async createMultiple(req: any, res: any, next: any) {
+  async createMultiple(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Next() next: NextFunction,
+    @Body() body: any,
+    @Query() query: any
+    // @Param("id") id: string | undefined = undefined
+  ) {
     try {
-      const input = req.body;
+      const input = body;
       input.createdBy = req.user;
       input.updatedBy = req.user;
       const result: any = await this.service.saveMultipleItem(input);
@@ -63,9 +95,18 @@ abstract class AbstractApiClass<
   }
   @Patch('/:id')
   @Middleware(protect)
-  async delete(req: any, res: any, next: any) {
+  async delete(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Next() next: NextFunction,
+    @Body() body: any,
+    @Query() query: any,
+    @Param('id') id: string
+  ) {
     try {
-      const { id } = req.params;
+      if (!id) {
+        return res.status(400).json({ message: 'ID is required' });
+      }
       const { data } = await this.service.delete(id);
       return res.json(data);
     } catch (error) {
@@ -75,10 +116,17 @@ abstract class AbstractApiClass<
   }
   @Put('')
   @Middleware(protect)
-  async update(req: any, res: any, next: any) {
+  async update(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Next() next: NextFunction,
+    @Body() body: any,
+    @Query() query: any
+    // @Param("id") id: string | undefined = undefined
+  ) {
     try {
-      const input = req.body;
-      input.updatedBy = req.user;
+      const input = body;
+      input.updatedBy = req.user || '';
       const { data } = await this.service.update(input);
       return res.status(202).json(data);
     } catch (error) {
@@ -88,10 +136,16 @@ abstract class AbstractApiClass<
   }
   @Put('/update-all')
   @Middleware(protect)
-  async updateMany(req: any, res: any, next: any) {
+  async updateMany(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Next() next: NextFunction,
+    @Body() body: any,
+    @Query() query: any
+    // @Param("id") id: string | undefined = undefined
+  ) {
     try {
-      const input = req.body;
-      const value = await this.service.updateMultipleItem(input);
+      const value = await this.service.updateMultipleItem(body);
       return res.status(202).json({ message: 'Successfully update' });
     } catch (error) {
       Logger.logError(error);
@@ -132,9 +186,16 @@ abstract class AbstractApiClass<
   })
   @Get('')
   @Middleware(protect)
-  async getALL(req: any, res: any, next: any) {
+  async getALL(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Next() next: NextFunction,
+    //    @Body() body: any,
+    @Query() query: any
+    // @Param("id") id: string | undefined = undefined
+  ) {
     try {
-      const { page, limit, sort, status } = req.query;
+      const { page, limit, sort, status } = query;
       let isActive = ACTIVE_STATUS.ACTIVE;
       if (status == 'active') {
         isActive = ACTIVE_STATUS.ACTIVE;
@@ -147,7 +208,7 @@ abstract class AbstractApiClass<
         sort,
         isActive,
       });
-      return res.json(result);
+      return res.status(200).json(result);
     } catch (error) {
       Logger.logError(error);
       next(error);
@@ -176,10 +237,19 @@ abstract class AbstractApiClass<
   })
   @Post('/search')
   @Middleware(protect)
-  async search(req: any, res: any, next: any) {
+  async search(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Next() next: NextFunction,
+    @Body() body: any,
+    @Query() query: any
+    // @Param("id") id: string | undefined = undefined
+  ) {
     try {
-      const body = req.body;
-      const { page, limit } = req.query;
+      if (!body || Object.keys(body).length === 0) {
+        return res.status(400).json({ message: 'Search body cannot be empty' });
+      }
+      const { page, limit } = query;
       const result = await this.service.Search(body, page, limit);
       return res.json(result);
     } catch (error) {
@@ -205,9 +275,13 @@ abstract class AbstractApiClass<
   })
   @Get('/:id')
   @Middleware(protect)
-  async getById(req: any, res: any, next: any) {
+  async getById(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Next() next: NextFunction,
+    @Param('id') id: string
+  ) {
     try {
-      const { id } = req.params;
       const { data } = await this.service.GetById(id);
       return res.json(data);
     } catch (error) {
