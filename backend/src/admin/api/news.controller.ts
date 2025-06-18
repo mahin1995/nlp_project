@@ -4,7 +4,6 @@ import NewsService from '../../admin/service/news.service';
 import AbstractApiClass from '../../common/abstract/api/AbstractApi';
 import { Controller } from '../../common/decorator/controller.decorator';
 import { INews } from '../model/News-model';
-import { SearchBuilder } from '../../utils/SearchBuilder';
 
 @Controller('/api/v1/news')
 export default class NewsController extends AbstractApiClass<
@@ -12,6 +11,11 @@ export default class NewsController extends AbstractApiClass<
   NewsRepository,
   NewsService
 > {
- 
+  protected dropownResponse(data: INews[]) {
+    return data.map((news) => ({
+      id: news._id,
+      title: news.title,
+    }));
+  }
   protected service = Container.get(NewsService);
 }

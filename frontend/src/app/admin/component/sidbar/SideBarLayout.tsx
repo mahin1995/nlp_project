@@ -37,8 +37,16 @@ export default function SideBarLayout({
   const [collapsed, setCollapsed] = useState(false);
 
   const items: MenuItem[] = [
-    getItem("News", "", <CalendarOutlined />, [
+    getItem("News", "news", <CalendarOutlined />, [
       getItem("List", "/admin/news/list", <RightOutlined />),
+      //   getItem("Pólizas", "polizas", <RightOutlined />),
+    ]),
+    getItem("Users", "user", <CalendarOutlined />, [
+      getItem("List", "/admin/user/list", <RightOutlined />),
+      //   getItem("Pólizas", "polizas", <RightOutlined />),
+    ]),
+    getItem("Category", "category", <CalendarOutlined />, [
+      getItem("List", "/admin/category/list", <RightOutlined />),
       //   getItem("Pólizas", "polizas", <RightOutlined />),
     ]),
     // getItem("Contabilidad", "contabilidad", <MoneyCollectOutlined />, [
@@ -57,7 +65,7 @@ export default function SideBarLayout({
   ];
   const router = useRouter();
 
-  let user=null;
+  let user = null;
   if (typeof window !== "undefined") {
     user = localStorage.getItem("user");
   }

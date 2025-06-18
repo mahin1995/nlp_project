@@ -11,5 +11,12 @@ export default class AdminUserController extends AbstractApiClass<
   AdminUserRepository,
   AdminUserService
 > {
+  protected dropownResponse(data: IAdminUser[]) {
+    return data.map((user) => ({
+      id: user.id,
+      name: user.username || user.email,
+    }));
+  }
+
   protected service = Container.get(AdminUserService);
 }

@@ -75,7 +75,7 @@ abstract class AbstractApiClass<
     @Req() req: Request,
     @Res() res: Response,
     @Next() next: NextFunction,
-    @Body() body: any,
+    @Body() body: any
   ) {
     try {
       const input = body;
@@ -268,6 +268,27 @@ abstract class AbstractApiClass<
     try {
       const { data } = await this.service.GetById(id);
       return res.json(data);
+    } catch (error) {
+      Logger.logError(error);
+      next(error);
+    }
+  }
+  protected abstract dropownResponse(data: T[]): any;
+  @SwaggerDoc({
+    summary: 'Get drop down list',
+
+    parameters: [],
+    responses: {
+      200: { description: 'Successfully Get Item' },
+    },
+  })
+  @Get('/drop-down/list')
+  @Middleware(protect)
+  async getDropDown(@Res() res: Response, @Next() next: NextFunction) {
+    try {
+      const { data } = await this.service.GetAll();
+      let result = this.dropownResponse(data);
+      return res.json(result);
     } catch (error) {
       Logger.logError(error);
       next(error);

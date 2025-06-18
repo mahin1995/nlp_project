@@ -3,7 +3,7 @@ import AXIOS_API from "../lib/axios";
 import { NEWS_MODULE_PATH } from "../lib/urlPath";
 
 export interface News {
-  _id: string | null;
+  _id?: string | null;
   id?: string;
   title: string;
   link: string;
@@ -13,6 +13,7 @@ export interface News {
   embedding?: number[];
   author?: string;
   website: string;
+  category:string;
 }
 
 
