@@ -24,30 +24,32 @@
       ]
     },
     {
-      "tag": "latest_news",
+      "tag": "latest",
       "patterns": [
         "latest news",
         "breaking news",
         "current news",
         "recent updates",
-        "top headlines"
+        "top headlines",
+        "latest news",
+        "breaking news",
+        "current news",
+        "recent updates",
+        "top headlines",
+        "news updates",
+        "what's happening now?",
+        "today's headlines",
+        "news today",
+        "latest updates",
+        "news in the last hour",
+        "what just happened?",
+        "latest updates right now",
+        "news today",
+        "fresh headlines"
       ],
-      "responses": [
-        "Here are the latest headlines...",
-        "Fetching the top news for you..."
-      ]
+      "type": "NEWS"
     },
-    {
-      "tag": "news_by_category",
-      "patterns": [
-        "show me sports news",
-        "what's happening in technology?",
-        "politics news",
-        "entertainment updates",
-        "business news"
-      ],
-      "responses": ["Here are the latest {category} news updates."]
-    },
+
     {
       "tag": "trending_news",
       "patterns": [
@@ -56,18 +58,9 @@
         "most popular news",
         "viral news"
       ],
-      "responses": ["Here are the trending news stories today."]
+      "type": "NEWS"
     },
-    {
-      "tag": "news_by_location",
-      "patterns": [
-        "news in my area",
-        "local news",
-        "what's happening near me?",
-        "city news"
-      ],
-      "responses": ["Here are the latest local news updates."]
-    },
+
     {
       "tag": "news_by_source",
       "patterns": [
@@ -75,39 +68,104 @@
         "CNN news updates",
         "articles from The Guardian"
       ],
-      "responses": ["Fetching news from {source}."]
+      "type": "SOURCE"
     },
+
     {
-      "tag": "news_search",
-      "patterns": [
-        "find news about climate change",
-        "search news on bitcoin",
-        "articles related to AI"
-      ],
-      "responses": ["Searching for news articles on {query}..."]
-    },
-    {
-      "tag": "weather_update",
-      "patterns": [
-        "what's the weather like?",
-        "today's weather",
-        "weather forecast"
-      ],
-      "responses": ["Fetching the latest weather updates for your location."]
-    },
-    {
-      "tag": "stock_market",
-      "patterns": ["stock market news", "share prices", "finance updates"],
-      "responses": ["Here are the latest stock market updates."]
-    },
-    {
-      "tag": "sports_scores",
+      "tag": "Sports",
       "patterns": [
         "latest football scores",
         "NBA results",
-        "cricket match updates"
+        "cricket match updates",
+        "What's happening in sports?",
+        "Latest sports news",
+        "Tell me the top sports stories",
+        "What are the major sports events happening?",
+        "Sports news today",
+        "What's trending in sports?",
+        "Breaking sports news",
+        "Latest breaking news in sports"
       ],
-      "responses": ["Here are the latest sports scores and results."]
+      "type": "CATEGORY"
+    },
+
+    {
+      "tag": "world",
+      "patterns": [
+        "What's happening around the world?",
+        "Latest world news updates",
+        "Tell me the top global news stories",
+        "What are the major events happening worldwide?",
+        "Global news headlines today",
+        "News from Europe",
+        "What's going on in Asia?",
+        "Latest updates from Africa",
+        "News in the Americas",
+        "What's happening in the Middle East?",
+        "Updates on global climate change",
+        "World health news",
+        "International politics updates",
+        "Global economic news",
+        "World conflict updates",
+        "Breaking world news",
+        "Latest global breaking news",
+        "Urgent world news updates",
+        "What's the latest breaking news worldwide?",
+        "Global breaking news alerts",
+        "What's new in the world?",
+        "What's the latest in global affairs?",
+        "Tell me something interesting happening in the world",
+        "What are people talking about worldwide?",
+        "What's trending globally?",
+        "World news this week",
+        "Global news updates today",
+        "What happened in the world yesterday?",
+        "World news this month",
+        "Global news roundup this year",
+        "How does this compare to world events?",
+        "What's different in global news compared to last year?",
+        "World news trends over the past decade",
+        "World news related to technology",
+        "Global updates on space exploration",
+        "World news about sports",
+        "International cultural news",
+        "World news in science and innovation"
+      ],
+      "type": "CATEGORY"
+    },
+    {
+      "tag": "us-news",
+      "patterns": [
+        "What's happening in the US?",
+        "Latest US news updates",
+        "Tell me the top news stories in the United States",
+        "What are the major events happening in the US?",
+        "US news headlines today",
+        "News from Washington DC",
+        "What's going on in California?",
+        "Latest updates from New York",
+        "News in Texas",
+        "What's happening in Florida?",
+        "Updates on US politics",
+        "Breaking US news",
+        "Latest breaking news in the United States",
+        "Urgent US news updates",
+        "What's the latest breaking news in the US?",
+        "US breaking news alerts",
+        "What's new in the United States?"
+      ],
+      "type": "CATEGORY"
+    },
+    {
+      "tag": "Technology",
+      "patterns": [
+        "What's new in technology?",
+        "Latest tech news",
+        "Tell me the top technology stories",
+        "What are the latest tech innovations?",
+        "Technology news today"
+      ],
+      "type": "CATEGORY"
     },
     {
       "tag": "subscribe_newsletter",

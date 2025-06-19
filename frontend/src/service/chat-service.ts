@@ -1,7 +1,7 @@
 import { RESPONSE_STATUS } from "@/utils/utils";
 import api from "./Api";
 
-const url = "chat";
+const url = "api/chat";
 export const ChatService = {
   postPrompt: async (prompt: string) => {
     console.log(

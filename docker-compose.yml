@@ -1,0 +1,32 @@
+version: '3.8'
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_BASE_URL=http://backend:5000
+
+  backend:
+    build: ./backend
+    ports:
+      - "5000:5000"
+    environment:
+      - MONGODB_URI=mongodb://mongo:27017/news-db  # Connect to MongoDB service
+      - NODE_ENV=production
+      - PORT=5000
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo_data:/data/db
+      - ./mongo-dump:/docker-entrypoint-initdb.d  # Auto-restore
+    environment:
+      - MONGO_INITDB_DATABASE=news-db
+
+volumes:
+  mongo_data:
