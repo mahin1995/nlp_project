@@ -25,7 +25,10 @@ export interface INewsInput {
   author?: string;
   website: string;
 }
-
+export enum news_origin {
+  OUTSIDE = 'outside',
+  INSIDE = 'inside',
+}
 const newsSchema = new Schema(
   {
     title: { type: String, required: true },
@@ -38,6 +41,7 @@ const newsSchema = new Schema(
     website: { type: String, required: true },
     category: { type: Schema.Types.ObjectId, ref: 'Category', required: true },
     isActive: { type: Boolean, default: true },
+    origin: { type: String, enum: Object.values(news_origin), required: false },
   },
   { timestamps: true }
 );

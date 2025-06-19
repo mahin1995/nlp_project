@@ -3,25 +3,31 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Button, Col, DatePicker, Form, Input, Row, Select } from "antd";
 
+import { DropDowlResponse } from "@/app/admin/lib/interfaces";
 import { dropDown } from "@/app/admin/service/category.service";
-import { News } from "@/app/admin/service/news.service";
+import { createNews, News } from "@/app/admin/service/news.service";
 
 const { TextArea } = Input;
 
 const FormView = () => {
   const [form] = Form.useForm();
 
-//   const { data: categories, isLoading: loadingCategories } = useQuery({
-//     queryKey: ["categories"],
-//     queryFn: dropDown,
-//   });
+  const { data: categories, isLoading: loadingCategories } = useQuery<
+    DropDowlResponse[]
+  >({
+    queryKey: ["categories"],
+    queryFn: async () => {
+      const response = await dropDown();
+      return response.data; // assuming ApiResponse has a 'data' property with DropDowlResponse[]
+    },
+  });
 
-//   const mutation = useMutation({
-//     mutationFn: createNews,
-//     onSuccess: () => {
-//       form.resetFields();
-//     },
-//   });
+  const mutation = useMutation({
+    mutationFn: createNews,
+    onSuccess: () => {
+      form.resetFields();
+    },
+  });
 
   interface FormValues {
     title: string;
@@ -29,24 +35,24 @@ const FormView = () => {
     image?: string;
     website: string;
     author?: string;
-// You can further specify this if you know the type (e.g., Moment)
+    // You can further specify this if you know the type (e.g., Moment)
     category: string;
     content: string;
   }
 
   const onFinish = (values: FormValues) => {
-    // const payload: News = {
-    //   _id: null,
-    //   title: values.title,
-    //   link: values.link,
-    //   content: values.content,
-    // //   image: values.image,
-    //   website: values.website,
-    //   category: values.category,
-    //   author: values.author,
-    // };
+    const payload: News = {
+      title: values.title,
+      link: values.link,
+      content: values.content,
+      website: values.website,
+      category: values.category,
+      author: values.author,
+      publishedAt: null,
+      image: values?.image,
+    };
 
-    // mutation.mutate(payload);
+    mutation.mutate(payload);
   };
 
   return (
@@ -104,11 +110,12 @@ const FormView = () => {
             rules={[{ required: true }]}
           >
             <Select loading={loadingCategories} placeholder="Select category">
-              {/* {categories?.map((cat: any) => (
-                <Select.Option key={cat._id} value={cat._id}>
-                  {cat.name}
-                </Select.Option>
-              ))} */}
+              {categories &&
+                categories?.map((cat: DropDowlResponse) => (
+                  <Select.Option key={cat.value} value={cat.value}>
+                    {cat.label}
+                  </Select.Option>
+                ))}
             </Select>
           </Form.Item>
         </Col>
@@ -128,7 +135,7 @@ const FormView = () => {
             <Button
               type="primary"
               htmlType="submit"
-            //   loading={mutation.isLoading}
+              //   loading={mutation.isLoading}
             >
               Submit
             </Button>

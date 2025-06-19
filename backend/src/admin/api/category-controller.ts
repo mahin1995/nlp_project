@@ -12,10 +12,10 @@ export default class CategoryController extends AbstractApiClass<
   CategoryService
 > {
   protected dropownResponse(data: ICategory[]) {
-     return data.map(category => ({
-        value: category.name,
-        label: category._id
-     }));
+    return data.map((category) => ({
+      value: category._id,
+      label: category.name,
+    }));
   }
 
   protected service = Container.get(CategoryService);

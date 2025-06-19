@@ -1,4 +1,8 @@
-import { ApiResponse } from "../component/dataTable/GenericTable";
+import {
+  ApiCreateResponse,
+  ApiResponse,
+  STATUS_RESPONSE,
+} from "../component/dataTable/GenericTable";
 import AXIOS_API from "../lib/axios";
 import { NEWS_MODULE_PATH } from "../lib/urlPath";
 
@@ -9,13 +13,12 @@ export interface News {
   link: string;
   content: string;
   publishedAt: Date | null;
-  image: string;
+  image?: string;
   embedding?: number[];
   author?: string;
   website: string;
-  category:string;
+  category: string;
 }
-
 
 export const getAllNews = async (
   status: string,
@@ -33,5 +36,14 @@ export const getAllNews = async (
   return {
     data: response.data.data,
     total: response.data.total,
+  };
+};
+export const createNews = async (body: News): Promise<ApiCreateResponse> => {
+  const response = await AXIOS_API.post(NEWS_MODULE_PATH.NEWS_GET_ALL, {
+    body,
+  });
+  return {
+    status: STATUS_RESPONSE.FAILED,
+    message: response.data,
   };
 };

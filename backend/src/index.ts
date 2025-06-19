@@ -15,6 +15,7 @@ import newsRoutes from './web-site/routes/news.routes';
 
 import { router, setupSwagger } from './common/decorator/controller.decorator';
 
+import path from 'path';
 import { globalErrorHandler } from './utils/error/error-handler';
 import { initializeModel } from './web-site/services/chatbotv2';
 dotenv.config();
@@ -28,7 +29,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 // Middleware
 app.use(express.json());
-
+app.use('/public', express.static(path.join(process.cwd(), 'public')));
 // MongoDB Connection
 mongoose
   .connect(process.env.MONGODB_URI!)

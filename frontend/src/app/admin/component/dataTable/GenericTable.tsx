@@ -1,15 +1,22 @@
-import React from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Table, TablePaginationConfig, TableProps } from "antd";
 import { FilterValue, SorterResult } from "antd/es/table/interface";
-import { useQuery } from "@tanstack/react-query";
-import { useState, useMemo } from "react";
+import { useMemo, useState } from "react";
 // Generic TypeScript interfaces
 
-
+export enum STATUS_RESPONSE {
+  SUCCESS = "SUCCESS",
+  FAILED = "FAILED",
+}
 export interface ApiResponse<T> {
   data: T[];
   total: number;
   [key: string]: unknown; // Allow additional properties
+}
+export interface ApiCreateResponse {
+  message?: unknown;
+  status?: STATUS_RESPONSE;
+  code?: number;
 }
 
 export interface QueryParams<T = unknown> {
@@ -68,7 +75,11 @@ const GenericTable = <T extends object>({
   }, [queryParams.sorters]);
 
   // React Query data fetching
-  const { data, isLoading, isError, error } = useQuery<ApiResponse<T>, Error, ApiResponse<T>>({
+  const { data, isLoading, isError, error } = useQuery<
+    ApiResponse<T>,
+    Error,
+    ApiResponse<T>
+  >({
     queryKey: [
       "tableData",
       queryParams.pagination.current,
@@ -131,6 +142,5 @@ const GenericTable = <T extends object>({
       />
     </div>
   );
-}
+};
 export default GenericTable;
-
