@@ -1,6 +1,14 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  async handlers() {
+    return [
+      {
+        source: "/firebase-messaging-sw.js",
+        headers: [{ key: "Service-Worker-Allowed", value: "/" }],
+      },
+    ];
+  },
   async redirects() {
     return [
       {

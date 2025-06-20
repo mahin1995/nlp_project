@@ -3,6 +3,7 @@ import {
   ApiResponse,
   STATUS_RESPONSE,
 } from "../component/dataTable/GenericTable";
+import { RECORD_STATUS } from "../component/types";
 import AXIOS_API from "../lib/axios";
 import { NEWS_MODULE_PATH } from "../lib/urlPath";
 
@@ -32,10 +33,33 @@ export const getAllNews = async (
       limit,
     },
   });
-  console.log("My Log response: ", response);
+
   return {
     data: response.data.data,
     total: response.data.total,
+  };
+};
+export const deleteAndUndoNews = async ({id,recordStatus}:
+  {id: string,
+  recordStatus: RECORD_STATUS}
+): Promise<ApiCreateResponse> => {
+  let response;
+  if (recordStatus == RECORD_STATUS.ACTIVE) {
+    response = await AXIOS_API.delete(NEWS_MODULE_PATH.NEWS_GET_ALL + "/" + id);
+  } else {
+    response = await AXIOS_API.patch(NEWS_MODULE_PATH.NEWS_GET_ALL + "/" + id);
+  }
+
+  console.log("My Log response: ", response);
+  if (response.status == 200) {
+    return {
+      status: STATUS_RESPONSE.SUCCESS,
+      message: response.data,
+    };
+  }
+  return {
+    status: STATUS_RESPONSE.FAILED,
+    message: response.data,
   };
 };
 export const createNews = async (body: News): Promise<ApiCreateResponse> => {

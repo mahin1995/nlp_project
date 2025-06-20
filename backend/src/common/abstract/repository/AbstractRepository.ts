@@ -38,15 +38,29 @@ abstract class AbstractRepository<T extends Document> {
   }
 
   async deleteById(id: string): Promise<any> {
-    const model = await this.model.findById(id);
+    const model: T | null = await this.model.findById(id);
     if (model) {
-      const result = await this.model.deleteOne({ _id: id });
+      const result = await this.model.updateOne(
+        { _id: model._id },
+        { isActive: false }
+      );
       return result;
     } else {
       throw AppError.notFound('Data Not found', null);
     }
   }
-
+  async reActive(id: string): Promise<any> {
+    const model: T | null = await this.model.findById(id);
+    if (model) {
+      const result = await this.model.updateOne(
+        { _id: model._id },
+        { isActive: true }
+      );
+      return result;
+    } else {
+      throw AppError.notFound('Data Not found', null);
+    }
+  }
   async findById(id: string): Promise<any> {
     const model = await this.model.findById(id);
     return model;

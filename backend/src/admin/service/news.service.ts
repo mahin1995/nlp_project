@@ -45,7 +45,6 @@ class NewsService extends AbstractService<INews, NewsRepository> {
       sort,
       offset,
     }));
-    console.log('My Log isActive: ', isActive);
     let qt = this.repository
       .getModel()
       .find({})

@@ -145,6 +145,19 @@ abstract class AbstractService<
       });
     }
   }
+  async reActive(id: string) {
+    try {
+      if (id === undefined || id === null)
+        throw AppError.internal('ID is not provided', null);
+      const data = await this.repository.reActive(id);
+      return this.FormateData(data);
+    } catch (error) {
+      throw AppError.notFound('Data Not found', {
+        error,
+        Service: this.constructor.name,
+      });
+    }
+  }
 
   async update(input: T) {
     try {

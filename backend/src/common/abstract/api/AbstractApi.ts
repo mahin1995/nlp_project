@@ -13,7 +13,13 @@ import {
   SwaggerDoc,
 } from '../../decorator/controller.decorator';
 import { Middleware } from '../../decorator/middleware.decorator';
-import { Get, Patch, Post, Put } from '../../decorator/router.decorator';
+import {
+  Delete,
+  Get,
+  Patch,
+  Post,
+  Put,
+} from '../../decorator/router.decorator';
 import AbstractService from '../Service/AbstractService';
 import AbstractRepository from '../repository/AbstractRepository';
 import { ACTIVE_STATUS } from '../utils/constant';
@@ -89,7 +95,7 @@ abstract class AbstractApiClass<
       next(error);
     }
   }
-  @Patch('/:id')
+  @Delete('/:id')
   @Middleware(protect)
   async delete(
     @Res() res: Response,
@@ -101,6 +107,24 @@ abstract class AbstractApiClass<
         return res.status(400).json({ message: 'ID is required' });
       }
       const { data } = await this.service.delete(id);
+      return res.json(data);
+    } catch (error) {
+      Logger.logError(error);
+      next(error);
+    }
+  }
+  @Patch('/:id')
+  @Middleware(protect)
+  async reActive(
+    @Res() res: Response,
+    @Next() next: NextFunction,
+    @Param('id') id: string
+  ) {
+    try {
+      if (!id) {
+        return res.status(400).json({ message: 'ID is required' });
+      }
+      const { data } = await this.service.reActive(id);
       return res.json(data);
     } catch (error) {
       Logger.logError(error);
@@ -273,6 +297,7 @@ abstract class AbstractApiClass<
       next(error);
     }
   }
+
   protected abstract dropownResponse(data: T[]): any;
   @SwaggerDoc({
     summary: 'Get drop down list',
