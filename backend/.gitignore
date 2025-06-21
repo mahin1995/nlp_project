@@ -133,3 +133,5 @@ dist
 dist/
 ./.idea
 /.idea
+.university-project.json
+./.university-project.json
