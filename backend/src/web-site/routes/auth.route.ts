@@ -1,6 +1,6 @@
 import express from 'express';
 import { body } from 'express-validator';
-import { getMe, loginUser, registerUser } from '../controllers/auth.controller';
+import { getMe, loginUser, registerUser, storeToken } from '../controllers/auth.controller';
 import { protect } from '../middleware/auth.middleware';
 
 const router = express.Router();
@@ -180,5 +180,6 @@ router.post(
  *         description: Unauthorized
  */
 router.get('/me', protect, getMe);
+router.post('/store-token', protect, storeToken);
 
 export default router;

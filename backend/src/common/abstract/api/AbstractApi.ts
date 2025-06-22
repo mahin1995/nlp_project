@@ -95,7 +95,7 @@ abstract class AbstractApiClass<
       next(error);
     }
   }
-  @Delete('/:id')
+  @Delete('/delete-by-id/:id')
   @Middleware(protect)
   async delete(
     @Res() res: Response,
@@ -113,7 +113,7 @@ abstract class AbstractApiClass<
       next(error);
     }
   }
-  @Patch('/:id')
+  @Patch('/reactive-by-id/:id')
   @Middleware(protect)
   async reActive(
     @Res() res: Response,
@@ -282,7 +282,7 @@ abstract class AbstractApiClass<
       200: { description: 'Successfully Get Item' },
     },
   })
-  @Get('/:id')
+  @Get('/get-by-id/:id')
   @Middleware(protect)
   async getById(
     @Res() res: Response,

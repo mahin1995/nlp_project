@@ -44,7 +44,7 @@ mongoose.set('debug', true);
 app.use('/api/news', newsRoutes);
 app.use('/api/chat', chatRoute);
 app.use('/api/category', categoryRoutes);
-app.use('/api/auth', authRoutes);
+app.use('/api/web/auth', authRoutes);
 app.use(router);
 if (process.env.NODE_ENV === 'development') {
   setupSwagger(app);

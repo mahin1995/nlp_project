@@ -1,6 +1,7 @@
 // components/FcmTokenHandler.tsx
 "use client";
 
+import { AuthService } from "@/service/auth-service";
 import { useEffect, useState } from "react";
 import { getFcmToken } from "../utils/firebase-client-config";
 
@@ -24,7 +25,13 @@ export default function FcmTokenHandler() {
           //   if (!response.ok) {
           //     throw new Error("Failed to store token in backend");
           //   }
-
+          const username = localStorage.getItem("user_web");
+          const jwt_token = localStorage.getItem("jwt_token_web");
+          await AuthService.storeToken({
+            token: fcmToken,
+            username: username || "",
+            jwt_token: jwt_token || null,
+          });
           console.log("Token stored successfully", token);
         }
       } catch (err) {

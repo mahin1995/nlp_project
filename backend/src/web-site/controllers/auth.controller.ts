@@ -45,18 +45,20 @@ export const registerUser = async (req: Request, res: Response) => {
 };
 
 export const loginUser = async (req: Request, res: Response) => {
-  const { email,username, password } = req.body;
+  const { email, username, password } = req.body;
 
   try {
     // Check if user exists
-     if(!username && !email) return res.status(401).json({ message: 'User Name email both not found' });
+    if (!username && !email)
+      return res
+        .status(401)
+        .json({ message: 'User Name email both not found' });
     let user;
-    if(email!=null || email){
-     user = await User.findOne({ email }).select('+password');
+    if (email != null || email) {
+      user = await User.findOne({ email }).select('+password');
     }
-    if(username!=null || username != undefined || user){
-     user = await User.findOne({ username }).select('+password');
-
+    if (username != null || username != undefined || user) {
+      user = await User.findOne({ username }).select('+password');
     }
     if (!user) {
       return res.status(401).json({ message: 'Invalid credentials' });
@@ -95,6 +97,22 @@ export const getMe = async (req: Request, res: Response) => {
     }
 
     res.status(200).json(user);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
+export const storeToken = async (req: Request, res: Response) => {
+  try {
+    // req.user is set by the auth middleware
+    let { token, username } = req.body;
+    const user = await User.findById((req as any).user.id).select('-password');
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    user.token = token;
+    await user.save();
+    return res.status(200).json({ user, message: 'Token stored successfully' });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }

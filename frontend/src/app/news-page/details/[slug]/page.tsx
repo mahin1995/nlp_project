@@ -65,7 +65,10 @@ export default function Page() {
                 </div>
               </div>
               <div className="card-title text-base hidden md:contents dark:text-white text-black pt-2">
-                {data?.news?.content}
+                {/* {data?.news?.content} */}
+                <div
+                  dangerouslySetInnerHTML={{ __html: data?.news?.content }}
+                />
               </div>
               <div className="card-link no-decoration hover:underline mt-2 text-sm lg:text-base pl-2 text-black dark:text-white border-l-2 border-red-500">
                 <Link href={data?.news?.link}>Read More</Link>

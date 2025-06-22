@@ -10,9 +10,12 @@ import {
   Param,
   Req,
   Res,
+  SwaggerDoc,
 } from '../../common/decorator/controller.decorator';
 import { Get, Post } from '../../common/decorator/router.decorator';
+import admin from '../../utils/firebase/firbase.config';
 import Logger from '../../utils/Logger';
+import User from '../../web-site/models/user';
 import { INews } from '../model/News-model';
 import { ImageUploadService } from '../service/image-upload.service';
 const uploadService = new ImageUploadService('public/uploads/news');
@@ -117,6 +120,73 @@ export default class NewsController extends AbstractApiClass<
       console.log('My Log error: ', error);
       Logger.logError(error);
       return res.status(404).json({ error: (error as any)?.message });
+    }
+  }
+
+  @SwaggerDoc({
+    summary: 'send notification',
+    bodyExample: {
+      type: 'object',
+      properties: {
+        title: { type: 'string', example: 'test' },
+        body: { type: 'string', example: 'test' },
+        image: {
+          type: 'string',
+          example: 'https://example.com/image.png',
+        },
+      },
+    },
+    responses: {
+      200: { description: 'notification send successful' },
+    },
+  })
+  @Post('/send-notification')
+  //   @Middleware(protect)
+  async sendNotification(@Req() req: Request, @Res() res: Response) {
+    try {
+      const { title, body, image, link } = req.body;
+      if (!title || !body) {
+        return res.status(400).json({ error: 'Title and body are required' });
+      }
+      // Here you would implement the logic to send a notification
+      const payload = {
+        notification: {
+          title,
+          body,
+          ...(image && { image }),
+        },
+        webpush: {
+          fcmOptions: {
+            link: 'http://localhost:3000/notifications',
+          },
+        },
+      };
+
+      const users = await User.find({ token: { $exists: true, $ne: null } });
+      const tokens = users
+        .map((user) => user.token)
+        .filter((token): token is string => typeof token === 'string');
+
+      if (tokens.length === 0) {
+        return res.status(404).json({ error: 'No tokens found' });
+      }
+
+      // If you are using Firebase Admin SDK, you can send notifications like this:
+      // Send to all tokens
+      const result = await admin.messaging().sendEachForMulticast({
+        ...payload,
+        tokens,
+      });
+      console.log('body: ', { title, body, image }, 'result: ', result);
+      // For example, using Firebase Cloud Messaging or another service
+      // This is just a placeholder response
+      return res.status(200).json({
+        message: 'Notification sent successfully',
+        data: { title, body, image },
+      });
+    } catch (error) {
+      Logger.logError(error);
+      return res.status(500).json({ error: (error as any)?.message });
     }
   }
 }

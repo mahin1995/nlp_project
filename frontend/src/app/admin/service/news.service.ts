@@ -39,16 +39,45 @@ export const getAllNews = async (
     total: response.data.total,
   };
 };
-export const deleteAndUndoNews = async ({id,recordStatus}:
-  {id: string,
-  recordStatus: RECORD_STATUS}
-): Promise<ApiCreateResponse> => {
+export const deleteAndUndoNews = async ({
+  id,
+  recordStatus,
+}: {
+  id: string;
+  recordStatus: RECORD_STATUS;
+}): Promise<ApiCreateResponse> => {
   let response;
   if (recordStatus == RECORD_STATUS.ACTIVE) {
-    response = await AXIOS_API.delete(NEWS_MODULE_PATH.NEWS_GET_ALL + "/" + id);
+    response = await AXIOS_API.delete(NEWS_MODULE_PATH.NEWS_DELETE + "/" + id);
   } else {
-    response = await AXIOS_API.patch(NEWS_MODULE_PATH.NEWS_GET_ALL + "/" + id);
+    response = await AXIOS_API.patch(
+      NEWS_MODULE_PATH.NEWS_REACTIVATE + "/" + id
+    );
   }
+
+  console.log("My Log response: ", response);
+  if (response.status == 200) {
+    return {
+      status: STATUS_RESPONSE.SUCCESS,
+      message: response.data,
+    };
+  }
+  return {
+    status: STATUS_RESPONSE.FAILED,
+    message: response.data,
+  };
+};
+export const sendNotification = async ({
+  title,
+  body,
+}: {
+  title: string;
+  body: string;
+}): Promise<ApiCreateResponse> => {
+  const response = await AXIOS_API.post(
+    NEWS_MODULE_PATH.NEWS_SEND_NOTIFICATION,
+    { title, body }
+  );
 
   console.log("My Log response: ", response);
   if (response.status == 200) {

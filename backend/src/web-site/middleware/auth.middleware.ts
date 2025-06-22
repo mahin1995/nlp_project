@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import User from '../models/user';
 
@@ -11,7 +11,11 @@ declare global {
   }
 }
 
-export const protect = async (req: Request, res: Response, next: NextFunction) => {
+export const protect = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   let token;
 
   if (
@@ -23,8 +27,10 @@ export const protect = async (req: Request, res: Response, next: NextFunction) =
       token = req.headers.authorization.split(' ')[1];
 
       // Verify token
-      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key') as any;
-
+      const decoded = jwt.verify(
+        token,
+        process.env.JWT_SECRET || 'your-secret-key'
+      ) as any;
       // Get user from the token
       req.user = await User.findById(decoded.id).select('-password');
 
