@@ -1,3 +1,4 @@
+"use client";
 import {
   deleteAndUndoNews,
   getAllNews,
@@ -6,7 +7,14 @@ import {
 } from "@/app/admin/service/news.service";
 import { truncateText } from "@/utils/utils";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Button, Table, TablePaginationConfig, TableProps, Tabs } from "antd";
+import {
+  Button,
+  notification,
+  Table,
+  TablePaginationConfig,
+  TableProps,
+  Tabs,
+} from "antd";
 import { FilterValue, SorterResult } from "antd/es/table/interface";
 import { useState } from "react";
 import { ApiResponse } from "../../../dataTable/GenericTable";
@@ -78,10 +86,10 @@ const TableView = () => {
     mutationFn: sendNotification,
     onSuccess: () => {
       console.log("Notification sent successfully");
-      //   notification.success({
-      //     message: "Notification sent successfully",
-      //     description: "The notification has been sent to the user.",
-      //   });
+      notification.success({
+        message: "Notification sent successfully",
+        description: "The notification has been sent to the user.",
+      });
       // Optionally, you can show a success message or perform other actions
     },
   });

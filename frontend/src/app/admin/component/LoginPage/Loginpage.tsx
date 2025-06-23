@@ -16,21 +16,29 @@ type FieldType = {
 const LoginPage: React.FC = () => {
   const router = useRouter();
   const onFinish: FormProps<FieldType>["onFinish"] = async (values) => {
-    const response = await AXIOS_API.post(AUTH_PATH.LOGIN, {
-      username: values.username,
-      password: values.password,
-    });
-    if (response.status === 200) {
-      console.log("Login successful:", response.data);
-      // Handle successful login, e.g., store token, redirect, etc.
-      localStorage.setItem("jwt_token", response.data.token); // Adjust based on your API response
-      localStorage.setItem("user", response.data.user.username); // Adjust based on your API response
-      router.push("/admin");
-    } else {
-      notification.open({
-        message: `error`,
-        description: response.data.message || "Login failed",
-        placement: "topRight",
+    try {
+      const response = await AXIOS_API.post(AUTH_PATH.LOGIN, {
+        username: values.username,
+        password: values.password,
+      });
+      if (response.status === 200) {
+        console.log("Login successful:", response.data);
+        // Handle successful login, e.g., store token, redirect, etc.
+        localStorage.setItem("jwt_token", response.data.token); // Adjust based on your API response
+        localStorage.setItem("user", response.data.user.username); // Adjust based on your API response
+        router.push("/admin");
+      } else {
+        console.log("My Log mahin: ");
+        notification.error({
+          message: "Notification sent successfully",
+          description: "The notification has been sent to the user.",
+        });
+      }
+    } catch (error) {
+      console.error("Login failed:", error);
+      notification.error({
+        message: "Login Failed",
+        description: "Invalid username or password.",
       });
     }
   };
@@ -38,7 +46,13 @@ const LoginPage: React.FC = () => {
   const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (
     errorInfo
   ) => {
-    console.log("Failed:", errorInfo);
+    console.log("errorInfo: ", errorInfo);
+    notification.error({
+      message: "Login Failed",
+      description: errorInfo.errorFields
+        .map((field) => field.errors.join(", "))
+        .join("; "),
+    });
   };
   return (
     <>
