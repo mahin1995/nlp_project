@@ -1,6 +1,6 @@
 "use client";
 import { BackwardOutlined, PlusOutlined } from "@ant-design/icons";
-import { Breadcrumb, Button } from "antd";
+import { Button } from "antd";
 import { useRouter } from "next/navigation";
 
 import React from "react";
@@ -30,11 +30,10 @@ const PageHeaderBlock: React.FC<PageHeaderBlockProps> = ({
     <section className="p-4 space-y-4 mt-1">
       <div className="bg-white px-4 py-3 rounded-md">
         <div className="flex justify-between items-center">
-          <Breadcrumb>
-            <Breadcrumb.Item>
-              <p>{title}</p>
-            </Breadcrumb.Item>
-          </Breadcrumb>
+          {/* <Breadcrumb.Item> */}
+          <p>{title}</p>
+          {/* </Breadcrumb.Item> */}
+
           {createPermission && (
             <Button
               style={{

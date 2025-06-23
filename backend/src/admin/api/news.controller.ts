@@ -36,7 +36,7 @@ export default class NewsController extends AbstractApiClass<
   async uploadImage(@Req() req: Request, @Res() res: Response) {
     try {
       await new Promise<void>((resolve, reject) => {
-        const uploadMiddleware = uploadService.getUploadMiddleware('image');
+        const uploadMiddleware = uploadService.getUploadMiddleware('file');
 
         uploadMiddleware(req, res, (err) => {
           if (err) {

@@ -13,9 +13,7 @@ export interface News {
   title: string;
   link: string;
   content: string;
-  publishedAt: Date | null;
   image?: string;
-  embedding?: number[];
   author?: string;
   website: string;
   category: string;

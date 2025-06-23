@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import AXIOS_API from "../../lib/axios";
 import { AUTH_PATH } from "../../lib/urlPath";
+import { JWT_TOKEN_FIELD_NAME, USER_NAME_FIELD_NAME } from "../../utils/tokens";
 
 type FieldType = {
   username?: string;
@@ -24,8 +25,8 @@ const LoginPage: React.FC = () => {
       if (response.status === 200) {
         console.log("Login successful:", response.data);
         // Handle successful login, e.g., store token, redirect, etc.
-        localStorage.setItem("jwt_token", response.data.token); // Adjust based on your API response
-        localStorage.setItem("user", response.data.user.username); // Adjust based on your API response
+        localStorage.setItem(JWT_TOKEN_FIELD_NAME, response.data.token); // Adjust based on your API response
+        localStorage.setItem(USER_NAME_FIELD_NAME, response.data.user.username); // Adjust based on your API response
         router.push("/admin");
       } else {
         console.log("My Log mahin: ");

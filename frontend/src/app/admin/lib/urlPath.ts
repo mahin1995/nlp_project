@@ -3,6 +3,7 @@ export const NEWS_MODULE_PATH = {
   NEWS_DELETE: "/api/v1/news/delete-by-id",
   NEWS_REACTIVATE: "/api/v1/news/reactive-by-id",
   NEWS_SEND_NOTIFICATION: "/api/v1/news/send-notification",
+  NEWS_UPLOAD_IMAGE: "/api/v1/news/upload/image",
 };
 export const USER_MODULE_PATH = {
   USER_GET_ALL: "/api/v1/users",

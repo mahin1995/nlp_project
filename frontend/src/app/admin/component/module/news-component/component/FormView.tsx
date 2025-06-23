@@ -4,12 +4,25 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { Button, Col, DatePicker, Form, Input, Row, Select } from "antd";
 
 import { DropDowlResponse } from "@/app/admin/lib/interfaces";
+import { NEWS_MODULE_PATH } from "@/app/admin/lib/urlPath";
 import { dropDown } from "@/app/admin/service/category.service";
 import { createNews, News } from "@/app/admin/service/news.service";
+import { UploadFile } from "antd/lib/upload/interface";
+import { useState } from "react";
+import { Descendant } from "slate";
+import CustomEditor, { slateToHtml } from "../../../Editor/SlateEditor";
+import UploadImage from "../../../common/UploadImage";
 
-const { TextArea } = Input;
-
+// const { TextArea } = Input;
+const initialValue: Descendant[] = [
+  {
+    type: "paragraph",
+    children: [{ text: "Write something here..." }],
+  },
+];
 const FormView = () => {
+  const [value, setValue] = useState<Descendant[]>(initialValue);
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [form] = Form.useForm();
 
   const { data: categories, isLoading: loadingCategories } = useQuery<
@@ -18,7 +31,6 @@ const FormView = () => {
     queryKey: ["categories"],
     queryFn: async () => {
       const response = await dropDown();
-      console.log("My Log response: ", response);
       return response.data; // assuming ApiResponse has a 'data' property with DropDowlResponse[]
     },
   });
@@ -45,15 +57,14 @@ const FormView = () => {
     const payload: News = {
       title: values.title,
       link: values.link,
-      content: values.content,
+      content: slateToHtml(value),
       website: values.website,
       category: values.category,
       author: values.author,
-      publishedAt: null,
       image: values?.image,
     };
-
-    mutation.mutate(payload);
+    console.log("My Log payload: ", payload);
+    // mutation.mutate(payload);
   };
 
   return (
@@ -126,15 +137,27 @@ const FormView = () => {
         </Col>
 
         <Col xs={24} md={24}>
-          <Form.Item
+          {/* <Form.Item
             name="content"
             label="Content"
             rules={[{ required: true }]}
           >
             <TextArea rows={4} />
-          </Form.Item>
+          </Form.Item> */}
+          {/* <RichTextEditor name="content" form={form} /> */}
+          <CustomEditor value={value} setValue={setValue} />
         </Col>
-
+        <Col xs={24} md={24}>
+          <UploadImage
+            fileList={fileList}
+            setFileList={(files) => {
+              setFileList(files);
+              form.validateFields(["file"]);
+            }}
+            fileSize={10}
+            apiEndpoint={NEWS_MODULE_PATH.NEWS_UPLOAD_IMAGE}
+          />
+        </Col>
         <Col span={24}>
           <Form.Item>
             <Button
