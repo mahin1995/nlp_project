@@ -21,13 +21,17 @@ function CategoryDetails({ slug }: { slug: string }) {
   };
 
   function formatDate(dateString: string) {
-    const date = new Date(dateString);
+    if(dateString){
+ const date = new Date(dateString);
     const options: Intl.DateTimeFormatOptions = {
       day: "2-digit",
       month: "short",
       year: "numeric",
     };
     return date.toLocaleDateString("en-GB", options).replace(",", "");
+    }
+    return ""
+   
   }
 
   return (
@@ -97,7 +101,7 @@ function CategoryDetails({ slug }: { slug: string }) {
                                 {news?.author || "Unknown"}
                               </p>
                               <p className="text-xs text-gray-600 dark:text-white">
-                                {formatDate(news.publishedAt.toString())}
+                                {news?.publishedAt && formatDate(news?.publishedAt?.toString())}
                               </p>
                             </div>
                           </div>

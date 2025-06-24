@@ -134,7 +134,7 @@ const BlogLayout = () => {
                                 {news.website || "Unknown"}
                               </p>
                               <p className="dark:text-white text-gray-600 text-xs">
-                                {formatDate(news.publishedAt.toString())}
+                                {news?.publishedAt &&  formatDate(news?.publishedAt?.toString())}
                               </p>
                             </div>
                           </div>

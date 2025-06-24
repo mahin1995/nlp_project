@@ -31,7 +31,7 @@ const loadData = async (): Promise<{
       filePath,
       'utf-8'
     );
-    // console.log('My Log data: ',data)
+    
     const intents: IntentData = JSON.parse(data);
 
     let labels: string[] = [];

@@ -87,7 +87,7 @@ const TechNewsPage = ({ news }: { news: HomeResponse }) => {
         <div className="flex items-center">
           <ClockIcon />
           <span className="text-xs md:text-sm dark:text-gray-300">
-            {formatDate(item.publishedAt.toString())} |{" "}
+            {item?.publishedAt && formatDate(item?.publishedAt?.toString())} |{" "}
             <span className="dark:text-gray-300">{item.author}</span>
           </span>
         </div>

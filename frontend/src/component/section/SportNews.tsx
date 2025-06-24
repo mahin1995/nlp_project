@@ -33,7 +33,7 @@ const SportNews = ({ news }: { news: HomeResponse }) => {
                       {truncateText(item.content, 50)}
                     </p>
                     <p className="text-gray-600 dark:text-gray-500 text-xs">
-                      {formatDate(item.publishedAt.toString())}
+                      {item?.publishedAt && formatDate(item?.publishedAt?.toString())}
                     </p>
                   </div>
                   <Link

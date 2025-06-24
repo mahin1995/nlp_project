@@ -7,7 +7,7 @@ export interface INews extends Document {
   link: string;
   category: string;
   content: string;
-  publishedAt: Date;
+  publishedAt?: Date | null;
   image: string;
   embedding: number[];
   author: string;
@@ -53,7 +53,7 @@ export const NewsService = {
   },
   getNewsById: async (id = "") => {
     const { data } = await api.get(url + `/get-by-id/${id}`);
-    console.log("My Log data: ", data);
+   
     if (data && data?.data) {
       return {
         news: data?.data,

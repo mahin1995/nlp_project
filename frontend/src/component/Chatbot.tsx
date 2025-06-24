@@ -34,7 +34,7 @@ const Chatbot = () => {
     mutationFn: ChatService.postPrompt,
     onSuccess: ({ data }) => {
       // Invalidate and refetch
-      console.log("My Log data: ", data);
+      
       handleMesaageHistory("AI", data.result);
 
       //   queryClient.invalidateQueries({ queryKey: ["todos"] });
@@ -60,9 +60,7 @@ const Chatbot = () => {
       return [...prev, { host: host, message: message }];
     });
   };
-  {
-    console.log("My Log data: ", messageHistory);
-  }
+  
   return (
     <>
       {/* Floating Button */}

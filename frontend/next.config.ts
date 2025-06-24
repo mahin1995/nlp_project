@@ -1,11 +1,20 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  async handlers() {
+  //  eslint: {
+  //   ignoreDuringBuilds: true,
+  // },
+  reactStrictMode:true,
+   async headers() {
     return [
       {
         source: "/firebase-messaging-sw.js",
-        headers: [{ key: "Service-Worker-Allowed", value: "/" }],
+        headers: [
+          {
+            key: "Service-Worker-Allowed",
+            value: "/",
+          },
+        ],
       },
     ];
   },

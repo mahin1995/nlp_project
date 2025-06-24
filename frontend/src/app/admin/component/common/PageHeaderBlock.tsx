@@ -1,4 +1,4 @@
-"use client";
+// "use client";
 import { BackwardOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button } from "antd";
 import { useRouter } from "next/navigation";
