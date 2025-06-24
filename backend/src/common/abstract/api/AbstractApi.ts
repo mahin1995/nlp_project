@@ -56,7 +56,7 @@ abstract class AbstractApiClass<
     @Req() req: Request,
     @Res() res: Response,
     @Next() next: NextFunction,
-    @Body() body: any
+    @Body() {body}: any
   ) {
     try {
       const input = body;

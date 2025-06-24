@@ -16,10 +16,11 @@ import {
   Tabs,
 } from "antd";
 import { FilterValue, SorterResult } from "antd/es/table/interface";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { FaEdit } from "react-icons/fa";
 import { ApiResponse } from "../../../dataTable/GenericTable";
 import { RECORD_STATUS } from "../../../types";
-
 // Define TypeScript interfaces
 
 interface QueryParams {
@@ -38,6 +39,7 @@ const fetchData = async (
 };
 
 const TableView = () => {
+  const router = useRouter();
   const [tabState, setTabState] = useState(RECORD_STATUS.ACTIVE);
   const [queryParams, setQueryParams] = useState<QueryParams>({
     pagination: {
@@ -142,6 +144,13 @@ const TableView = () => {
               <div className="flex items-center gap-2">
                 <Button
                   onClick={() => {
+                    router.push(`/admin/news/add/?id=${_id}`);
+                  }}
+                  type="default"
+                  icon={<FaEdit />}
+                />
+                <Button
+                  onClick={() => {
                     sendNotificationMutation.mutate({
                       title: truncateText(title, 50),
                       body: `News with title ${truncateText(
@@ -189,6 +198,7 @@ const TableView = () => {
                     </svg>
                   }
                 />
+
                 <Button
                   onClick={() => {
                     deleteMutation.mutate({

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   createEditor,
   Descendant,
@@ -168,7 +168,15 @@ export default function CustomEditor({
   value: Descendant[];
   setValue: (value: Descendant[]) => void;
 }) {
-  //   const [value, setValue] = useState<Descendant[]>(initialValue);
+  const [value2, setValue2] = useState<Descendant[]>(value);
+  useEffect(() => {
+    setValue2(value);
+  }, [value]);
+
+  useEffect(() => {
+    setValue(value2);
+  }, [value2]);
+
   const editor = useMemo(() => withReact(createEditor()), []);
 
   console.log("My Log slateToHtml(value): ", slateToHtml(value));
@@ -216,7 +224,7 @@ export default function CustomEditor({
 
   return (
     <div className="border p-4 rounded space-y-4">
-      <Slate editor={editor} initialValue={value} onChange={setValue}>
+      <Slate editor={editor} initialValue={value2} onChange={setValue2}>
         <div className="flex flex-wrap gap-2">
           {/* Mark buttons */}
           <ToolbarButton format="bold" icon="B" />

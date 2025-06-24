@@ -1,30 +1,48 @@
 "use client";
 
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Button, Col, DatePicker, Form, Input, Row, Select } from "antd";
+import {
+  Button,
+  Col,
+  Form,
+  Image,
+  Input,
+  notification,
+  Row,
+  Select,
+} from "antd";
 
 import { DropDowlResponse } from "@/app/admin/lib/interfaces";
 import { NEWS_MODULE_PATH } from "@/app/admin/lib/urlPath";
 import { dropDown } from "@/app/admin/service/category.service";
-import { createNews, News } from "@/app/admin/service/news.service";
+import {
+  createNews,
+  getById,
+  News,
+  updateNews,
+} from "@/app/admin/service/news.service";
 import { UploadFile } from "antd/lib/upload/interface";
-import { useState } from "react";
-import { Descendant } from "slate";
-import CustomEditor, { slateToHtml } from "../../../Editor/SlateEditor";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import UploadImage from "../../../common/UploadImage";
+import TextEditor from "../../../Editor/TextEditor";
 
 // const { TextArea } = Input;
-const initialValue: Descendant[] = [
-  {
-    type: "paragraph",
-    children: [{ text: "Write something here..." }],
-  },
-];
+// const initialValue: Descendant[] = [
+//   {
+//     type: "paragraph",
+//     children: [{ text: "Write something here..." }],
+//   },
+// ];
 const FormView = () => {
-  const [value, setValue] = useState<Descendant[]>(initialValue);
+  const router = useRouter();
+  const [value, setValue] = useState<string>("");
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [form] = Form.useForm();
-
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
+  console.log("My Log id: ", id);
+  useEffect(() => {}, [id]);
   const { data: categories, isLoading: loadingCategories } = useQuery<
     DropDowlResponse[]
   >({
@@ -34,15 +52,39 @@ const FormView = () => {
       return response.data; // assuming ApiResponse has a 'data' property with DropDowlResponse[]
     },
   });
-
+  const { data: singleNews } = useQuery<News, Error>({
+    queryKey: ["news", id],
+    queryFn: () => {
+      if (id) return getById(id);
+      return Promise.reject("No ID provided");
+    },
+    enabled: !!id, // Avoid fetching when id is falsy
+  });
+  useEffect(() => {
+    if (singleNews) {
+      form.setFieldsValue(singleNews);
+      setValue(singleNews.content);
+    }
+  }, [singleNews, form]);
   const mutation = useMutation({
     mutationFn: createNews,
     onSuccess: () => {
       form.resetFields();
     },
   });
+  const updateMutation = useMutation({
+    mutationFn: updateNews,
+    onSuccess: () => {
+      notification.success({
+        message: "News updated successfully",
+      });
+      router.push("/admin/news/list");
+    },
+  });
 
   interface FormValues {
+    id?: string | null; // Assuming id can be null if not provided
+    _id?: string | null; // Assuming _id can be null if not provided
     title: string;
     link: string;
     image?: string;
@@ -54,17 +96,32 @@ const FormView = () => {
   }
 
   const onFinish = (values: FormValues) => {
+    let imageUrl = values.image;
+    console.log("My Log fileList: ", fileList);
+    if (fileList && fileList.length > 0) {
+      imageUrl = fileList[0].response?.url || fileList[0].url;
+    }
+    console.log("My Log imageUrl: ", imageUrl);
     const payload: News = {
       title: values.title,
       link: values.link,
-      content: slateToHtml(value),
+      content: value,
       website: values.website,
       category: values.category,
       author: values.author,
-      image: values?.image,
+      image: imageUrl,
+      publishedAt: new Date().toISOString(),
     };
-    console.log("My Log payload: ", payload);
-    // mutation.mutate(payload);
+    if (id) {
+      const _payload: News = {
+        ...payload,
+        _id: id,
+        id: singleNews?._id ?? undefined,
+      };
+      updateMutation.mutate({ body: _payload });
+    } else {
+      mutation.mutate(payload);
+    }
   };
 
   return (
@@ -110,12 +167,6 @@ const FormView = () => {
         </Col>
 
         <Col xs={24} md={8}>
-          <Form.Item name="publishedAt" label="Published At">
-            <DatePicker showTime style={{ width: "100%" }} />
-          </Form.Item>
-        </Col>
-
-        <Col xs={24} md={8}>
           <Form.Item
             name="category"
             label="Category"
@@ -145,7 +196,12 @@ const FormView = () => {
             <TextArea rows={4} />
           </Form.Item> */}
           {/* <RichTextEditor name="content" form={form} /> */}
-          <CustomEditor value={value} setValue={setValue} />
+          <TextEditor
+            value={value}
+            setValue={(value) => {
+              setValue(value);
+            }}
+          />
         </Col>
         <Col xs={24} md={24}>
           <UploadImage
@@ -157,6 +213,9 @@ const FormView = () => {
             fileSize={10}
             apiEndpoint={NEWS_MODULE_PATH.NEWS_UPLOAD_IMAGE}
           />
+        </Col>
+        <Col xs={24} md={24}>
+          <Image src={form.getFieldValue("image") || ""} alt="" />
         </Col>
         <Col span={24}>
           <Form.Item>

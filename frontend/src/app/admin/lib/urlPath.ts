@@ -1,5 +1,6 @@
 export const NEWS_MODULE_PATH = {
   NEWS_GET_ALL: "/api/v1/news",
+  NEWS_GET_BY_ID: "/api/v1/news/get-by-id",
   NEWS_DELETE: "/api/v1/news/delete-by-id",
   NEWS_REACTIVATE: "/api/v1/news/reactive-by-id",
   NEWS_SEND_NOTIFICATION: "/api/v1/news/send-notification",

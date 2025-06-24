@@ -17,6 +17,7 @@ export interface News {
   author?: string;
   website: string;
   category: string;
+  publishedAt?: string;
 }
 
 export const getAllNews = async (
@@ -36,6 +37,13 @@ export const getAllNews = async (
     data: response.data.data,
     total: response.data.total,
   };
+};
+export const getById = async (id: string): Promise<News> => {
+  const response = await AXIOS_API.get(
+    NEWS_MODULE_PATH.NEWS_GET_BY_ID + "/" + id
+  );
+
+  return response.data;
 };
 export const deleteAndUndoNews = async ({
   id,
@@ -92,6 +100,19 @@ export const sendNotification = async ({
 export const createNews = async (body: News): Promise<ApiCreateResponse> => {
   const response = await AXIOS_API.post(NEWS_MODULE_PATH.NEWS_GET_ALL, {
     body,
+  });
+  return {
+    status: STATUS_RESPONSE.FAILED,
+    message: response.data,
+  };
+};
+export const updateNews = async ({
+  body,
+}: {
+  body: News;
+}): Promise<ApiCreateResponse> => {
+  const response = await AXIOS_API.put(NEWS_MODULE_PATH.NEWS_GET_ALL, {
+    ...body,
   });
   return {
     status: STATUS_RESPONSE.FAILED,
