@@ -62,6 +62,12 @@ export const predictIntent = async (text: string) => {
   if (!model) {
     throw new Error('Model not loaded.');
   }
+  if (text) {
+    text = text.trim();
+    if (text.length != 0) {
+      text = text.toLowerCase();
+    }
+  }
 
   const inputTensor = vectorize(text);
   const prediction = model.predict(inputTensor) as tf.Tensor;
@@ -75,8 +81,7 @@ export const predictIntent = async (text: string) => {
   if (intent.type == 'CATEGORY') {
     const newsList = await getPageDataByCategory(1, 10, intent.tag);
     response = { messageType: 'NEWS', news: newsList };
-  }
-  if (intent.type == 'NEWS') {
+  } else if (intent.type == 'NEWS') {
     const newsList = await getPaginatedNews(1, 10);
     response = { messageType: 'NEWS', news: newsList };
   } else {

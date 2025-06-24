@@ -88,6 +88,20 @@
       ],
       "type": "CATEGORY"
     },
+    {
+      "tag": "Bangladesh",
+      "patterns": [
+        "bangladesh news",
+        "latest news from bangladesh",
+        "today bangladesh news",
+        "bangladesh headlines",
+        "bangladesh updates",
+        "today bangladesh",
+        "bangladesh current news",
+        "bangladesh news today"
+      ],
+      "type": "CATEGORY"
+    },
 
     {
       "tag": "world",

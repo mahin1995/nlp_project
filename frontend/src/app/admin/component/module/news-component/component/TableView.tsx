@@ -277,61 +277,63 @@ const TableView = () => {
   ];
 
   return (
-    <Tabs
-      onChange={(value) => {
-        if (value == RECORD_STATUS.ACTIVE) setTabState(RECORD_STATUS.ACTIVE);
-        else setTabState(RECORD_STATUS.INACTIVE);
-      }}
-      items={[
-        {
-          label: `ACTIVE`,
-          key: RECORD_STATUS.ACTIVE,
-          children: (
-            <>
-              <Table<News>
-                columns={columns}
-                dataSource={data?.data || []}
-                loading={isLoading}
-                onChange={handleTableChange}
-                pagination={{
-                  ...queryParams.pagination,
-                  total: data?.total || 0,
-                  showSizeChanger: true,
-                  pageSizeOptions: ["5", "10", "20", "50"],
-                }}
-                rowKey="_id"
-                scroll={{ x: true }}
-                showSorterTooltip={false}
-              />
-            </>
-          ),
-        },
-        {
-          label: `INACTIVE`,
-          key: RECORD_STATUS.INACTIVE,
+    <>
+      <Tabs
+        onChange={(value) => {
+          if (value == RECORD_STATUS.ACTIVE) setTabState(RECORD_STATUS.ACTIVE);
+          else setTabState(RECORD_STATUS.INACTIVE);
+        }}
+        items={[
+          {
+            label: `ACTIVE`,
+            key: RECORD_STATUS.ACTIVE,
+            children: (
+              <>
+                <Table<News>
+                  columns={columns}
+                  dataSource={data?.data || []}
+                  loading={isLoading}
+                  onChange={handleTableChange}
+                  pagination={{
+                    ...queryParams.pagination,
+                    total: data?.total || 0,
+                    showSizeChanger: true,
+                    pageSizeOptions: ["5", "10", "20", "50"],
+                  }}
+                  rowKey="_id"
+                  scroll={{ x: true }}
+                  showSorterTooltip={false}
+                />
+              </>
+            ),
+          },
+          {
+            label: `INACTIVE`,
+            key: RECORD_STATUS.INACTIVE,
 
-          children: (
-            <>
-              <Table<News>
-                columns={columns}
-                dataSource={data?.data || []}
-                loading={isLoading}
-                onChange={handleTableChange}
-                pagination={{
-                  ...queryParams.pagination,
-                  total: data?.total || 0,
-                  showSizeChanger: true,
-                  pageSizeOptions: ["5", "10", "20", "50"],
-                }}
-                rowKey="_id"
-                scroll={{ x: true }}
-                showSorterTooltip={false}
-              />
-            </>
-          ),
-        },
-      ]}
-    />
+            children: (
+              <>
+                <Table<News>
+                  columns={columns}
+                  dataSource={data?.data || []}
+                  loading={isLoading}
+                  onChange={handleTableChange}
+                  pagination={{
+                    ...queryParams.pagination,
+                    total: data?.total || 0,
+                    showSizeChanger: true,
+                    pageSizeOptions: ["5", "10", "20", "50"],
+                  }}
+                  rowKey="_id"
+                  scroll={{ x: true }}
+                  showSorterTooltip={false}
+                />
+              </>
+            ),
+          },
+        ]}
+      />
+    </>
   );
 };
 

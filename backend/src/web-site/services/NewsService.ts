@@ -77,7 +77,10 @@ export const getPageDataByCategory = async (
   try {
     const skip = (page - 1) * limit;
     const categoryObj: ICategoryOut | null = await Category.findOne({
-      link: category,
+      $or: [
+        { link: { $regex: new RegExp(`^${category}$`, 'i') } },
+        { name: { $regex: new RegExp(`^${category}$`, 'i') } },
+      ],
     });
     const news: INews[] = await News.find(
       { category: categoryObj?._id },
