@@ -19,7 +19,10 @@ class NewsService extends AbstractService<INews, NewsRepository> {
       .build();
     return query;
   }
-
+    protected validateInput(input: INews): Promise<void> {
+        // Implement validation logic here
+        return Promise.resolve();
+    }
   async Search(body: any, page: any, limit: any) {
     try {
       const filter = this.searchQuery(body);

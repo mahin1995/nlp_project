@@ -9,6 +9,8 @@ export interface IAdminUser extends Document {
   password: string;
   createdAt: Date;
   updatedAt: Date;
+  createdBy?: mongoose.Types.ObjectId; // Optional field for created by user
+  updatedBy?: mongoose.Types.ObjectId; // Optional field for updated by user
   comparePassword(candidatePassword: string): Promise<boolean>;
   generateAuthToken(): string;
   isActive?: boolean; // Optional field to indicate if the user is active
@@ -46,6 +48,16 @@ const AdminUserSchema = new Schema<IAdminUser, IAdminUserModel>(
       required: [true, 'Password is required'],
       minlength: [6, 'Password must be at least 6 characters long'],
       select: false, // Don't return password in queries by default
+    },
+    createdBy: {
+      type: mongoose.Types.ObjectId,
+      ref: 'Admin-user',
+      default: null, // Optional field for created by user
+    },
+    updatedBy: {
+      type: mongoose.Types.ObjectId,
+      ref: 'Admin-user',
+      default: null, // Optional field for updated by user
     },
     isActive: {
       type: Boolean,

@@ -56,12 +56,17 @@ abstract class AbstractApiClass<
     @Req() req: Request,
     @Res() res: Response,
     @Next() next: NextFunction,
-    @Body() {body}: any
+    @Body() { body }: any
   ) {
     try {
-      const input = body;
-      input.createdBy = req.user;
-      input.updatedBy = req.user;
+      const input: any = body;
+  
+      if (req.user && req.user._id) {
+        input.createdBy = req.user._id;
+        input.updatedBy = req.user._id;
+      }
+      //   input.createdBy = req?.user || null;
+      //   input.updatedBy = req?.user || null;
       const { data } = await this.service.Create(input);
       return res.json(data);
     } catch (error) {

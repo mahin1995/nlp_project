@@ -49,7 +49,7 @@ app.use(router);
 if (process.env.NODE_ENV === 'development') {
   setupSwagger(app);
 }
-app.use(globalErrorHandler);
+
 initializeModel()
   .then(() => {
     app.listen(port, () => {
@@ -73,3 +73,4 @@ initializeModel()
 // });
 // job.start();
 // processFeeds();
+app.use(globalErrorHandler);

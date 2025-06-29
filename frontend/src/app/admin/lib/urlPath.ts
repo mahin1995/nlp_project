@@ -9,6 +9,7 @@ export const NEWS_MODULE_PATH = {
 };
 export const USER_MODULE_PATH = {
   USER_GET_ALL: "/api/v1/users",
+  USER_GET_BY_ID: "/api/v1/users/get-by-id",
 };
 export const CATEGORY_MODULE_PATH = {
   GET_ALL: "/api/v1/category",

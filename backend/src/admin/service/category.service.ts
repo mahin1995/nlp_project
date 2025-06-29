@@ -6,12 +6,16 @@ import CategoryRepository from '../repository/category.repository';
 
 @Service()
 class CategoryService extends AbstractService<ICategory, CategoryRepository> {
+    protected validateInput(input: ICategory): Promise<void> {
+        // Implement validation logic here
+        return Promise.resolve();
+    }
   @Inject((type) => CategoryRepository)
   protected repository!: CategoryRepository;
   searchQuery(body: any): Object {
     return {};
   }
-  mapInputToModel(input: never) {
+    mapInputToModel(input: never) {
     return input;
   }
   mapModelToRes(modelData: never) {

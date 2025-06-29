@@ -5,6 +5,9 @@ import { Repository } from '../../common/decorator/repository.decorator';
 import AdminUser, { IAdminUser } from '../model/Admin-user-model';
 @Repository()
 class AdminUserRepository extends AbstractRepository<IAdminUser> {
+    validateInput(input: never) {
+        throw new Error('Method not implemented.');
+    }
  protected model=AdminUser;
   getModel(): Model<IAdminUser> {
         return this.model;

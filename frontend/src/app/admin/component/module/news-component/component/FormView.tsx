@@ -41,7 +41,6 @@ const FormView = () => {
   const [form] = Form.useForm();
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
-  console.log("My Log id: ", id);
   useEffect(() => {}, [id]);
   const { data: categories, isLoading: loadingCategories } = useQuery<
     DropDowlResponse[]
@@ -70,6 +69,10 @@ const FormView = () => {
     mutationFn: createNews,
     onSuccess: () => {
       form.resetFields();
+      notification.success({
+        message: "News created successfully",
+      });
+      router.push("/admin/news/list");
     },
   });
   const updateMutation = useMutation({
@@ -97,11 +100,9 @@ const FormView = () => {
 
   const onFinish = (values: FormValues) => {
     let imageUrl = values.image;
-    console.log("My Log fileList: ", fileList);
     if (fileList && fileList.length > 0) {
       imageUrl = fileList[0].response?.url || fileList[0].url;
     }
-    console.log("My Log imageUrl: ", imageUrl);
     const payload: News = {
       title: values.title,
       link: values.link,

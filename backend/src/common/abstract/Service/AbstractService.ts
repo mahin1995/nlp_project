@@ -1,6 +1,7 @@
 import { Document } from 'mongoose';
 import 'reflect-metadata';
 import { PaginatedResult } from '../../../utils/all_interface';
+
 import { AppError } from '../../../utils/app-errors';
 import AbstractRepository from '../repository/AbstractRepository';
 
@@ -11,13 +12,17 @@ abstract class AbstractService<
   //   repository: R;
 
   protected abstract repository: R;
-
+  protected abstract validateInput(input: T): Promise<void>;
   async Create(input: T) {
     try {
+      await this.validateInput(input);
       const modifying = this.mapInputToModel(input);
       const result = await this.repository.save(modifying);
       return this.FormateData(result);
     } catch (error) {
+      if (error instanceof AppError && error.statusCode === 400) {
+        throw error;
+      }
       throw AppError.internal('Unable to Create ', {
         error,
         Service: this.constructor.name,
@@ -31,6 +36,9 @@ abstract class AbstractService<
       const data = await this.repository.saveAll(modifying);
       return data;
     } catch (error) {
+      if (error instanceof AppError && error.statusCode === 400) {
+        throw error;
+      }
       throw AppError.internal('Unable to Create ', {
         error,
         Service: this.constructor.name,
@@ -43,6 +51,9 @@ abstract class AbstractService<
       const data = await this.repository.updateMany(input);
       return data;
     } catch (error) {
+      if (error instanceof AppError && error.statusCode === 400) {
+        throw error;
+      }
       throw AppError.internal('Unable to Update ', {
         error,
         Service: this.constructor.name,
@@ -80,6 +91,9 @@ abstract class AbstractService<
         totalItems: data.count,
       };
     } catch (error) {
+      if (error instanceof AppError && error.statusCode === 400) {
+        throw error;
+      }
       throw AppError.notFound('Data not Found ', {
         error,
         Service: this.constructor.name,
@@ -111,6 +125,9 @@ abstract class AbstractService<
         totalItems: totalCount || 0,
       };
     } catch (error) {
+      if (error instanceof AppError && error.statusCode === 400) {
+        throw error;
+      }
       throw AppError.internal('Unable to Search ', {
         error,
         Service: this.constructor.name,
@@ -125,6 +142,9 @@ abstract class AbstractService<
       const data = await this.repository.findById(id);
       return this.FormateData(data);
     } catch (error) {
+      if (error instanceof AppError && error.statusCode === 400) {
+        throw error;
+      }
       throw AppError.notFound('Data Not found', {
         error,
         Service: this.constructor.name,
@@ -139,6 +159,9 @@ abstract class AbstractService<
       const data = await this.repository.deleteById(id);
       return this.FormateData(data);
     } catch (error) {
+      if (error instanceof AppError && error.statusCode === 400) {
+        throw error;
+      }
       throw AppError.notFound('Data Not found', {
         error,
         Service: this.constructor.name,
@@ -152,6 +175,9 @@ abstract class AbstractService<
       const data = await this.repository.reActive(id);
       return this.FormateData(data);
     } catch (error) {
+      if (error instanceof AppError && error.statusCode === 400) {
+        throw error;
+      }
       throw AppError.notFound('Data Not found', {
         error,
         Service: this.constructor.name,
@@ -165,6 +191,9 @@ abstract class AbstractService<
       const data = await this.repository.update(modifying);
       return this.FormateData(data);
     } catch (error) {
+      if (error instanceof AppError && error.statusCode === 400) {
+        throw error;
+      }
       throw AppError.badRequest('Update not possible', {
         error,
         Service: this.constructor.name,
