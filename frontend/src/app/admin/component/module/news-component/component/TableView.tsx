@@ -2,6 +2,7 @@
 import {
   deleteAndUndoNews,
   getAllNews,
+  getAllNewsBySearch,
   News,
   sendNotification,
 } from "@/app/admin/service/news.service";
@@ -9,6 +10,7 @@ import { truncateText } from "@/utils/utils";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Button,
+  Input,
   notification,
   Table,
   TablePaginationConfig,
@@ -37,6 +39,27 @@ const fetchData = async (
 ): Promise<ApiResponse<News>> => {
   return await getAllNews(dataState, page, size);
 };
+const searchData = async ({
+  page,
+  size,
+  dataState,
+  body,
+}: {
+  page: number;
+  size: number;
+  dataState: RECORD_STATUS;
+  body: Partial<News>;
+}): Promise<ApiResponse<News>> => {
+  return await getAllNewsBySearch({
+    status: dataState,
+    page,
+    limit: size,
+    body: body,
+  });
+};
+
+// ... existing imports ...
+// ... existing interfaces ...
 
 const TableView = () => {
   const router = useRouter();
@@ -49,9 +72,10 @@ const TableView = () => {
     filters: {},
     sorters: {},
   });
+  const [searchTerm, setSearchTerm] = useState(""); // Track search term
 
-  // UseQuery hook for data fetching
-  const { data, isLoading } = useQuery<ApiResponse<News>, Error>({
+  // Regular data query
+  const { data, isLoading, refetch } = useQuery<ApiResponse<News>, Error>({
     queryKey: [
       "news",
       queryParams.pagination.current,
@@ -67,7 +91,58 @@ const TableView = () => {
       );
     },
   });
+
   const queryClient = useQueryClient();
+
+  // Search mutation
+  const searchMutation = useMutation({
+    mutationFn: searchData,
+    onSuccess: () => {
+      // Invalidate regular query to prevent stale data
+      queryClient.invalidateQueries({ queryKey: ["news"] });
+    },
+  });
+
+  // Determine which data to display
+  const displayData = searchMutation.data?.data || data?.data || [];
+  const displayTotal = searchMutation.data?.total || data?.total || 0;
+
+  // Handle search
+  const handleSearch = (value: string) => {
+    setSearchTerm(value);
+    if (value.trim()) {
+      searchMutation.mutate({
+        page: 1, // Reset to first page when searching
+        size: queryParams.pagination.pageSize || 10,
+        dataState: tabState,
+        body: { title: value.trim() },
+      });
+      // Update pagination to page 1
+      setQueryParams((prev) => ({
+        ...prev,
+        pagination: {
+          ...prev.pagination,
+          current: 1,
+        },
+      }));
+    } else {
+      // If search is cleared, refetch original data
+      refetch();
+    }
+  };
+
+  // ... deleteMutation, sendNotificationMutation, etc ...
+  const sendNotificationMutation = useMutation({
+    mutationFn: sendNotification,
+    onSuccess: () => {
+      console.log("Notification sent successfully");
+      notification.success({
+        message: "Notification sent successfully",
+        description: "The notification has been sent to the user.",
+      });
+      // Optionally, you can show a success message or perform other actions
+    },
+  });
   const deleteMutation = useMutation({
     mutationFn: deleteAndUndoNews,
     onSuccess: () => {
@@ -84,34 +159,6 @@ const TableView = () => {
       });
     },
   });
-  const sendNotificationMutation = useMutation({
-    mutationFn: sendNotification,
-    onSuccess: () => {
-      console.log("Notification sent successfully");
-      notification.success({
-        message: "Notification sent successfully",
-        description: "The notification has been sent to the user.",
-      });
-      // Optionally, you can show a success message or perform other actions
-    },
-  });
-  // Handle table changes (pagination, sorting, filtering)
-  const handleTableChange: TableProps<News>["onChange"] = (
-    pagination,
-    filters,
-    sorters
-  ) => {
-    setQueryParams({
-      pagination: {
-        ...queryParams.pagination,
-        current: pagination.current,
-        pageSize: pagination.pageSize,
-      },
-      filters,
-      sorters: sorters as SorterResult<News> | SorterResult<News>[],
-    });
-  };
-
   // Columns configuration
   const columns = [
     {
@@ -275,60 +322,107 @@ const TableView = () => {
       ),
     },
   ];
+  // Handle table changes
+  const handleTableChange: TableProps<News>["onChange"] = (
+    pagination,
+    filters,
+    sorters
+  ) => {
+    setQueryParams({
+      pagination: {
+        ...queryParams.pagination,
+        current: pagination.current,
+        pageSize: pagination.pageSize,
+      },
+      filters,
+      sorters: sorters as SorterResult<News> | SorterResult<News>[],
+    });
+
+    // If we're in search mode, refetch search results with new pagination
+    if (searchTerm) {
+      searchMutation.mutate({
+        page: pagination.current || 1,
+        size: pagination.pageSize || 10,
+        dataState: tabState,
+        body: { title: searchTerm },
+      });
+    }
+  };
+
+  // ... columns definition ...
 
   return (
     <>
+      <Input.Search
+        style={{ width: 300, marginBottom: 16 }}
+        allowClear
+        enterButton="Search"
+        onSearch={handleSearch}
+        placeholder="Search by title"
+        variant="filled"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+
       <Tabs
         onChange={(value) => {
-          if (value == RECORD_STATUS.ACTIVE) setTabState(RECORD_STATUS.ACTIVE);
-          else setTabState(RECORD_STATUS.INACTIVE);
+          const newState = value as RECORD_STATUS;
+          setTabState(newState);
+          // Clear search when changing tabs
+          setSearchTerm("");
+          // Reset to first page
+          setQueryParams((prev) => ({
+            ...prev,
+            pagination: {
+              ...prev.pagination,
+              current: 1,
+            },
+          }));
         }}
         items={[
           {
             label: `ACTIVE`,
             key: RECORD_STATUS.ACTIVE,
             children: (
-              <>
-                <Table<News>
-                  columns={columns}
-                  dataSource={data?.data || []}
-                  loading={isLoading}
-                  onChange={handleTableChange}
-                  pagination={{
-                    ...queryParams.pagination,
-                    total: data?.total || 0,
-                    showSizeChanger: true,
-                    pageSizeOptions: ["5", "10", "20", "50"],
-                  }}
-                  rowKey="_id"
-                  scroll={{ x: true }}
-                  showSorterTooltip={false}
-                />
-              </>
+              <Table<News>
+                columns={columns}
+                dataSource={displayData}
+                loading={isLoading || searchMutation.isPending}
+                onChange={handleTableChange}
+                pagination={{
+                  current: queryParams.pagination.current,
+                  pageSize: queryParams.pagination.pageSize,
+                  total: displayTotal,
+                  showSizeChanger: true,
+                  pageSizeOptions: ["5", "10", "20", "50"],
+                }}
+                rowKey="_id"
+                scroll={{ x: true }}
+                showSorterTooltip={false}
+              />
             ),
           },
           {
             label: `INACTIVE`,
             key: RECORD_STATUS.INACTIVE,
-
             children: (
-              <>
-                <Table<News>
-                  columns={columns}
-                  dataSource={data?.data || []}
-                  loading={isLoading}
-                  onChange={handleTableChange}
-                  pagination={{
-                    ...queryParams.pagination,
-                    total: data?.total || 0,
-                    showSizeChanger: true,
-                    pageSizeOptions: ["5", "10", "20", "50"],
-                  }}
-                  rowKey="_id"
-                  scroll={{ x: true }}
-                  showSorterTooltip={false}
-                />
-              </>
+              // Same table structure as active tab
+              <Table<News>
+                columns={columns}
+                dataSource={displayData}
+                loading={isLoading || searchMutation.isPending}
+                onChange={handleTableChange}
+                pagination={{
+                  current: queryParams.pagination.current,
+                  pageSize: queryParams.pagination.pageSize,
+                  total: displayTotal,
+                  showSizeChanger: true,
+                  pageSizeOptions: ["5", "10", "20", "50"],
+                }}
+                rowKey="_id"
+                scroll={{ x: true }}
+                showSorterTooltip={false}
+              />
             ),
           },
         ]}

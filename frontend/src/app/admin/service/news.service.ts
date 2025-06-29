@@ -38,6 +38,34 @@ export const getAllNews = async (
     total: response.data.total,
   };
 };
+export const getAllNewsBySearch = async ({
+  status,
+  page,
+  limit = 10,
+  body,
+}: {
+  status: string;
+  page: number;
+  limit: number;
+  body?: Partial<News>;
+}): Promise<ApiResponse<News>> => {
+  const response = await AXIOS_API.post(
+    NEWS_MODULE_PATH.NEWS_GET_ALL_BY_SEARCH,
+    body,
+    {
+      params: {
+        status,
+        page,
+        limit,
+      },
+    }
+  );
+
+  return {
+    data: response.data.data,
+    total: response.data.total,
+  };
+};
 export const getById = async (id: string): Promise<News> => {
   const response = await AXIOS_API.get(
     NEWS_MODULE_PATH.NEWS_GET_BY_ID + "/" + id
@@ -85,7 +113,6 @@ export const sendNotification = async ({
     { title, body }
   );
 
-  console.log("My Log response: ", response);
   if (response.status == 200) {
     return {
       status: STATUS_RESPONSE.SUCCESS,

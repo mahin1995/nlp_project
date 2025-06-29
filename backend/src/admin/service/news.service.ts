@@ -5,6 +5,7 @@ import AbstractService from '../../common/abstract/Service/AbstractService';
 import pageAbleQuery from '../../common/abstract/utils/pageableQuery';
 import { SearchBuilder } from '../../utils/SearchBuilder';
 import { PaginatedResult } from '../../utils/all_interface';
+import { AppError } from '../../utils/app-errors';
 import { INews } from '../model/News-model';
 
 @Service()
@@ -18,10 +19,50 @@ class NewsService extends AbstractService<INews, NewsRepository> {
       .build();
     return query;
   }
+
+  async Search(body: any, page: any, limit: any) {
+    try {
+      const filter = this.searchQuery(body);
+      let model = this.repository
+        .getModel()
+        .find(filter, {
+          content: 0,
+          isActive: 0,
+          createdAt: 0,
+          updatedAt: 0,
+          __v: 0,
+        });
+      if (page && limit) {
+        model = model.skip((page - 1) * limit).limit(limit);
+      }
+
+      const paginatedData = await model.exec();
+      if (paginatedData.length === 0) {
+        throw AppError.notFound('No Data Found', null);
+      }
+      const totalCount: number = await this.repository
+        .getModel()
+        .countDocuments(filter);
+      const totalPages = Math.ceil(totalCount / limit);
+      const modifydata = this.mapModelToRes(paginatedData);
+      return {
+        data: modifydata,
+        currentPage: page || 1,
+        totalPages: totalPages || 1,
+        totalItems: totalCount || 0,
+      };
+    } catch (error) {
+      throw AppError.internal('Unable to Search ', {
+        error,
+        Service: this.constructor.name,
+      });
+    }
+  }
+
   mapInputToModel(input: never) {
     return input;
   }
-  mapModelToRes(modelData: never) {
+  mapModelToRes(modelData: any) {
     return modelData;
   }
   async GetAll(
