@@ -7,6 +7,7 @@ import cors from 'cors';
 import './admin/api/auth.controller';
 import './admin/api/category-controller';
 import './admin/api/news.controller';
+import './admin/api/story.analytics.controller';
 import './admin/api/user.controller';
 import authRoutes from './web-site/routes/auth.route';
 import categoryRoutes from './web-site/routes/category.routes';

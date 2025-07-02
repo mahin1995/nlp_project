@@ -53,7 +53,21 @@ export const NewsService = {
   },
   getNewsById: async (id = "") => {
     const { data } = await api.get(url + `/get-by-id/${id}`);
-   
+
+    if (data && data?.data) {
+      return {
+        news: data?.data,
+        status: RESPONSE_STATUS.SUCCESS,
+      };
+    } else {
+      return {
+        status: RESPONSE_STATUS.FAILED,
+      };
+    }
+  },
+  countStoryRead: async (id = "") => {
+    const { data } = await api.get(`/api/v1/story-analytics/${id}/count`);
+
     if (data && data?.data) {
       return {
         news: data?.data,

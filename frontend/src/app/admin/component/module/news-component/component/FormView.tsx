@@ -111,7 +111,6 @@ const FormView = () => {
       category: values.category,
       author: values.author,
       image: imageUrl,
-      publishedAt: new Date().toISOString(),
     };
     if (id) {
       const _payload: News = {
@@ -121,7 +120,11 @@ const FormView = () => {
       };
       updateMutation.mutate({ body: _payload });
     } else {
-      mutation.mutate(payload);
+      const _payload: News = {
+        ...payload,
+        publishedAt: new Date().toISOString(),
+      };
+      mutation.mutate(_payload);
     }
   };
 

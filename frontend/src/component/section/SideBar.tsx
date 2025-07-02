@@ -14,10 +14,10 @@ interface ContentItem {
   category: string;
 }
 
-type TabName = "LATEST" | "POPULAR" | "HOT-TOPIC";
+type TabName = "LATEST" | "POPULAR";
 
 function SideBar() {
-  const [activeTab, setActiveTab] = useState<TabName>("POPULAR");
+  const [activeTab, setActiveTab] = useState<TabName>("LATEST");
   const { data: sideBarData } = useQuery({
     queryKey: ["side-bar-data"], // Include page and limit in query key
     queryFn: NewsService.getSideBarData, // Pass dynamic page and limit
@@ -30,7 +30,7 @@ function SideBar() {
     <div className="xl:col-span-3 lg:col-span-4 lg:block py-6">
       {/* Tab Navigation */}
       <div className="border-b-2 border-yellow-700 border-opacity-10 space-x-5 mb-8">
-        {(["LATEST", "POPULAR", "HOT-TOPIC"] as TabName[]).map((tab) => (
+        {(["LATEST", "POPULAR"] as TabName[]).map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}

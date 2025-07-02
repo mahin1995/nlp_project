@@ -19,6 +19,11 @@ export default function Page() {
     queryFn: () => NewsService.getNewsById(slug),
     enabled: !!slug,
   });
+  const {} = useQuery({
+    queryKey: ["news_count", slug],
+    queryFn: () => NewsService.countStoryRead(slug),
+    enabled: !!slug,
+  });
 
   return (
     <>

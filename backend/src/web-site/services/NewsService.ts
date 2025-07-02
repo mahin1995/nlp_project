@@ -1,6 +1,7 @@
 import { PaginatedResult, Response } from '../../utils/all_interface';
 import Category, { ICategoryOut } from '../models/Category';
 import News, { INews } from '../models/News';
+import { StoryAnalyticsService } from './PopularStoryService';
 
 export const getPaginatedNews = async (
   page: number = 1,
@@ -45,9 +46,27 @@ export const getLatestPopularHotTopicNews = async (): Promise<{
       time: item.publishedAt ? new Date(item.publishedAt).toLocaleString() : '',
       category: (item as any).category?.Name || 'General',
     }));
+    let popularStories: any[] = [];
+    let storyCount = await StoryAnalyticsService.getPopluarStories(4);
+    if (storyCount.length > 0) {
+      let storyIds = storyCount.map((item) => item.storyId);
+      let news = await News.find(
+        { _id: { $in: storyIds } },
+        { embedding: 0 }
+      ).sort({ publishedAt: -1 });
+      popularStories = news.map((item, idx) => ({
+        id: item._id,
+        imageUrl: item?.image || '',
+        title: item.title,
+        time: item.publishedAt
+          ? new Date(item.publishedAt).toLocaleString()
+          : '',
+        category: (item as any).category?.Name || 'General',
+      }));
+    }
     data['LATEST'] = mappedNews;
-    data['POPULAR'] = mappedNews;
-    data['HOT-TOPIC'] = mappedNews;
+    data['POPULAR'] = popularStories;
+    // data['HOT-TOPIC'] = mappedNews;
     return data;
   } catch (error) {
     console.error('Error fetching paginated news:', error);
