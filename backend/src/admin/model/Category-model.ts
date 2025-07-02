@@ -4,6 +4,7 @@ export interface ICategory extends Document {
   name: string;
   description?: string;
   link?: string;
+  isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -21,6 +22,7 @@ const categorySchema = new Schema<ICategory>(
     name: { type: String, required: true, unique: true, index: true },
     description: { type: String },
     link: { type: String, unique: true },
+    isActive: { type: Boolean, default: true }, // ✅ Default to true
   },
   { timestamps: true } // ✅ Adds createdAt & updatedAt
 );

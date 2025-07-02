@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import {
   getAllCategory,
   ICategoryOut,
@@ -51,7 +51,7 @@ const TableView = () => {
       );
     },
   });
-
+  console.log("My Log data: ", data?.total);
   // Handle table changes (pagination, sorting, filtering)
   const handleTableChange: TableProps<ICategoryOut>["onChange"] = (
     pagination,
@@ -123,7 +123,8 @@ const TableView = () => {
       loading={isLoading}
       onChange={handleTableChange}
       pagination={{
-        ...queryParams.pagination,
+        current: queryParams.pagination.current,
+        pageSize: queryParams.pagination.pageSize,
         total: data?.total || 0,
         showSizeChanger: true,
         pageSizeOptions: ["5", "10", "20", "50"],

@@ -5,11 +5,13 @@ const pageAbleQuery = (queryParams: any) => {
     queryParams.offset = 0;
     queryParams.page = 0;
   } else {
-    queryParams.offset = queryParams.limit * page;
+    const newPage = page - 1; // Adjusting for zero-based index
+    queryParams.offset = queryParams.limit * newPage;
     queryParams.page = page;
   }
 
-  queryParams.sort = queryParams.sort === "des" ? -1 : 1 || "asc" ? 1 : -1;
+  //   queryParams.sort = queryParams.sort === "des" ? -1 : 1 || "asc" ? 1 : -1;
+  queryParams.sort = queryParams.sort || 'asc';
   return queryParams;
 };
 export default pageAbleQuery;

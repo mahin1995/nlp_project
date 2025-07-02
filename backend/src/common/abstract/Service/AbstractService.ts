@@ -4,6 +4,7 @@ import { PaginatedResult } from '../../../utils/all_interface';
 
 import { AppError } from '../../../utils/app-errors';
 import AbstractRepository from '../repository/AbstractRepository';
+import pageAbleQuery from '../utils/pageableQuery';
 
 abstract class AbstractService<
   T extends Document,
@@ -65,7 +66,7 @@ abstract class AbstractService<
     {
       page = 1,
       limit = 10,
-      sort = '-createdAt',
+      sort = 'asc',
       offset = 0,
       isActive = true,
     } = {} as {
@@ -77,19 +78,41 @@ abstract class AbstractService<
     }
   ): Promise<PaginatedResult<T>> {
     try {
-      const data = await this.repository.findAll({
+      ({ page, limit, sort, offset } = pageAbleQuery({
         page,
         limit,
         sort,
-        pageable: true,
-        isActive,
+        offset,
+      }));
+      let qt = this.repository
+        .getModel()
+        .find({})
+        .where('isActive')
+        .equals(isActive)
+        .limit(limit || 10)
+        .skip(offset || 0)
+        .sort({ _id: sort === 'asc' ? 1 : -1 })
+        .select({
+          __v: 0,
+          createdAt: 0,
+          updatedAt: 0,
+          content: 0,
+          isActive: 0,
+        });
+      let data = await qt.exec();
+      // TODO: Implement actual logic
+      const countData = await this.repository
+        .getModel()
+        .countDocuments({ isActive: isActive });
+      const totalPage = Math.ceil(countData / (limit ?? 10));
+      return Promise.resolve({
+        data: data,
+        total: countData,
+        limit: limit ?? 10,
+        currentPage: page ?? 1,
+        totalPages: totalPage,
+        totalItems: countData,
       });
-      return {
-        data: data.data,
-        currentPage: data.currentPage,
-        totalPages: data.totalPage,
-        totalItems: data.count,
-      };
     } catch (error) {
       if (error instanceof AppError && error.statusCode === 400) {
         throw error;
