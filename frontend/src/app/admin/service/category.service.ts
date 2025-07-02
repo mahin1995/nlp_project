@@ -59,3 +59,25 @@ export const getAllCategory = async (
     total: response.data.totalItems,
   };
 };
+export const searchCategory = async (
+  status: string,
+  page: number,
+  limit: number = 10,
+  body?: ICategoryIn
+): Promise<ApiResponse<ICategoryOut>> => {
+  const response = await AXIOS_API.post(
+    CATEGORY_MODULE_PATH.CATEGORY_SEARCH,
+    body,
+    {
+      params: {
+        status,
+        page,
+        limit,
+      },
+    }
+  );
+  return {
+    data: response.data.data,
+    total: response.data.totalItems,
+  };
+};

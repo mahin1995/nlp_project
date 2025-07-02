@@ -13,6 +13,7 @@ export const USER_MODULE_PATH = {
 };
 export const CATEGORY_MODULE_PATH = {
   GET_ALL: "/api/v1/category",
+  CATEGORY_SEARCH: "/api/v1/category/search",
   DROP_DOWN: "/api/v1/category/drop-down/list",
 };
 export const AUTH_PATH = {
