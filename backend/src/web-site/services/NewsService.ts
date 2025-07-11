@@ -33,7 +33,8 @@ export const getLatestPopularHotTopicNews = async (): Promise<{
   [key: string]: INews[];
 }> => {
   try {
-    const news: INews[] = await News.find({}, { embedding: 0 }) // Exclude embedding
+    const news: INews[] = await News.find({}, { embedding: 0 })
+      .populate('category') // Exclude embedding
       .sort({ publishedAt: -1 }) // Sort by newest first
       .limit(4);
 
@@ -44,7 +45,7 @@ export const getLatestPopularHotTopicNews = async (): Promise<{
       imageUrl: item?.image || '',
       title: item.title,
       time: item.publishedAt ? new Date(item.publishedAt).toLocaleString() : '',
-      category: (item as any).category?.Name || 'General',
+      category: (item as any).category?.name || '',
     }));
     let popularStories: any[] = [];
     let storyCount = await StoryAnalyticsService.getPopluarStories(4);
